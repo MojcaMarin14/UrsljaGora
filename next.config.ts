@@ -1,7 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // izklopi Turbopack
+  turbopack: {
+    // prazna konfiguracija = Turbopack je izklopljen
+  },
+
+  // omogoči Webpack
+  webpack: (config) => {
+    return config;
+  },
 };
 
 export default nextConfig;
