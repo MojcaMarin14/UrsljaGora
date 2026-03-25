@@ -5,6 +5,11 @@ export default async function NovicePage() {
   const res = await fetchAPI("novicas?populate=*");
   const novice = res.data;
 
+  // Sortiranje po datumu (najnovejše prve)
+  const sorted = [...novice].sort((a, b) => {
+    return new Date(b.datum).getTime() - new Date(a.datum).getTime();
+  });
+
   return (
     <main className="max-w-6xl mx-auto py-16 px-4">
       {/* Hero naslov */}
@@ -15,30 +20,35 @@ export default async function NovicePage() {
         </p>
       </section>
 
-      {novice.length === 0 && (
+      {sorted.length === 0 && (
         <p className="text-center text-gray-400">Ni novic.</p>
       )}
 
       {/* Pinterest-style grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-        {novice.map((item: any) => {
-          const a = item;
-          const img = a.slika?.url ?? null;
+        {sorted.map((a: any) => {
+          // PRAVILNA pot do slike (single media)
+          const img = a.slika?.url
+            ? `http://localhost:1337${a.slika.url}`
+            : "/fallback.jpg";
+
+          // Excerpt
+          const excerpt = a.opis
+            ? a.opis.slice(0, 140) + "…"
+            : "";
 
           return (
             <article
-              key={item.id}
+              key={a.id}
               className="rounded-2xl overflow-hidden shadow-lg bg-white/10 backdrop-blur-sm border border-white/20 hover:shadow-xl transition"
             >
               {/* Slika */}
-              {img && (
-                <Link href={`/aktualno/novice/${a.slug}`}>
-                  <img
-                    src={`http://localhost:1337${img}`}
-                    className="w-full h-56 object-cover hover:scale-105 transition-transform duration-300"
-                  />
-                </Link>
-              )}
+              <Link href={`/aktualno/novice/${a.slug}`}>
+                <img
+                  src={img}
+                  className="w-full h-56 object-cover hover:scale-105 transition-transform duration-300"
+                />
+              </Link>
 
               {/* Vsebina */}
               <div className="p-6 space-y-3">
@@ -48,11 +58,7 @@ export default async function NovicePage() {
                   </h2>
                 </Link>
 
-                {a.opis && (
-                  <p className="text-gray-300 text-sm">
-                    {a.opis.substring(0, 140)}…
-                  </p>
-                )}
+                <p className="text-gray-300 text-sm">{excerpt}</p>
 
                 <Link
                   href={`/aktualno/novice/${a.slug}`}
