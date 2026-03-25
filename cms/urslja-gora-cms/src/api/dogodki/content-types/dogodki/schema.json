@@ -1,0 +1,38 @@
+{
+  "kind": "collectionType",
+  "collectionName": "dogodkis",
+  "info": {
+    "singularName": "dogodki",
+    "pluralName": "dogodkis",
+    "displayName": "Dogodki"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "naslov": {
+      "type": "string",
+      "required": true
+    },
+    "opis": {
+      "type": "richtext"
+    },
+    "datum": {
+      "type": "datetime"
+    },
+    "lokacija": {
+      "type": "string"
+    },
+    "slika": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    }
+  }
+}

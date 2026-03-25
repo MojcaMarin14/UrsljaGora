@@ -563,6 +563,41 @@ export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiDogodkiDogodki extends Struct.CollectionTypeSchema {
+  collectionName: 'dogodkis';
+  info: {
+    displayName: 'Dogodki';
+    pluralName: 'dogodkis';
+    singularName: 'dogodki';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    datum: Schema.Attribute.DateTime;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::dogodki.dogodki'
+    > &
+      Schema.Attribute.Private;
+    lokacija: Schema.Attribute.String;
+    naslov: Schema.Attribute.String & Schema.Attribute.Required;
+    opis: Schema.Attribute.RichText;
+    publishedAt: Schema.Attribute.DateTime;
+    slika: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios',
+      true
+    >;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiGlobalGlobal extends Struct.SingleTypeSchema {
   collectionName: 'globals';
   info: {
@@ -592,6 +627,76 @@ export interface ApiGlobalGlobal extends Struct.SingleTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+  };
+}
+
+export interface ApiNovicaNovica extends Struct.CollectionTypeSchema {
+  collectionName: 'novicas';
+  info: {
+    displayName: 'Novice';
+    pluralName: 'novicas';
+    singularName: 'novica';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    datum: Schema.Attribute.DateTime;
+    kategorija: Schema.Attribute.Enumeration<
+      ['obvestilo', 'dogodek', 'novica']
+    >;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::novica.novica'
+    > &
+      Schema.Attribute.Private;
+    naslov: Schema.Attribute.String & Schema.Attribute.Required;
+    opis: Schema.Attribute.RichText;
+    publishedAt: Schema.Attribute.DateTime;
+    slika: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    slug: Schema.Attribute.UID<'naslov'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiPonudbePonudbe extends Struct.CollectionTypeSchema {
+  collectionName: 'ponudbes';
+  info: {
+    displayName: 'Ponudbe';
+    pluralName: 'ponudbes';
+    singularName: 'ponudbe';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    cena: Schema.Attribute.Decimal;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::ponudbe.ponudbe'
+    > &
+      Schema.Attribute.Private;
+    naslov: Schema.Attribute.String;
+    opis: Schema.Attribute.RichText;
+    publishedAt: Schema.Attribute.DateTime;
+    slika: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios',
+      true
+    >;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    veljavnost: Schema.Attribute.Date;
   };
 }
 
@@ -1110,7 +1215,10 @@ declare module '@strapi/strapi' {
       'api::article.article': ApiArticleArticle;
       'api::author.author': ApiAuthorAuthor;
       'api::category.category': ApiCategoryCategory;
+      'api::dogodki.dogodki': ApiDogodkiDogodki;
       'api::global.global': ApiGlobalGlobal;
+      'api::novica.novica': ApiNovicaNovica;
+      'api::ponudbe.ponudbe': ApiPonudbePonudbe;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

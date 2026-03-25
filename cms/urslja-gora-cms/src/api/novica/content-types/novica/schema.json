@@ -1,0 +1,47 @@
+{
+  "kind": "collectionType",
+  "collectionName": "novicas",
+  "info": {
+    "singularName": "novica",
+    "pluralName": "novicas",
+    "displayName": "Novice"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "naslov": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "naslov"
+    },
+    "opis": {
+      "type": "richtext"
+    },
+    "datum": {
+      "type": "datetime"
+    },
+    "kategorija": {
+      "type": "enumeration",
+      "enum": [
+        "obvestilo",
+        "dogodek",
+        "novica"
+      ]
+    },
+    "slika": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    }
+  }
+}
