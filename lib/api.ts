@@ -1,7 +1,7 @@
 export async function fetchAPI(path: string) {
   const base = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
 
-  const res = await fetch(`${base}/api/${path}?populate=*`, {
+  const res = await fetch(`${base}/api/${path}`, {
     headers: {
       "Content-Type": "application/json",
     },

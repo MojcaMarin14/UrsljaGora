@@ -1,0 +1,55 @@
+import { fetchAPI } from "@/lib/api";
+
+export default async function NovicaDetailPage({
+  params,
+}: {
+  params: { slug: string };
+}) {
+  const { slug } = await params;
+
+  // PRAVILEN Strapi v5 REST query
+  const res = await fetchAPI(
+    `novicas?filters.slug.$eq=${slug}&populate=*`
+  );
+
+  const novica = res.data?.[0];
+
+  if (!novica) {
+    return (
+      <main className="max-w-4xl mx-auto py-10">
+        <h1 className="text-2xl font-bold">Novica ni bila najdena.</h1>
+      </main>
+    );
+  }
+
+  const a = novica;
+  const img = a.slika?.url ?? null;
+
+  return (
+    <main className="max-w-4xl mx-auto py-10 space-y-4">
+      <h1 className="text-3xl font-bold">{a.naslov}</h1>
+
+      {a.datum && (
+        <p className="text-sm text-gray-500">
+          {new Date(a.datum).toLocaleString("sl-SI", {
+            dateStyle: "medium",
+            timeStyle: "short",
+          })}
+        </p>
+      )}
+
+      {img && (
+        <img
+          src={`http://localhost:1337${img}`}
+          className="mt-3 rounded-md max-h-96 object-cover"
+        />
+      )}
+
+      {a.opis && (
+        <div className="mt-4 whitespace-pre-line text-lg text-gray-800">
+          {a.opis}
+        </div>
+      )}
+    </main>
+  );
+}
