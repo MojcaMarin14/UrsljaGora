@@ -1,15 +1,12 @@
+export const dynamic = "force-dynamic";
+
 import { fetchAPI } from "@/lib/api";
 
-export default async function NovicaDetailPage({
-  params,
-}: {
-  params: { slug: string };
-}) {
+export default async function NovicaDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
 
-  // PRAVILEN Strapi v5 REST query
   const res = await fetchAPI(
-    `novicas?filters.slug.$eq=${slug}&populate=*`
+    `novicas?filters[slug][$eq]=${encodeURIComponent(slug)}&populate=*`
   );
 
   const novica = res.data?.[0];
