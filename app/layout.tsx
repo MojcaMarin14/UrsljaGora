@@ -1,5 +1,7 @@
 import "./globals.css";
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+
 
 export const metadata = {
   title: "Koča",
@@ -9,9 +11,10 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="sl">
-      <body className="bg-[#0f1414] text-white">
+      <body className="bg-[var(--background)] text-[var(--foreground)]">
         <Navbar />
         <div className="pt-20">{children}</div>
+        <Footer />
       </body>
     </html>
   );

@@ -19,7 +19,7 @@
       "type": "richtext"
     },
     "datum": {
-      "type": "datetime"
+      "type": "date"
     },
     "lokacija": {
       "type": "string"

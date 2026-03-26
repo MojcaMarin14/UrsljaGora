@@ -1,24 +1,54 @@
 @import "tailwindcss";
+@import "swiper/css";
+@import "swiper/css/pagination";
+@import "swiper/css/autoplay";
+
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f4faf5;      /* zelo svetla pastelna zelena */
+  --foreground: #1a1a1a;      /* temno siv tekst */
+  --brand: #8bcf9b;           /* pastelna zelena (glavna) */
+  --brand-dark: #5fae72;      /* malo temnejša pastelna zelena */
+  --brand-light: #e6f5ea;     /* zelo nežna zelena za ozadja */
 }
 
+/* Tailwind theme binding */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-brand: var(--brand);
+  --color-brand-dark: var(--brand-dark);
+  --color-brand-light: var(--brand-light);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.swiper {
+  overflow: visible !important;
 }
 
+.swiper-wrapper {
+  overflow: hidden !important;
+}
+.swiper-slide {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+/* Popravek Swiper overflow bug */
+.swiper {
+  overflow: hidden !important;
+}
+
+.swiper-wrapper {
+  overflow: hidden !important;
+}
+
+html, body {
+  overflow-x: hidden !important;
+}
+
+
+/* Global styling */
 body {
   background: var(--background);
   color: var(--foreground);
