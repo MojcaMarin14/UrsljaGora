@@ -2,35 +2,56 @@ import { fetchAPI } from "@/lib/api";
 import Link from "next/link";
 
 export default async function DogodkiPage() {
-  const res = await fetchAPI("dogodkis?populate=*");
+  const res = await fetchAPI("dogodkis?populate=*&sort=datum:desc");
+
   const dogodki = res.data;
 
   return (
-    <main className="max-w-6xl mx-auto py-16 px-4">
-      {/* Hero naslov */}
-      <section className="text-center mb-12">
-        <h1 className="text-5xl font-bold text-white">Dogodki</h1>
-        <p className="text-gray-300 mt-3 text-lg">
-          Prihajajoči in pretekli dogodki naše koče.
-        </p>
+    <main className="w-full">
+
+      {/* HERO VIDEO BLOK */}
+      <section className="relative w-full h-[70vh] md:h-[85vh] overflow-hidden">
+        <video
+          className="absolute inset-0 w-full h-full object-cover"
+          src="/dogodek.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+        />
+        <div className="absolute inset-0 bg-black/40"></div>
+
+        <div className="relative z-10 flex flex-col items-center justify-center h-full text-white text-center px-6">
+          <h1 className="text-5xl md:text-6xl font-bold drop-shadow-lg">
+            Dogodki
+          </h1>
+          <p className="mt-4 text-lg md:text-2xl max-w-2xl drop-shadow-lg">
+            Prihajajoči in pretekli dogodki naše koče.
+          </p>
+        </div>
       </section>
 
-      {dogodki.length === 0 && (
-        <p className="text-center text-gray-400">Ni dogodkov.</p>
-      )}
+      {/* NAVIGACIJA */}
+      <nav className="max-w-6xl mx-auto px-4 text-sm text-[var(--text-main)] mt-10 mb-6">
+        <a href="/aktualno/novice" className="hover:text-[var(--text-link)]">Novice</a>
+        <span className="mx-2">/</span>
+        <a href="/aktualno/ponudbe" className="hover:text-[var(--text-link)]">Ponudbe</a>
+      </nav>
 
-      {/* Pinterest-style grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+      {/* GRID DOGODKOV */}
+      <div className="max-w-6xl mx-auto px-4 pb-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+        {dogodki.length === 0 && (
+          <p className="text-center text-[var(--text-main)]">Ni dogodkov.</p>
+        )}
+
         {dogodki.map((item: any) => {
-          const a = item;
-          const img = a.slika?.[0]?.url ?? null;
+          const img = item.slika?.[0]?.url;
 
           return (
             <article
               key={item.id}
-              className="rounded-2xl overflow-hidden shadow-lg bg-white/10 backdrop-blur-sm border border-white/20 hover:shadow-xl transition"
+              className="rounded-2xl overflow-hidden shadow-sm bg-[var(--brand-light)] border border-[var(--brand)] hover:shadow-md transition"
             >
-              {/* Slika */}
               {img && (
                 <Link href={`/aktualno/dogodki/${item.id}`}>
                   <img
@@ -40,38 +61,33 @@ export default async function DogodkiPage() {
                 </Link>
               )}
 
-              {/* Vsebina */}
               <div className="p-6 space-y-3">
-                {/* Datum + lokacija */}
-                <p className="text-gray-300 text-sm">
-                  {a.datum &&
-                    new Date(a.datum).toLocaleString("sl-SI", {
+                <p className="text-[var(--text-main)] text-sm">
+                  {item.datum &&
+                    new Date(item.datum).toLocaleString("sl-SI", {
                       dateStyle: "medium",
                       timeStyle: "short",
                     })}
-                  {a.lokacija && (
-                    <> · <span className="text-green-300">{a.lokacija}</span></>
+                  {item.lokacija && (
+                    <> · <span className="text-[var(--text-link)]">{item.lokacija}</span></>
                   )}
                 </p>
 
-                {/* Naslov */}
                 <Link href={`/aktualno/dogodki/${item.id}`}>
-                  <h2 className="text-2xl font-semibold text-white hover:text-green-300 transition">
-                    {a.naslov}
+                  <h2 className="text-2xl font-semibold text-[var(--text-heading)] hover:text-[var(--text-link)] transition">
+                    {item.naslov}
                   </h2>
                 </Link>
 
-                {/* Opis */}
-                {a.opis && (
-                  <p className="text-gray-300 text-sm">
-                    {a.opis.substring(0, 140)}…
+                {item.opis && (
+                  <p className="text-[var(--text-main)] text-sm">
+                    {item.opis.substring(0, 140)}…
                   </p>
                 )}
 
-                {/* Gumb */}
                 <Link
                   href={`/aktualno/dogodki/${item.id}`}
-                  className="inline-block text-green-400 hover:text-green-300 font-medium"
+                  className="inline-block text-[var(--text-link)] hover:text-[var(--text-heading)] font-medium"
                 >
                   Preberi več →
                 </Link>
