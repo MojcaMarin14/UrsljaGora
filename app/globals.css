@@ -1,7 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&display=swap');
 @import "tailwindcss";
 @import "swiper/css";
 @import "swiper/css/pagination";
 @import "swiper/css/autoplay";
+
+:root {
+  --font-premium: 'Playfair Display', serif;
+}
 
 
 :root {
@@ -52,5 +57,47 @@ html, body {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-premium), serif;
+}
+.snowflake {
+  position: absolute;
+  top: -40px;
+  font-size: calc(20px + (var(--size) * 6px));
+  opacity: 0.9;
+  animation: snowFall linear infinite;
+  animation-duration: calc(2.5s + (var(--speed) * 1.5s));
+  transform: rotate(calc(var(--rotate) * 1deg));
+  left: calc(50% + (var(--offset) * 80px));
+}
+
+@keyframes snowFall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(380px) rotate(360deg);
+    opacity: 0;
+  }
+}
+.leaf {
+  position: absolute;
+  top: -40px;
+  font-size: calc(26px + (var(--size) * 8px));
+  opacity: 0.9;
+  animation: leafFall ease-in infinite;
+  animation-duration: calc(2.8s + (var(--speed) * 1.8s));
+  transform: rotate(calc(var(--rotate) * 1deg));
+  left: calc(50% + (var(--offset) * 90px));
+}
+
+@keyframes leafFall {
+  0% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(380px) translateX(calc(var(--sway) * 40px)) rotate(180deg);
+    opacity: 0;
+  }
 }

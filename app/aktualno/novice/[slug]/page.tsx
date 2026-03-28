@@ -24,6 +24,9 @@ export default async function NovicaDetailPage({ params }: { params: Promise<{ s
 
   return (
     <main className="max-w-4xl mx-auto py-10 space-y-4">
+      <div className="pt-40"></div>
+
+      
       <h1 className="text-3xl font-bold">{a.naslov}</h1>
 
       {a.datum && (

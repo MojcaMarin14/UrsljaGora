@@ -30,6 +30,13 @@ export default async function PonudbePage() {
         </div>
       </section>
 
+      {/* NAVIGACIJA */}
+      <nav className="max-w-6xl mx-auto px-4 text-sm text-[var(--text-main)] mt-10 mb-6">
+        <a href="/aktualno/novice" className="hover:text-[var(--text-link)]">Novice</a>
+        <span className="mx-2">/</span>
+        <a href="/aktualno/dogodki" className="hover:text-[var(--text-link)]">Dogodki</a>
+      </nav>
+
       {/* VSEBINA */}
       <div className="max-w-6xl mx-auto px-4 py-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
