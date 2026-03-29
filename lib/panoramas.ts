@@ -1,3 +1,5 @@
+import { fetchAPI } from "@/lib/api";
+
 export type PanoramaItem = {
   slug: string;
   title: string;
@@ -5,33 +7,40 @@ export type PanoramaItem = {
   description: string;
 };
 
-export const panoramas: PanoramaItem[] = [
-  {
-    slug: "bryan-goff",
-    title: "Bryan Goff Panorama",
-    imageUrl: "/panoramas/bryan-goff-IuyhXAia8EA-unsplash.jpg",
-    description: "Panorama of Bryan Goff.",
-  },
-  {
-    slug: "jessica-anderson",
-    title: "Jessica Anderson Panorama",
-    imageUrl: "/panoramas/jessica-anderson-yFPJdy_R8LA-unsplash.jpg",
-    description: "Panorama of Jessica Anderson.",
-  },
-  {
-    slug: "one-zen",
-    title: "One Zen Panorama",
-    imageUrl: "/panoramas/one-zen-48kE4A9dMKc-unsplash.jpg",
-    description: "Panorama of One Zen.",
-  },
-  {
-    slug: "tomas-cocacola",
-    title: "Tomas Cocacola Panorama",
-    imageUrl: "/panoramas/tomas-cocacola-1MCdcbJxViE-unsplash.jpg",
-    description: "Panorama of Tomas Cocacola.",
-  },
-];
+type StrapiPanorama = {
+  slug: string;
+  title: string;
+  description?: string;
+  image?: {
+    url?: string;
+  };
+};
 
-export function getPanoramaBySlug(slug: string) {
-  return panoramas.find((panorama) => panorama.slug === slug);
+type StrapiResponse = {
+  data?: StrapiPanorama[];
+};
+
+const BASE_URL =
+  process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+
+function makeFullUrl(url?: string) {
+  if (!url) return "";
+  if (url.startsWith("http")) return url;
+  return `${BASE_URL}${url}`;
 }
+
+export async function getPanoramas(): Promise<PanoramaItem[]> {
+  const response = (await fetchAPI("panoramas")) as StrapiResponse;
+
+  return (response.data || []).map((item) => ({
+    slug: item.slug,
+    title: item.title,
+    description: item.description || "",
+    imageUrl: makeFullUrl(item.image?.url),
+  }));
+}
+
+export async function getPanoramaBySlug(slug: string): Promise<PanoramaItem | undefined> {
+  const panoramas = await getPanoramas();
+  return panoramas.find((panorama) => panorama.slug === slug);
+};

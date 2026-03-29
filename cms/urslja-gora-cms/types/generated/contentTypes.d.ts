@@ -665,6 +665,37 @@ export interface ApiNovicaNovica extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiPanoramaPanorama extends Struct.CollectionTypeSchema {
+  collectionName: 'panoramas';
+  info: {
+    displayName: 'Panorama';
+    pluralName: 'panoramas';
+    singularName: 'panorama';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    Description: Schema.Attribute.String;
+    image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::panorama.panorama'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    slug: Schema.Attribute.UID<'Title'>;
+    Title: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiPonudbePonudbe extends Struct.CollectionTypeSchema {
   collectionName: 'ponudbes';
   info: {
@@ -1218,6 +1249,7 @@ declare module '@strapi/strapi' {
       'api::dogodki.dogodki': ApiDogodkiDogodki;
       'api::global.global': ApiGlobalGlobal;
       'api::novica.novica': ApiNovicaNovica;
+      'api::panorama.panorama': ApiPanoramaPanorama;
       'api::ponudbe.ponudbe': ApiPonudbePonudbe;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;

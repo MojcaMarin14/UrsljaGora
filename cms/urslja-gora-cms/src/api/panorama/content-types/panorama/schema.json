@@ -1,0 +1,35 @@
+{
+  "kind": "collectionType",
+  "collectionName": "panoramas",
+  "info": {
+    "singularName": "panorama",
+    "pluralName": "panoramas",
+    "displayName": "Panorama"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Title": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "Title"
+    },
+    "Description": {
+      "type": "string"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    }
+  }
+}

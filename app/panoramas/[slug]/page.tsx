@@ -2,13 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import MarzipanoViewer from "@/components/MarzipanoViewer";
-import { getPanoramaBySlug, panoramas } from "@/lib/panoramas";
-
-export function generateStaticParams() {
-  return panoramas.map((panorama) => ({
-    slug: panorama.slug,
-  }));
-}
+import { getPanoramaBySlug } from "@/lib/panoramas";
 
 export default async function PanoramaViewerPage({
   params,
@@ -16,7 +10,7 @@ export default async function PanoramaViewerPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const panorama = getPanoramaBySlug(slug);
+  const panorama = await getPanoramaBySlug(slug);
 
   if (!panorama) {
     notFound();
@@ -53,7 +47,10 @@ export default async function PanoramaViewerPage({
           >
             Back to gallery
           </Link>
-          <h1 style={{ margin: 0, fontSize: "1.5rem" }}>{panorama.title}</h1>
+
+          <h1 style={{ margin: 0, fontSize: "1.5rem" }}>
+            {panorama.title}
+          </h1>
         </div>
 
         <p

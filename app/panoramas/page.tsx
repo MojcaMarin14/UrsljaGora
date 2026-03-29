@@ -1,9 +1,12 @@
+import { getPanoramas } from "@/lib/panoramas";
 import Image from "next/image";
 import Link from "next/link";
 
-import { panoramas } from "@/lib/panoramas";
+//import { panoramas } from "@/lib/panoramas";
 
-export default function PanoramaPage() {
+export default async function PanoramaPage() {
+  const panoramas = await getPanoramas();
+
   return (
     <main
       style={{
@@ -68,11 +71,12 @@ export default function PanoramaPage() {
             >
               <div style={{ position: "relative", aspectRatio: "16 / 9" }}>
                 <Image
-                  src={panorama.imageUrl}
+                   src={panorama.imageUrl}
                   alt={panorama.title}
                   fill
                   sizes="(max-width: 768px) 100vw, 33vw"
                   style={{ objectFit: "cover" }}
+                  unoptimized //strapi image URLs are not compatible with Nextjs img optimization??
                 />
               </div>
 
