@@ -72,7 +72,7 @@ export default async function PanoramaPage() {
               <div style={{ position: "relative", aspectRatio: "16 / 9" }}>
                 <Image
                    src={panorama.imageUrl}
-                  alt={panorama.title}
+                  alt={panorama.title || "Panorama image"} //alt image fallback ce ni definiran v cms 
                   fill
                   sizes="(max-width: 768px) 100vw, 33vw"
                   style={{ objectFit: "cover" }}
