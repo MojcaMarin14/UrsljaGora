@@ -1,5 +1,6 @@
 export const dynamic = "force-dynamic";
 
+import Footer from "@/app/components/Footer";
 import { fetchAPI, getStrapiMedia } from "@/lib/api";
 
 export default async function NovicaDetailPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -50,6 +51,7 @@ export default async function NovicaDetailPage({ params }: { params: Promise<{ s
           {a.opis}
         </div>
       )}
+       <Footer />
     </main>
   );
 }

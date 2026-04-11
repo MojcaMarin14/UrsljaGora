@@ -1,5 +1,6 @@
 import { fetchAPI, getStrapiMedia } from "@/lib/api";
 import Link from "next/link";
+import Footer from "@/app/components/Footer";
 
 export default async function PonudbePage() {
   const res = await fetchAPI("ponudbes?populate=*&sort=veljavnost:desc");
@@ -81,6 +82,7 @@ export default async function PonudbePage() {
           })}
         </div>
       </div>
+       <Footer />
     </main>
   );
 }

@@ -1,3 +1,4 @@
+import Footer from "@/app/components/Footer";
 import { fetchAPI, getStrapiMedia } from "@/lib/api";
 import Link from "next/link";
 
@@ -95,6 +96,8 @@ export default async function DogodkiPage() {
           );
         })}
       </div>
+       <Footer />
     </main>
+
   );
 }

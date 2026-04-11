@@ -1,3 +1,4 @@
+import Footer from "@/app/components/Footer";
 import { fetchAPI, getStrapiMedia } from "@/lib/api";
 
 export default async function PonudbaDetailPage(props: { params: Promise<{ id: string }> }) {
@@ -37,6 +38,7 @@ export default async function PonudbaDetailPage(props: { params: Promise<{ id: s
           {ponudba.opis}
         </div>
       )}
+       <Footer />
     </main>
   );
 }

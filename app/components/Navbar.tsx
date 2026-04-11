@@ -15,6 +15,9 @@ export default function Navbar() {
           <a href="/onas" className="text-white hover:text-[var(--brand)] transition text-lg">
             O nas
           </a>
+           <a href="/onas/jedilnik" className="text-white hover:text-[var(--brand)] transition text-lg">
+            Jedilnik
+          </a>
 
           <a href="/aktualno" className="text-white hover:text-[var(--brand)] transition text-lg">
             Aktualno
@@ -36,9 +39,7 @@ export default function Navbar() {
             Kontakt
           </a>
 
-          <a href="/politikaZasebnosti" className="text-white hover:text-[var(--brand)] transition text-lg">
-            Politika zasebnosti
-          </a>
+      
 
         </div>
       </div>

@@ -1,4 +1,5 @@
 
+import Footer from "@/app/components/Footer";
 import { fetchAPI, getStrapiMedia } from "@/lib/api";
 
 export default async function DogodekDetailPage({
@@ -71,6 +72,7 @@ export default async function DogodekDetailPage({
           {a.opis}
         </div>
       )}
+      <Footer />
     </main>
   );
 }
