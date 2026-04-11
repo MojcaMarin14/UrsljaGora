@@ -1,5 +1,5 @@
 
-import { fetchAPI } from "@/lib/api";
+import { fetchAPI, getStrapiMedia } from "@/lib/api";
 
 export default async function DogodekDetailPage({
   params,
@@ -59,7 +59,7 @@ export default async function DogodekDetailPage({
       {img && (
         <div className="w-full rounded-xl overflow-hidden">
           <img
-            src={`http://localhost:1337${img}`}
+            src={getStrapiMedia(img)}
             className="w-full h-auto max-h-[450px] object-cover"
           />
         </div>

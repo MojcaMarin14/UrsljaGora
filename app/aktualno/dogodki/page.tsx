@@ -1,9 +1,8 @@
-import { fetchAPI } from "@/lib/api";
+import { fetchAPI, getStrapiMedia } from "@/lib/api";
 import Link from "next/link";
 
 export default async function DogodkiPage() {
   const res = await fetchAPI("dogodkis?populate=*&sort=datum:desc");
-
   const dogodki = res.data;
 
   return (
@@ -55,7 +54,7 @@ export default async function DogodkiPage() {
               {img && (
                 <Link href={`/aktualno/dogodki/${item.id}`}>
                   <img
-                    src={`http://localhost:1337${img}`}
+                    src={getStrapiMedia(img)}
                     className="w-full h-56 object-cover hover:scale-105 transition-transform duration-300"
                   />
                 </Link>

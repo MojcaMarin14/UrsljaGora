@@ -1,4 +1,4 @@
-import { fetchAPI } from "@/lib/api";
+import { fetchAPI, getStrapiMedia } from "@/lib/api";
 import Link from "next/link";
 
 export default async function NovicePage() {
@@ -49,7 +49,7 @@ export default async function NovicePage() {
 
         {sorted.map((a: any) => {
           const img = a.slika?.url
-            ? `http://localhost:1337${a.slika.url}`
+            ? getStrapiMedia(a.slika.url)
             : "/fallback.jpg";
 
           const excerpt = a.opis

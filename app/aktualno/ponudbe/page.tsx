@@ -1,4 +1,4 @@
-import { fetchAPI } from "@/lib/api";
+import { fetchAPI, getStrapiMedia } from "@/lib/api";
 import Link from "next/link";
 
 export default async function PonudbePage() {
@@ -51,7 +51,7 @@ export default async function PonudbePage() {
                 {img && (
                   <Link href={`/aktualno/ponudbe/${item.id}`}>
                     <img
-                      src={`http://localhost:1337${img}`}
+                      src={getStrapiMedia(img)}
                       className="w-full h-56 object-cover"
                       alt={item.naslov}
                     />

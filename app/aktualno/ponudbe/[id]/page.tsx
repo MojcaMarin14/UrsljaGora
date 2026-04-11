@@ -1,4 +1,4 @@
-import { fetchAPI } from "@/lib/api";
+import { fetchAPI, getStrapiMedia } from "@/lib/api";
 
 export default async function PonudbaDetailPage(props: { params: Promise<{ id: string }> }) {
   const { id } = await props.params;
@@ -27,7 +27,7 @@ export default async function PonudbaDetailPage(props: { params: Promise<{ id: s
 
       {img && (
         <img
-          src={`http://localhost:1337${img}`}
+          src={getStrapiMedia(img)}
           className="mt-3 rounded-md max-h-96 object-cover"
         />
       )}

@@ -1,6 +1,6 @@
 export const dynamic = "force-dynamic";
 
-import { fetchAPI } from "@/lib/api";
+import { fetchAPI, getStrapiMedia } from "@/lib/api";
 
 export default async function NovicaDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -40,7 +40,7 @@ export default async function NovicaDetailPage({ params }: { params: Promise<{ s
 
       {img && (
         <img
-          src={`http://localhost:1337${img}`}
+          src={getStrapiMedia(img)}
           className="mt-3 rounded-md max-h-96 object-cover"
         />
       )}

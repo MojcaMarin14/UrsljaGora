@@ -1,4 +1,4 @@
-import { fetchAPI } from "@/lib/api";
+import { fetchAPI, getStrapiMedia } from "@/lib/api";
 import Link from "next/link";
 
 export default async function AktualnoPage() {
@@ -13,33 +13,29 @@ export default async function AktualnoPage() {
   return (
     <main className="w-full">
 
-     <section className="relative w-full h-[70vh] md:h-[85vh] overflow-hidden">
+      {/* HERO VIDEO */}
+      <section className="relative w-full h-[70vh] md:h-[85vh] overflow-hidden">
+        <video
+          className="absolute inset-0 w-full h-full object-cover"
+          src="/aktualno.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+        />
 
-  {/* VIDEO */}
-  <video
-    className="absolute inset-0 w-full h-full object-cover"
-    src="/aktualno.mp4"
-    autoPlay
-    muted
-    loop
-    playsInline
-  />
+        <div className="absolute inset-0 bg-black/40"></div>
 
-  {/* TEMNI GRADIENT ZA BOLJŠO BERLJIVOST */}
-  <div className="absolute inset-0 bg-black/40"></div>
+        <div className="relative z-10 flex flex-col items-center justify-center h-full text-white text-center px-6">
+          <h1 className="text-5xl md:text-6xl font-bold drop-shadow-lg">
+            Aktualno
+          </h1>
 
-  {/* TEKST NA VRHU VIDEA */}
-  <div className="relative z-10 flex flex-col items-center justify-center h-full text-white text-center px-6">
-    <h1 className="text-5xl md:text-6xl font-bold drop-shadow-lg">
-      Aktualno
-    </h1>
-
-    <p className="mt-4 text-lg md:text-2xl max-w-2xl drop-shadow-lg">
-      Izberite kategorijo aktualnih vsebin naše koče.
-    </p>
-  </div>
-</section>
-
+          <p className="mt-4 text-lg md:text-2xl max-w-2xl drop-shadow-lg">
+            Izberite kategorijo aktualnih vsebin naše koče.
+          </p>
+        </div>
+      </section>
 
       {/* BLOK 1 — NOVICE */}
       <section className="w-full bg-[#e8f7e1] py-20 px-6">
@@ -48,7 +44,7 @@ export default async function AktualnoPage() {
           <img
             src={
               zadnjaNovica?.slika?.url
-                ? `http://localhost:1337${zadnjaNovica.slika.url}`
+                ? getStrapiMedia(zadnjaNovica.slika.url)
                 : "/fallback.jpg"
             }
             className="w-full h-72 object-cover rounded-xl shadow"
@@ -81,7 +77,7 @@ export default async function AktualnoPage() {
           <img
             src={
               zadnjaPonudba?.slika?.[0]?.url
-                ? `http://localhost:1337${zadnjaPonudba.slika[0].url}`
+                ? getStrapiMedia(zadnjaPonudba.slika[0].url)
                 : "/fallback.jpg"
             }
             className="w-full h-72 object-cover rounded-xl shadow"
@@ -114,7 +110,7 @@ export default async function AktualnoPage() {
           <img
             src={
               zadnjiDogodek?.slika?.[0]?.url
-                ? `http://localhost:1337${zadnjiDogodek.slika[0].url}`
+                ? getStrapiMedia(zadnjiDogodek.slika[0].url)
                 : "/fallback.jpg"
             }
             className="w-full h-72 object-cover rounded-xl shadow"

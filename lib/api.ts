@@ -14,3 +14,13 @@ export async function fetchAPI(path: string) {
 
   return res.json();
 }
+
+export function getStrapiMedia(url: string) {
+  // If URL is already a full URL (starts with http), return as is
+  if (url && url.startsWith('http')) {
+    return url;
+  }
+  // Otherwise, prefix with Strapi base URL
+  const base = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+  return `${base}${url}`;
+}
