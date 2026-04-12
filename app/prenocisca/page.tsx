@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence, Variants } from "framer-motion";
+import type { Transition } from "framer-motion";
 import { useState } from "react";
 
 const GOLD = "#c9a96e";
@@ -198,6 +199,7 @@ function RoomGallery({ images, roomName }: { images: string[]; roomName: string 
   );
 }
 
+// ── Fixed: use cubic-bezier array instead of string "easeOut" to satisfy framer-motion's Easing type ──
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 36 },
   show: {
@@ -205,7 +207,7 @@ const fadeUp: Variants = {
     y: 0,
     transition: {
       duration: 0.8,
-      ease: "easeOut" as const,
+      ease: [0.25, 0.1, 0.25, 1] as Transition["ease"],
     },
   },
 };
