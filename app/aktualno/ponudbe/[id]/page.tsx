@@ -23,6 +23,15 @@ export default async function PonudbaDetailPage(props: { params: Promise<{ id: s
   return (
     <main className="max-w-4xl mx-auto py-10 space-y-4">
       <div className="pt-32"></div>
+          <nav className="text-sm text-[var(--text-main)] mb-6">
+  <a href="/" className="hover:text-[var(--text-link)]">Domov</a>
+  <span className="mx-2">/</span>
+  <a href="/aktualno" className="hover:text-[var(--text-link)]">Aktualno</a>
+  <span className="mx-2">/</span>
+  <a href="/aktualno/dogodki" className="hover:text-[var(--text-link)]">Dogodki</a>
+  <span className="mx-2">/</span>
+  <span className="text-[var(--text-heading)]">{ponudba.naslov}</span>
+</nav>
 
       <h1 className="text-3xl font-bold">{ponudba.naslov}</h1>
 
