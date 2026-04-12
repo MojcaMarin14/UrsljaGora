@@ -285,7 +285,7 @@ export default function HomePage() {
             {[
               { label: "O nas", sub: "Zgodba & tradicija", href: "/onas", img: "/onas1.jpg" },
               { label: "Jedilnik", sub: "Hrana & pijača", href: "/onas/jedilnik", img: "/meni2.jpg" },
-              { label: "Prenočišča", sub: "Počitek na vrhu", href: "/prenočišča", img: "/koca.jpg" },
+              { label: "Prenočišča", sub: "Počitek na vrhu", href: "/prenocisca", img: "/koca.jpg" },
               { label: "Kontakt", sub: "Kako do nas", href: "/kontakt", img: "/razgled.jpg" },
             ].map((item, i) => (
               <motion.a

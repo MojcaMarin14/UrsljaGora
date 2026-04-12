@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Footer from "@/app/components/Footer";
+import { ContactForm } from "@/app/components/ContactForm";
 
 export default function KontaktPage() {
   const fadeUp = {
@@ -259,6 +260,13 @@ export default function KontaktPage() {
           allowFullScreen
           src="https://www.google.com/maps?q=Jazbina+19,+2393+Črna+na+Koroškem&output=embed"
         />
+      </section>
+        <div className="w-20 h-[2px] bg-[#d4b676] mb-10 rounded-full" />
+      <section>
+        <div>
+          <ContactForm />
+        </div>
+
       </section>
 
       <Footer dark />
