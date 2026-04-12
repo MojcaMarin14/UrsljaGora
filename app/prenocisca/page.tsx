@@ -72,17 +72,14 @@ const rooms = [
   },
 ];
 
-// Adaptive gallery: shows only as many slots as there are images, no empty cells, no "+X" button
 function RoomGallery({ images, roomName }: { images: string[]; roomName: string }) {
   const [lightbox, setLightbox] = useState<number | null>(null);
   const count = images.length;
 
-  // Layout configs based on image count
   const getGridStyle = (): React.CSSProperties => {
     if (count === 1) return { display: "grid", gridTemplateColumns: "1fr", gridTemplateRows: "360px", gap: 3, borderRadius: 18, overflow: "hidden" };
     if (count === 2) return { display: "grid", gridTemplateColumns: "1fr 1fr", gridTemplateRows: "330px", gap: 3, borderRadius: 18, overflow: "hidden" };
     if (count === 3) return { display: "grid", gridTemplateColumns: "1fr 1fr", gridTemplateRows: "220px 160px", gap: 3, borderRadius: 18, overflow: "hidden" };
-    // 4+
     return { display: "grid", gridTemplateColumns: "1fr 1fr", gridTemplateRows: "220px 110px", gap: 3, borderRadius: 18, overflow: "hidden" };
   };
 
@@ -90,9 +87,13 @@ function RoomGallery({ images, roomName }: { images: string[]; roomName: string 
 
   const Cell = ({ index, style }: { index: number; style?: React.CSSProperties }) => (
     <motion.div onClick={() => setLightbox(index)} style={{ overflow: "hidden", cursor: "pointer", ...style }}>
-      <motion.img src={images[index]} alt={`${roomName} ${index + 1}`}
-        whileHover={{ scale: 1.05 }} transition={{ duration: 0.5 }}
-        style={imgStyle} />
+      <motion.img
+        src={images[index]}
+        alt={`${roomName} ${index + 1}`}
+        whileHover={{ scale: 1.05 }}
+        transition={{ duration: 0.5 }}
+        style={imgStyle}
+      />
     </motion.div>
   );
 
@@ -110,9 +111,7 @@ function RoomGallery({ images, roomName }: { images: string[]; roomName: string 
 
         {count === 3 && (
           <>
-            {/* Big left spanning both rows */}
             <Cell index={0} style={{ gridColumn: "1", gridRow: "1 / 3" }} />
-            {/* Two stacked right */}
             <Cell index={1} style={{ gridColumn: "2", gridRow: "1" }} />
             <Cell index={2} style={{ gridColumn: "2", gridRow: "2" }} />
           </>
@@ -120,14 +119,11 @@ function RoomGallery({ images, roomName }: { images: string[]; roomName: string 
 
         {count >= 4 && (
           <>
-            {/* Big left */}
             <Cell index={0} style={{ gridColumn: "1", gridRow: "1 / 3" }} />
-            {/* Top-right: up to 2 */}
             <div style={{ gridColumn: "2", gridRow: "1", display: "grid", gridTemplateColumns: count >= 3 ? "1fr 1fr" : "1fr", gap: 3 }}>
               <Cell index={1} />
               {count >= 3 && <Cell index={2} />}
             </div>
-            {/* Bottom-right: remaining, max 3 */}
             <div style={{ gridColumn: "2", gridRow: "2", display: "grid", gridTemplateColumns: `repeat(${Math.min(count - 3, 3)}, 1fr)`, gap: 3 }}>
               {images.slice(3, 6).map((_, i) => (
                 <Cell key={i} index={i + 3} />
@@ -137,44 +133,61 @@ function RoomGallery({ images, roomName }: { images: string[]; roomName: string 
         )}
       </div>
 
-      {/* Thumbnails strip below gallery (only if 2+ images) */}
       {count > 1 && (
         <div style={{ display: "flex", gap: 6, marginTop: 8, flexWrap: "wrap" }}>
           {images.map((img, i) => (
-            <motion.img key={i} src={img} alt="" onClick={() => setLightbox(i)}
+            <motion.img
+              key={i}
+              src={img}
+              alt=""
+              onClick={() => setLightbox(i)}
               whileHover={{ opacity: 1 }}
-              style={{ width: 52, height: 36, objectFit: "cover", borderRadius: 6, cursor: "pointer", opacity: 0.55, transition: "opacity 0.2s" }} />
+              style={{ width: 52, height: 36, objectFit: "cover", borderRadius: 6, cursor: "pointer", opacity: 0.55, transition: "opacity 0.2s" }}
+            />
           ))}
         </div>
       )}
 
-      {/* Lightbox */}
       <AnimatePresence>
         {lightbox !== null && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             onClick={() => setLightbox(null)}
-            style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(17,16,8,0.95)", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
-            <motion.div initial={{ scale: 0.93, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.93, opacity: 0 }}
-              transition={{ duration: 0.28 }} onClick={e => e.stopPropagation()}
-              style={{ position: "relative", maxWidth: 900, width: "100%" }}>
-              <img src={images[lightbox]} alt={roomName}
-                style={{ width: "100%", borderRadius: 12, display: "block", maxHeight: "78vh", objectFit: "contain" }} />
+            style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(17,16,8,0.95)", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}
+          >
+            <motion.div
+              initial={{ scale: 0.93, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.93, opacity: 0 }}
+              transition={{ duration: 0.28 }}
+              onClick={e => e.stopPropagation()}
+              style={{ position: "relative", maxWidth: 900, width: "100%" }}
+            >
+              <img
+                src={images[lightbox]} alt={roomName}
+                style={{ width: "100%", borderRadius: 12, display: "block", maxHeight: "78vh", objectFit: "contain" }}
+              />
               {lightbox > 0 && (
-                <button onClick={() => setLightbox(l => l !== null ? l - 1 : null)}
-                  style={{ position: "absolute", left: -48, top: "50%", transform: "translateY(-50%)", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "white", width: 36, height: 36, borderRadius: "50%", cursor: "pointer", fontSize: 18 }}>‹</button>
+                <button
+                  onClick={() => setLightbox(l => l !== null ? l - 1 : null)}
+                  style={{ position: "absolute", left: -48, top: "50%", transform: "translateY(-50%)", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "white", width: 36, height: 36, borderRadius: "50%", cursor: "pointer", fontSize: 18 }}
+                >‹</button>
               )}
               {lightbox < images.length - 1 && (
-                <button onClick={() => setLightbox(l => l !== null ? l + 1 : null)}
-                  style={{ position: "absolute", right: -48, top: "50%", transform: "translateY(-50%)", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "white", width: 36, height: 36, borderRadius: "50%", cursor: "pointer", fontSize: 18 }}>›</button>
+                <button
+                  onClick={() => setLightbox(l => l !== null ? l + 1 : null)}
+                  style={{ position: "absolute", right: -48, top: "50%", transform: "translateY(-50%)", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "white", width: 36, height: 36, borderRadius: "50%", cursor: "pointer", fontSize: 18 }}
+                >›</button>
               )}
-              <button onClick={() => setLightbox(null)}
-                style={{ position: "absolute", top: -40, right: 0, background: "none", border: "none", color: "rgba(255,255,255,0.55)", fontSize: 13, cursor: "pointer", letterSpacing: "0.08em", textTransform: "uppercase" }}>
-                ✕ zapri
-              </button>
+              <button
+                onClick={() => setLightbox(null)}
+                style={{ position: "absolute", top: -40, right: 0, background: "none", border: "none", color: "rgba(255,255,255,0.55)", fontSize: 13, cursor: "pointer", letterSpacing: "0.08em", textTransform: "uppercase" }}
+              >✕ zapri</button>
               <div style={{ display: "flex", gap: 6, marginTop: 14, justifyContent: "center", flexWrap: "wrap" }}>
                 {images.map((img, i) => (
-                  <motion.img key={i} src={img} alt="" onClick={() => setLightbox(i)} whileHover={{ opacity: 1 }}
-                    style={{ width: 56, height: 40, objectFit: "cover", borderRadius: 6, cursor: "pointer", opacity: i === lightbox ? 1 : 0.38, outline: i === lightbox ? `2px solid ${GOLD}` : "none", transition: "opacity 0.2s" }} />
+                  <motion.img
+                    key={i} src={img} alt="" onClick={() => setLightbox(i)}
+                    whileHover={{ opacity: 1 }}
+                    style={{ width: 56, height: 40, objectFit: "cover", borderRadius: 6, cursor: "pointer", opacity: i === lightbox ? 1 : 0.38, outline: i === lightbox ? `2px solid ${GOLD}` : "none", transition: "opacity 0.2s" }}
+                  />
                 ))}
               </div>
             </motion.div>
@@ -189,7 +202,8 @@ const fadeUp: Variants = {
   hidden: { opacity: 0, y: 36 },
   show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } },
 };
-const stagger = {
+
+const stagger: Variants = {
   hidden: {},
   show: { transition: { staggerChildren: 0.14 } },
 };
@@ -203,8 +217,11 @@ export default function PrenociscaPage() {
         <img src="/drone1.jpg" alt="Prenočišča"
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(17,16,8,0.3) 0%, rgba(17,16,8,0.72) 100%)" }} />
-        <motion.div initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.2 }}
-          style={{ position: "relative", zIndex: 10, height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "0 24px" }}>
+        <motion.div
+          initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.2 }}
+          style={{ position: "relative", zIndex: 10, height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "0 24px" }}
+        >
           <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 20 }}>
             <div style={{ width: 32, height: 1, background: "rgba(201,169,110,0.6)" }} />
             <span style={{ fontSize: 11, letterSpacing: "0.26em", textTransform: "uppercase", color: "rgba(201,169,110,0.85)", fontWeight: 500 }}>Uršlja gora · Koroška</span>
@@ -221,18 +238,20 @@ export default function PrenociscaPage() {
 
       {/* ── SOBE ── */}
       <section style={{ backgroundColor: "white", padding: "80px 24px 100px" }}>
-        <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-40px" }}
-          style={{ maxWidth: 1040, margin: "0 auto", display: "flex", flexDirection: "column", gap: 88 }}>
+        <motion.div
+          variants={stagger} initial="hidden" whileInView="show"
+          viewport={{ once: true, margin: "-40px" }}
+          style={{ maxWidth: 1040, margin: "0 auto", display: "flex", flexDirection: "column", gap: 88 }}
+        >
           {rooms.map((room, idx) => (
-            <motion.div key={room.id} variants={fadeUp}
-              style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 56, alignItems: "start" }}>
-
-              {/* Gallery */}
+            <motion.div
+              key={room.id} variants={fadeUp}
+              style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 56, alignItems: "start" }}
+            >
               <div style={{ order: idx % 2 === 1 ? 2 : 1 }}>
                 <RoomGallery images={room.images} roomName={room.name} />
               </div>
 
-              {/* Info */}
               <div style={{ order: idx % 2 === 1 ? 1 : 2, paddingTop: 6 }}>
                 <SectionLabel text={room.type} />
                 <h2 style={{ fontSize: "clamp(22px, 3vw, 34px)", fontWeight: 500, color: DARK, letterSpacing: "-0.025em", lineHeight: 1.2, marginBottom: 14, marginTop: 0 }}>
@@ -270,9 +289,11 @@ export default function PrenociscaPage() {
 
       {/* ── INFO BANNER ── */}
       <section style={{ backgroundColor: DARK, padding: "72px 24px" }}>
-        <motion.div initial={{ opacity: 0, y: 32 }} whileInView={{ opacity: 1, y: 0 }}
+        <motion.div
+          initial={{ opacity: 0, y: 32 }} whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }} transition={{ duration: 0.8 }}
-          style={{ maxWidth: 860, margin: "0 auto" }}>
+          style={{ maxWidth: 860, margin: "0 auto" }}
+        >
           <SectionLabel text="Informacije" light />
           <h2 style={{ fontSize: "clamp(24px, 4vw, 38px)", fontWeight: 500, color: "white", letterSpacing: "-0.025em", marginBottom: 40 }}>
             Praktične <span style={{ color: GOLD }}>informacije</span>
