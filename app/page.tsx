@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, Variants } from "framer-motion";
 import { useRef } from "react";
 import Footer from "./components/Footer";
 import SeasonsSection from "./components/SeasonsSection";
@@ -61,7 +61,7 @@ export default function HomePage() {
   const textY = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
-const fadeUp = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 44 },
   show: { opacity: 1, y: 0, transition: { duration: 0.85, ease: "easeOut" as const } },
 };
