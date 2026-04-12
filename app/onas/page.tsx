@@ -74,7 +74,7 @@ export default function ONasPage() {
 
   const fadeUp = {
     hidden: { opacity: 0, y: 50 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.25, 0.1, 0.25, 1] as any } },
+    show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" as any } },
   };
 
   const stagger = {

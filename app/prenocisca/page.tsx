@@ -187,7 +187,7 @@ function RoomGallery({ images, roomName }: { images: string[]; roomName: string 
 
 const fadeUp = {
   hidden: { opacity: 0, y: 36 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.25, 0.1, 0.25, 1] } },
+  show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } },
 };
 const stagger = {
   hidden: {},

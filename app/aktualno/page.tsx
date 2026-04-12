@@ -61,7 +61,7 @@ function FeaturedCard({ img, category, title, excerpt, href }: {
     <motion.div
       initial={{ opacity: 0, y: 32 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
       style={{ position: "relative", borderRadius: 24, overflow: "hidden", gridRow: "span 2" }}
     >
       <Link href={href} style={{ display: "block", textDecoration: "none", height: "100%" }}>
@@ -110,7 +110,7 @@ function SmallCard({ img, category, title, excerpt, href, delay = 0 }: {
     <motion.div
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay, ease: [0.25, 0.1, 0.25, 1] }}
+     transition={{ duration: 0.5, delay, ease: "easeOut" }}
       whileHover={{ y: -4 }}
       style={{
         background: "white", borderRadius: 20, overflow: "hidden",

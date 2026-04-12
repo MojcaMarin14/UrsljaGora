@@ -34,8 +34,7 @@ function FeaturedCard({ img, title, excerpt, href, datum }: {
       initial={{ opacity: 0, y: 32 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.75, ease: [0.25, 0.1, 0.25, 1] }}
-      style={{ position: "relative", borderRadius: 24, overflow: "hidden", gridColumn: "1 / -1" }}
+transition={{ duration: 0.75, ease: "easeOut" }}      style={{ position: "relative", borderRadius: 24, overflow: "hidden", gridColumn: "1 / -1" }}
     >
       <Link href={href} style={{ display: "block", textDecoration: "none" }}>
         <motion.img
@@ -87,8 +86,7 @@ function NewsCard({ img, title, excerpt, href, datum, delay = 0 }: {
       initial={{ opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.65, delay, ease: [0.25, 0.1, 0.25, 1] }}
-      whileHover={{ y: -6 }}
+transition={{ duration: 0.65, delay, ease: "easeOut" }}      whileHover={{ y: -6 }}
       style={{
         background: "white", borderRadius: 20, overflow: "hidden",
         border: "1px solid rgba(0,0,0,0.07)", display: "flex", flexDirection: "column",

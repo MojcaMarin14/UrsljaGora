@@ -61,10 +61,10 @@ export default function HomePage() {
   const textY = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
-  const fadeUp = {
-    hidden: { opacity: 0, y: 44 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.85, ease: [0.25, 0.1, 0.25, 1] } },
-  };
+const fadeUp = {
+  hidden: { opacity: 0, y: 44 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.85, ease: "easeOut" as const } },
+};
   const stagger = {
     hidden: {},
     show: { transition: { staggerChildren: 0.13 } },
