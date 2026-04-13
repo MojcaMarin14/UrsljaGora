@@ -252,18 +252,7 @@ function arrowBtn(side: "left" | "right"): React.CSSProperties {
    DATA
 ───────────────────────────────────────── */
 const rooms = [
-  {
-    id: 1,
-    name: "Skupna soba",
-    type: "Dormitorij · Bunk beds",
-    desc: "Planinska skupna soba z lesenimi posteljami v nadstropju — v pravem duhu gorskih koč. Primerna za pohodniške skupine in posameznike, ki iščejo preprost in topel kotiček po vzponu.",
-    details: [
-      { icon: "🛏️", label: "Postelje",    value: "Bunk beds (lesene nadstropne postelje)" },
-      { icon: "👥", label: "Kapaciteta",  value: "Do 8 oseb" },
-    ],
-    amenities: ["Skupna kopalnica", "Skupni WC", "Posteljnina", "Omarica z ključavnico"],
-    images: ["/soba-skupna1.jpg", "/soba-skupna2.jpg"],
-  },
+
   {
     id: 2,
     name: "Samostojne sobe",
