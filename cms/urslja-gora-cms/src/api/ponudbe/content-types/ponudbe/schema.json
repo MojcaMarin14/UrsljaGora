@@ -23,6 +23,15 @@
     "veljavnost": {
       "type": "date"
     },
+    "kategorija": {
+      "type": "enumeration",
+      "enum": [
+        "Hrana",
+        "Prenočišče",
+        "Paket",
+        "Akcija"
+      ]
+    },
     "slika": {
       "type": "media",
       "multiple": true,

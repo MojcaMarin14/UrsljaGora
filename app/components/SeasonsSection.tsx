@@ -10,7 +10,7 @@ const seasons = {
   summer: {
     label: "Poletje",
     emoji: "☀️",
-    img: "/pohod.jpg",
+    img: "/pol1.jpg",
     color: "#e8f0e0",
     accent: "#5a8a3c",
     title: "Poletna doživetja",
@@ -26,7 +26,7 @@ const seasons = {
   winter: {
     label: "Zima",
     emoji: "❄️",
-    img: "/cebel.jpg",
+    img: "/zim1.jpg",
     color: "#e4eef5",
     accent: "#2a6a9e",
     title: "Zimska doživetja",

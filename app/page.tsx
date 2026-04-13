@@ -243,9 +243,9 @@ const fadeUp: Variants = {
             style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 24 }}
           >
             {[
-              { img: "/pohod.jpg", title: "Pohodništvo", desc: "Raznolike poti iz Kotlj, Naravskih ledin in Ivarčkega jezera – primerne za družine in izkušene pohodnike." },
-              { img: "/razgled.jpg", title: "Razgledi & fotografija", desc: "Eden najlepših razgledov na Koroško, Pohorje in Savinjsko dolino. Popolno za sončne vzhode in zahode." },
-              { img: "/koca.jpg", title: "Koča & domačnost", desc: "Topli obroki, čaj, sladice in prijeten kotiček za počitek po vzponu." },
+              { img: "/pol2.jpg", title: "Pohodništvo", desc: "Raznolike poti iz Kotlj, Naravskih ledin in Ivarčkega jezera – primerne za družine in izkušene pohodnike." },
+              { img: "/razg.jpg", title: "Razgledi & fotografija", desc: "Eden najlepših razgledov na Koroško, Pohorje in Savinjsko dolino. Popolno za sončne vzhode in zahode." },
+              { img: "/onas3.jpg", title: "Koča & domačnost", desc: "Topli obroki, čaj, sladice in prijeten kotiček za počitek po vzponu." },
             ].map((a, i) => (
               <motion.div key={i} variants={fadeUp}>
                 <ActivityCard {...a} />
@@ -301,10 +301,10 @@ const fadeUp: Variants = {
             style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}
           >
             {[
-              { label: "O nas", sub: "Zgodba & tradicija", href: "/onas", img: "/onas1.jpg" },
+              { label: "O nas", sub: "Zgodba & tradicija", href: "/onas", img: "/onas3.jpg" },
               { label: "Jedilnik", sub: "Hrana & pijača", href: "/onas/jedilnik", img: "/meni2.jpg" },
-              { label: "Prenočišča", sub: "Počitek na vrhu", href: "/prenocisca", img: "/koca.jpg" },
-              { label: "Kontakt", sub: "Kako do nas", href: "/kontakt", img: "/razgled.jpg" },
+              { label: "Prenočišča", sub: "Počitek na vrhu", href: "/prenocisca", img: "/pren1.jpg" },
+              { label: "Kontakt", sub: "Kako do nas", href: "/kontakt", img: "/kont.jpg" },
             ].map((item, i) => (
               <motion.a
                 key={i}

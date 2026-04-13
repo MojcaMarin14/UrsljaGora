@@ -4,11 +4,13 @@ import { motion } from "framer-motion";
 import Footer from "@/app/components/Footer";
 import { fetchAPI, getStrapiMedia } from "@/lib/api";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 const GOLD = "#c9a96e";
 const CREAM = "#f7f4ef";
 const DARK = "#111008";
+
+const PER_PAGE = 6;
 
 function SectionLabel({ text, light = false }: { text: string; light?: boolean }) {
   return (
@@ -25,7 +27,6 @@ function SectionLabel({ text, light = false }: { text: string; light?: boolean }
   );
 }
 
-// ── Velika featured kartica (prva novica) ──
 function FeaturedCard({ img, title, excerpt, href, datum }: {
   img: string; title: string; excerpt: string; href: string; datum?: string;
 }) {
@@ -34,7 +35,8 @@ function FeaturedCard({ img, title, excerpt, href, datum }: {
       initial={{ opacity: 0, y: 32 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-transition={{ duration: 0.75, ease: "easeOut" }}      style={{ position: "relative", borderRadius: 24, overflow: "hidden", gridColumn: "1 / -1" }}
+      transition={{ duration: 0.75, ease: [0.25, 0.1, 0.25, 1] }}
+      style={{ position: "relative", borderRadius: 24, overflow: "hidden", gridColumn: "1 / -1" }}
     >
       <Link href={href} style={{ display: "block", textDecoration: "none" }}>
         <motion.img
@@ -77,7 +79,6 @@ transition={{ duration: 0.75, ease: "easeOut" }}      style={{ position: "relati
   );
 }
 
-// ── Navadna kartica ──
 function NewsCard({ img, title, excerpt, href, datum, delay = 0 }: {
   img: string; title: string; excerpt: string; href: string; datum?: string; delay?: number;
 }) {
@@ -86,7 +87,8 @@ function NewsCard({ img, title, excerpt, href, datum, delay = 0 }: {
       initial={{ opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-transition={{ duration: 0.65, delay, ease: "easeOut" }}      whileHover={{ y: -6 }}
+      transition={{ duration: 0.65, delay, ease: [0.25, 0.1, 0.25, 1] }}
+      whileHover={{ y: -6 }}
       style={{
         background: "white", borderRadius: 20, overflow: "hidden",
         border: "1px solid rgba(0,0,0,0.07)", display: "flex", flexDirection: "column",
@@ -131,7 +133,6 @@ transition={{ duration: 0.65, delay, ease: "easeOut" }}      whileHover={{ y: -6
   );
 }
 
-// ── Navigacijska pills med Aktualno podstranmi ──
 function SubNav() {
   return (
     <div style={{ display: "flex", gap: 10, justifyContent: "center", marginBottom: 56 }}>
@@ -166,22 +167,142 @@ function SubNav() {
   );
 }
 
-// ── Ker je async + framer-motion, fetching naredimo v client wrapper ──
+// ── Search bar ──
+function SearchBar({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  return (
+    <div style={{ display: "flex", justifyContent: "center", marginBottom: 40 }}>
+      <div style={{
+        position: "relative", width: "100%", maxWidth: 420,
+      }}>
+        <span style={{
+          position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)",
+          color: "rgba(17,16,8,0.3)", fontSize: 15, pointerEvents: "none",
+        }}>🔍</span>
+        <input
+          type="text"
+          placeholder="Iskanje po novicah…"
+          value={value}
+          onChange={e => onChange(e.target.value)}
+          style={{
+            width: "100%",
+            padding: "12px 16px 12px 44px",
+            borderRadius: 999,
+            border: "1px solid rgba(17,16,8,0.12)",
+            background: "white",
+            fontSize: 14,
+            fontFamily: "sans-serif",
+            color: DARK,
+            outline: "none",
+            boxSizing: "border-box",
+            transition: "border-color 0.2s",
+          }}
+          onFocus={e => (e.target.style.borderColor = GOLD)}
+          onBlur={e => (e.target.style.borderColor = "rgba(17,16,8,0.12)")}
+        />
+        {value && (
+          <button
+            onClick={() => onChange("")}
+            style={{
+              position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)",
+              background: "none", border: "none", cursor: "pointer",
+              color: "rgba(17,16,8,0.3)", fontSize: 16, lineHeight: 1,
+            }}
+          >✕</button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── Pagination controls ──
+function Pagination({ page, totalPages, onChange }: { page: number; totalPages: number; onChange: (p: number) => void }) {
+  if (totalPages <= 1) return null;
+
+  return (
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 8, marginTop: 56 }}>
+      <button
+        onClick={() => onChange(page - 1)}
+        disabled={page === 1}
+        style={{
+          width: 38, height: 38, borderRadius: "50%",
+          border: "1px solid rgba(17,16,8,0.12)",
+          background: "white", cursor: page === 1 ? "default" : "pointer",
+          color: page === 1 ? "rgba(17,16,8,0.2)" : DARK,
+          fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center",
+          transition: "all 0.2s",
+        }}
+      >‹</button>
+
+      {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+        <button
+          key={p}
+          onClick={() => onChange(p)}
+          style={{
+            width: 38, height: 38, borderRadius: "50%",
+            border: p === page ? "none" : "1px solid rgba(17,16,8,0.12)",
+            background: p === page ? GOLD : "white",
+            color: p === page ? DARK : "rgba(17,16,8,0.5)",
+            fontWeight: p === page ? 700 : 400,
+            fontSize: 13, fontFamily: "sans-serif",
+            cursor: "pointer",
+            transition: "all 0.2s",
+          }}
+        >
+          {p}
+        </button>
+      ))}
+
+      <button
+        onClick={() => onChange(page + 1)}
+        disabled={page === totalPages}
+        style={{
+          width: 38, height: 38, borderRadius: "50%",
+          border: "1px solid rgba(17,16,8,0.12)",
+          background: "white", cursor: page === totalPages ? "default" : "pointer",
+          color: page === totalPages ? "rgba(17,16,8,0.2)" : DARK,
+          fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center",
+          transition: "all 0.2s",
+        }}
+      >›</button>
+    </div>
+  );
+}
+
 export default function NovicePage() {
   const [novice, setNovice] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
-  useEffect(() => {
-    fetchAPI("novicas?populate=*").then((res) => {
-      const sorted = [...(res.data ?? [])].sort(
-        (a: any, b: any) => new Date(b.datum).getTime() - new Date(a.datum).getTime()
-      );
-      setNovice(sorted);
-      setLoading(false);
-    });
+  // Ko se search spremeni, resetiraj na stran 1
+  const handleSearch = useCallback((v: string) => {
+    setSearch(v);
+    setPage(1);
   }, []);
 
+  useEffect(() => {
+    setLoading(true);
+
+    // Strapi v4 query: pagination + opcijsko filter po naslovu
+    const searchParam = search
+      ? `&filters[naslov][$containsi]=${encodeURIComponent(search)}`
+      : "";
+
+    fetchAPI(
+      `novicas?populate=*&sort=datum:desc&pagination[page]=${page}&pagination[pageSize]=${PER_PAGE}${searchParam}`
+    ).then((res) => {
+      setNovice(res.data ?? []);
+      const total = res.meta?.pagination?.pageCount ?? 1;
+      setTotalPages(total);
+      setLoading(false);
+    });
+  }, [page, search]);
+
+  // Featured je samo na prvi strani brez searcha
+  const showFeatured = page === 1 && !search;
   const [featured, ...rest] = novice;
+  const gridItems = showFeatured ? rest : novice;
 
   return (
     <main style={{ width: "100%", backgroundColor: CREAM, overflowX: "hidden" }}>
@@ -233,7 +354,6 @@ export default function NovicePage() {
           </motion.p>
         </div>
 
-        {/* Prehod v CREAM */}
         <div style={{
           position: "absolute", bottom: 0, left: 0, right: 0, height: 80,
           background: `linear-gradient(to bottom, transparent, ${CREAM})`,
@@ -244,7 +364,6 @@ export default function NovicePage() {
       <section style={{ backgroundColor: CREAM, padding: "64px 24px 100px" }}>
         <div style={{ maxWidth: 1152, margin: "0 auto" }}>
 
-          {/* Naslov + subnav */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -262,23 +381,24 @@ export default function NovicePage() {
           </motion.div>
 
           <SubNav />
+          <SearchBar value={search} onChange={handleSearch} />
 
-          {/* Loading state */}
+          {/* Loading */}
           {loading && (
             <div style={{ textAlign: "center", padding: "60px 0", color: "rgba(17,16,8,0.3)", fontFamily: "sans-serif", fontSize: 14, letterSpacing: "0.08em" }}>
               Nalaganje…
             </div>
           )}
 
-          {/* Prazno stanje */}
+          {/* Prazno */}
           {!loading && novice.length === 0 && (
             <div style={{ textAlign: "center", padding: "60px 0", color: "rgba(17,16,8,0.35)", fontFamily: "sans-serif" }}>
-              Trenutno ni objav.
+              {search ? `Ni rezultatov za "${search}".` : "Trenutno ni objav."}
             </div>
           )}
 
-          {/* Featured */}
-          {featured && (
+          {/* Featured — samo na strani 1 brez searcha */}
+          {!loading && showFeatured && featured && (
             <div style={{ marginBottom: 24 }}>
               <FeaturedCard
                 img={featured.slika?.url ? getStrapiMedia(featured.slika.url) : "/fallback.jpg"}
@@ -290,15 +410,15 @@ export default function NovicePage() {
             </div>
           )}
 
-          {/* Grid ostalih */}
-          {rest.length > 0 && (
+          {/* Grid */}
+          {!loading && gridItems.length > 0 && (
             <div style={{
               display: "grid",
               gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
               gap: 22,
               marginTop: 8,
             }}>
-              {rest.map((a: any, i: number) => (
+              {gridItems.map((a: any, i: number) => (
                 <NewsCard
                   key={a.id}
                   img={a.slika?.url ? getStrapiMedia(a.slika.url) : "/fallback.jpg"}
@@ -310,6 +430,18 @@ export default function NovicePage() {
                 />
               ))}
             </div>
+          )}
+
+          {/* Pagination */}
+          {!loading && (
+            <Pagination
+              page={page}
+              totalPages={totalPages}
+              onChange={(p) => {
+                setPage(p);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+            />
           )}
 
         </div>

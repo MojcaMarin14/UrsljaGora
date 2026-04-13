@@ -1,14 +1,17 @@
 "use client";
 
 import { motion } from "framer-motion";
+import type { Transition } from "framer-motion";
 import Footer from "@/app/components/Footer";
 import { fetchAPI, getStrapiMedia } from "@/lib/api";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 const GOLD = "#c9a96e";
 const CREAM = "#f7f4ef";
 const DARK = "#111008";
+
+const PER_PAGE = 6;
 
 function SectionLabel({ text, light = false }: { text: string; light?: boolean }) {
   return (
@@ -58,7 +61,91 @@ function SubNav() {
   );
 }
 
-// ── Datum + lokacija badge ──
+// ── Filter prihajajoči / pretekli ──
+type TimeFilter = "prihajajoči" | "pretekli";
+
+function TimeFilterPills({ active, onChange }: { active: TimeFilter; onChange: (v: TimeFilter) => void }) {
+  return (
+    <div style={{ display: "flex", gap: 8, justifyContent: "center", marginBottom: 40 }}>
+      {(["prihajajoči", "pretekli"] as TimeFilter[]).map((f) => (
+        <button
+          key={f}
+          onClick={() => onChange(f)}
+          style={{
+            padding: "8px 20px",
+            borderRadius: 999,
+            fontSize: 12,
+            fontWeight: 600,
+            letterSpacing: "0.05em",
+            textTransform: "uppercase",
+            fontFamily: "sans-serif",
+            cursor: "pointer",
+            border: active === f ? "none" : "1px solid rgba(17,16,8,0.12)",
+            background: active === f ? DARK : "white",
+            color: active === f ? "white" : "rgba(17,16,8,0.45)",
+            transition: "all 0.2s",
+          }}
+        >
+          {f === "prihajajoči" ? "🗓 Prihajajoči" : "📁 Pretekli"}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+// ── Pagination ──
+function Pagination({ page, totalPages, onChange }: { page: number; totalPages: number; onChange: (p: number) => void }) {
+  if (totalPages <= 1) return null;
+  return (
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 8, marginTop: 56 }}>
+      <button
+        onClick={() => onChange(page - 1)}
+        disabled={page === 1}
+        style={{
+          width: 38, height: 38, borderRadius: "50%",
+          border: "1px solid rgba(17,16,8,0.12)",
+          background: "white", cursor: page === 1 ? "default" : "pointer",
+          color: page === 1 ? "rgba(17,16,8,0.2)" : DARK,
+          fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center",
+          transition: "all 0.2s",
+        }}
+      >‹</button>
+
+      {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+        <button
+          key={p}
+          onClick={() => onChange(p)}
+          style={{
+            width: 38, height: 38, borderRadius: "50%",
+            border: p === page ? "none" : "1px solid rgba(17,16,8,0.12)",
+            background: p === page ? GOLD : "white",
+            color: p === page ? DARK : "rgba(17,16,8,0.5)",
+            fontWeight: p === page ? 700 : 400,
+            fontSize: 13, fontFamily: "sans-serif",
+            cursor: "pointer",
+            transition: "all 0.2s",
+          }}
+        >
+          {p}
+        </button>
+      ))}
+
+      <button
+        onClick={() => onChange(page + 1)}
+        disabled={page === totalPages}
+        style={{
+          width: 38, height: 38, borderRadius: "50%",
+          border: "1px solid rgba(17,16,8,0.12)",
+          background: "white", cursor: page === totalPages ? "default" : "pointer",
+          color: page === totalPages ? "rgba(17,16,8,0.2)" : DARK,
+          fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center",
+          transition: "all 0.2s",
+        }}
+      >›</button>
+    </div>
+  );
+}
+
 function EventMeta({ datum, lokacija, light = false }: { datum?: string; lokacija?: string; light?: boolean }) {
   const color = light ? "rgba(201,169,110,0.75)" : "rgba(17,16,8,0.35)";
   if (!datum && !lokacija) return null;
@@ -71,7 +158,6 @@ function EventMeta({ datum, lokacija, light = false }: { datum?: string; lokacij
   );
 }
 
-// ── Featured (prvi dogodek) ──
 function FeaturedCard({ img, title, excerpt, href, datum, lokacija }: {
   img: string; title: string; excerpt: string; href: string; datum?: string; lokacija?: string;
 }) {
@@ -80,7 +166,7 @@ function FeaturedCard({ img, title, excerpt, href, datum, lokacija }: {
       initial={{ opacity: 0, y: 32 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-    transition={{ duration: 0.75, ease: "easeOut" }}
+      transition={{ duration: 0.75, ease: [0.25, 0.1, 0.25, 1] as Transition["ease"] }}
       style={{ position: "relative", borderRadius: 24, overflow: "hidden", marginBottom: 24 }}
     >
       <Link href={href} style={{ display: "block", textDecoration: "none" }}>
@@ -119,28 +205,39 @@ function FeaturedCard({ img, title, excerpt, href, datum, lokacija }: {
   );
 }
 
-// ── Navadna kartica ──
-function EventCard({ img, title, excerpt, href, datum, lokacija, delay = 0 }: {
-  img: string; title: string; excerpt: string; href: string; datum?: string; lokacija?: string; delay?: number;
+function EventCard({ img, title, excerpt, href, datum, lokacija, delay = 0, pretekli = false }: {
+  img: string; title: string; excerpt: string; href: string; datum?: string; lokacija?: string; delay?: number; pretekli?: boolean;
 }) {
   return (
     <motion.article
       initial={{ opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-transition={{ duration: 0.65, delay, ease: "easeOut" }}      whileHover={{ y: -6 }}
+      transition={{ duration: 0.65, delay, ease: [0.25, 0.1, 0.25, 1] as Transition["ease"] }}
+      whileHover={{ y: -6 }}
       style={{
         background: "white", borderRadius: 20, overflow: "hidden",
         border: "1px solid rgba(0,0,0,0.07)", display: "flex", flexDirection: "column",
+        opacity: pretekli ? 0.75 : 1,
       }}
     >
-      <Link href={href} style={{ display: "block", overflow: "hidden", height: 220, textDecoration: "none" }}>
+      <Link href={href} style={{ display: "block", overflow: "hidden", height: 220, textDecoration: "none", position: "relative" }}>
         <motion.img
           src={img} alt={title}
           whileHover={{ scale: 1.06 }}
           transition={{ duration: 0.6 }}
-          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", filter: pretekli ? "grayscale(30%)" : "none" }}
         />
+        {pretekli && (
+          <div style={{
+            position: "absolute", top: 12, left: 12,
+            background: "rgba(17,16,8,0.6)", borderRadius: 999,
+            padding: "4px 12px", fontSize: 10, fontFamily: "sans-serif",
+            color: "rgba(255,255,255,0.7)", letterSpacing: "0.08em", textTransform: "uppercase",
+          }}>
+            Preteklo
+          </div>
+        )}
       </Link>
       <div style={{ padding: "26px 28px 32px", flex: 1, display: "flex", flexDirection: "column" }}>
         <EventMeta datum={datum} lokacija={lokacija} />
@@ -169,15 +266,40 @@ transition={{ duration: 0.65, delay, ease: "easeOut" }}      whileHover={{ y: -6
 export default function DogodkiPage() {
   const [dogodki, setDogodki] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [timeFilter, setTimeFilter] = useState<TimeFilter>("prihajajoči");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
-  useEffect(() => {
-    fetchAPI("dogodkis?populate=*&sort=datum:desc").then((res) => {
-      setDogodki(res.data ?? []);
-      setLoading(false);
-    });
+  const handleTimeFilter = useCallback((v: TimeFilter) => {
+    setTimeFilter(v);
+    setPage(1);
   }, []);
 
+  useEffect(() => {
+    setLoading(true);
+
+    const now = new Date().toISOString();
+
+    // Prihajajoči: datum >= danes, sort ASC (najbližji prvi)
+    // Pretekli:    datum < danes,  sort DESC (najnovejši prvi)
+    const isPrihajajoči = timeFilter === "prihajajoči";
+    const dateFilter = isPrihajajoči
+      ? `&filters[datum][$gte]=${now}`
+      : `&filters[datum][$lt]=${now}`;
+    const sortDir = isPrihajajoči ? "asc" : "desc";
+
+    fetchAPI(
+      `dogodkis?populate=*&sort=datum:${sortDir}&pagination[page]=${page}&pagination[pageSize]=${PER_PAGE}${dateFilter}`
+    ).then((res) => {
+      setDogodki(res.data ?? []);
+      setTotalPages(res.meta?.pagination?.pageCount ?? 1);
+      setLoading(false);
+    });
+  }, [page, timeFilter]);
+
+  const showFeatured = page === 1 && timeFilter === "prihajajoči";
   const [featured, ...rest] = dogodki;
+  const gridItems = showFeatured ? rest : dogodki;
 
   return (
     <main style={{ width: "100%", backgroundColor: CREAM, overflowX: "hidden" }}>
@@ -251,25 +373,32 @@ export default function DogodkiPage() {
               fontSize: "clamp(26px, 4vw, 42px)", fontWeight: 500, color: DARK,
               letterSpacing: "-0.025em", lineHeight: 1.2, marginBottom: 36,
             }}>
-              Prihajajoci <span style={{ color: GOLD }}>dogodki</span>
+              {timeFilter === "prihajajoči" ? "Prihajajoči" : "Pretekli"}{" "}
+              <span style={{ color: GOLD }}>dogodki</span>
             </h2>
           </motion.div>
 
           <SubNav />
+          <TimeFilterPills active={timeFilter} onChange={handleTimeFilter} />
 
+          {/* Loading */}
           {loading && (
             <div style={{ textAlign: "center", padding: "60px 0", color: "rgba(17,16,8,0.3)", fontFamily: "sans-serif", fontSize: 14, letterSpacing: "0.08em" }}>
               Nalaganje…
             </div>
           )}
 
+          {/* Prazno */}
           {!loading && dogodki.length === 0 && (
             <div style={{ textAlign: "center", padding: "60px 0", color: "rgba(17,16,8,0.35)", fontFamily: "sans-serif" }}>
-              Trenutno ni načrtovanih dogodkov.
+              {timeFilter === "prihajajoči"
+                ? "Trenutno ni načrtovanih dogodkov."
+                : "Ni preteklih dogodkov."}
             </div>
           )}
 
-          {featured && (
+          {/* Featured — samo prihajajoči, stran 1 */}
+          {!loading && showFeatured && featured && (
             <FeaturedCard
               img={featured.slika?.[0]?.url ? getStrapiMedia(featured.slika[0].url) : "/fallback.jpg"}
               title={featured.naslov}
@@ -280,13 +409,14 @@ export default function DogodkiPage() {
             />
           )}
 
-          {rest.length > 0 && (
+          {/* Grid */}
+          {!loading && gridItems.length > 0 && (
             <div style={{
               display: "grid",
               gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
               gap: 22,
             }}>
-              {rest.map((item: any, i: number) => (
+              {gridItems.map((item: any, i: number) => (
                 <EventCard
                   key={item.id}
                   img={item.slika?.[0]?.url ? getStrapiMedia(item.slika[0].url) : "/fallback.jpg"}
@@ -296,9 +426,22 @@ export default function DogodkiPage() {
                   datum={item.datum}
                   lokacija={item.lokacija}
                   delay={i * 0.08}
+                  pretekli={timeFilter === "pretekli"}
                 />
               ))}
             </div>
+          )}
+
+          {/* Pagination */}
+          {!loading && (
+            <Pagination
+              page={page}
+              totalPages={totalPages}
+              onChange={(p) => {
+                setPage(p);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+            />
           )}
 
         </div>

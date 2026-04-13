@@ -222,9 +222,9 @@ export default function ONasPage() {
               </p>
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                 {[
-                  { label: "Čebelnjak", href: "/o-nas/cebelnjak" },
-                  { label: "Knjižnjica", href: "/o-nas/knjiznjica" },
-                  { label: "Cerkvica sv. Uršule", href: "/o-nas/cerkvica" },
+                  { label: "Čebelnjak", href: "/onas/cebelnjak" },
+                  { label: "Knjižnjica", href: "/onas/knjiznjica" },
+                  { label: "Cerkvica sv. Uršule", href: "/onas/cerkvica" },
                 ].map((item, i) => (
                   <motion.a
                     key={i}
