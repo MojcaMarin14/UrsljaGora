@@ -71,6 +71,11 @@ export default function TrailSidebar({
           </h3>
           <h4 className="trail-detail__name">{activeTrail.name}</h4>
           <p className="trail-detail__desc">{activeTrail.description}</p>
+          <div className="trail-detail__route">
+            <span className="trail-detail__route-from">🚶 {activeTrail.startPoint}</span>
+            <span className="trail-detail__route-arrow">↓</span>
+            <span className="trail-detail__route-to">🏔️ {activeTrail.endPoint}</span>
+          </div>
           <div className="trail-detail__grid">
             <div className="trail-detail__stat">
               <span className="trail-detail__stat-label">Razdalja</span>

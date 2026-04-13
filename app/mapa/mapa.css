@@ -186,6 +186,28 @@
   color: #2c2420;
 }
 
+.trail-detail__route {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: #f8f6f2;
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  font-size: 12px;
+}
+
+.trail-detail__route-from,
+.trail-detail__route-to {
+  color: #4a4440;
+}
+
+.trail-detail__route-arrow {
+  color: #c9a96e;
+  font-size: 14px;
+  padding-left: 4px;
+}
+
 .trail-detail__source {
   font-size: 11px;
   color: #b0a89e;
