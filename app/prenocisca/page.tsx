@@ -3,6 +3,7 @@
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import type { Transition } from "framer-motion";
 import { useState } from "react";
+import MarzipanoViewer from "@/components/MarzipanoViewer";
 
 const GOLD = "#c9a96e";
 const CREAM = "#f7f4ef";
@@ -25,18 +26,6 @@ function SectionLabel({ text, light = false }: { text: string; light?: boolean }
 const rooms = [
   {
     id: 1,
-    name: "Skupna soba",
-    type: "Dormitorij · Bunk beds",
-    desc: "Planinska skupna soba z lesenimi posteljami v nadstropju — v pravem duhu gorskih koč. Primerna za pohodniške skupine in posameznike, ki iščejo preprost in topel kotiček po vzponu.",
-    details: [
-      { icon: "🛏️", label: "Postelje", value: "Bunk beds (lesene nadstropne postelje)" },
-      { icon: "👥", label: "Kapaciteta", value: "Do 8 oseb" },
-    ],
-    amenities: ["Skupna kopalnica", "Skupni WC", "Posteljnina", "Omarica z ključavnico"],
-    images: ["/soba-skupna1.jpg", "/soba-skupna2.jpg"],
-  },
-  {
-    id: 2,
     name: "Samostojne sobe",
     type: "Zasebne sobe",
     desc: "Tihe, skromno opremljene sobe za posameznike ali pare. Leseni detajli, mehka svetloba in pogled na gorski svet ustvarjajo vzdušje pristne planinske domačnosti.",
@@ -45,33 +34,407 @@ const rooms = [
       { icon: "👥", label: "Kapaciteta", value: "1–2 osebi" },
     ],
     amenities: ["Skupna kopalnica", "Skupni WC", "Posteljnina", "Pogled na naravo"],
-    images: ["/soba-zas1.jpg", "/soba-zas2.jpg", "/soba-zas3.jpg"],
+    images: [
+      "/sobe_Sony/samostojne/Sobe_Sony-5.jpg",
+      "/sobe_Sony/samostojne/Sobe_Sony-7.jpg",
+      "/sobe_Sony/samostojne/Sobe_Sony-8.jpg",
+      "/sobe_Sony/samostojne/Sobe_Sony-25.jpg",
+      "/sobe_Sony/samostojne/Sobe_Sony-29.jpg",
+    ],
+    panoramaImages: [
+      "/sobe_Sony/samostojne/PHOTO_0015.jpg",
+      "/sobe_Sony/samostojne/PHOTO_0031.jpg",
+    ],
+  },
+  {
+    id: 2,
+    name: "Sobe za 6 - 8 ljudi",
+    type: "Večposteljne sobe",
+    desc: "Planinska večposteljna soba z lesenimi posteljami v nadstropju, primerna za manjše skupine, pohodnike in goste, ki iščejo preprost ter topel kotiček po vzponu.",
+    details: [
+      { icon: "🛏️", label: "Postelje", value: "Lesene nadstropne postelje" },
+      { icon: "👥", label: "Kapaciteta", value: "6–8 oseb" },
+    ],
+    amenities: ["Skupna kopalnica", "Skupni WC", "Posteljnina", "Omarica z ključavnico"],
+    images: [
+      "/sobe_Sony/6-8/Sobe_Sony-11.jpg",
+      "/sobe_Sony/6-8/Sobe_Sony-13.jpg",
+      "/sobe_Sony/6-8/Sobe_Sony-14.jpg",
+      "/sobe_Sony/6-8/Sobe_Sony-15.jpg",
+      "/sobe_Sony/6-8/Sobe_Sony-17.jpg",
+    ],
+    panoramaImages: [
+      "/sobe_Sony/6-8/PHOTO_0011.jpg",
+      "/sobe_Sony/6-8/PHOTO_0012.jpg",
+      "/sobe_Sony/6-8/PHOTO_0013.jpg",
+      "/sobe_Sony/6-8/PHOTO_0014.jpg",
+      "/sobe_Sony/6-8/PHOTO_0026.jpg",
+      "/sobe_Sony/6-8/PHOTO_0028.jpg",
+    ],
   },
   {
     id: 3,
-    name: "Kopalnica & WC",
-    type: "Skupne sanitarije",
-    desc: "Skupni sanitarni prostori so vzdrževano čisti in funkcionalni — na voljo vsem gostom koče. Kopalnica s prho in ločen WC zagotavljata udobje po napornem pohodu.",
+    name: "Skupne sobe",
+    type: "Skupna prenočišča",
+    desc: "Skupne sobe ohranjajo pristno planinsko vzdušje koče. Namenjene so gostom, ki jim je pomemben udoben počitek v preprostem gorskem ambientu in družabnem vzdušju.",
     details: [
-      { icon: "🚿", label: "Kopalnica", value: "Prha, umivalnik, ogledalo" },
-      { icon: "🚽", label: "WC", value: "Ločen od kopalnice" },
+      { icon: "🛏️", label: "Ležišča", value: "Skupna postavitev" },
+      { icon: "👥", label: "Uporaba", value: "Za več gostov hkrati" },
     ],
-    amenities: ["Topla voda", "Brisače na voljo", "Čistila in higiena", "Skupna raba"],
-    images: ["/kopalnica1.jpg"],
+    amenities: ["Skupna kopalnica", "Skupni WC", "Posteljnina", "Planinski ambient"],
+    images: [
+      "/sobe_Sony/skupinske/Sobe_Sony-18.jpg",
+      "/sobe_Sony/skupinske/Sobe_Sony-19.jpg",
+      "/sobe_Sony/skupinske/Sobe_Sony-21.jpg",
+      "/sobe_Sony/skupinske/Sobe_Sony-22.jpg",
+      "/sobe_Sony/skupinske/Sobe_Sony-30.jpg",
+    ],
+    panoramaImages: [
+      "/sobe_Sony/skupinske/PHOTO_0018.jpg",
+      "/sobe_Sony/skupinske/PHOTO_0020.jpg",
+      "/sobe_Sony/skupinske/PHOTO_0030.jpg",
+    ],
   },
   {
     id: 4,
-    name: "Soba s kaminom",
-    type: "Dnevna soba · Skupni prostor",
-    desc: "Srce koče — topla dnevna soba s kaminom, kjer se po pohodu zbere vsa družba. Les, ogenj in vonj po smreki. Tukaj se pripovedujejo zgodbe, pijejo čaji in kujejo načrti za jutri.",
+    name: "Skupni prostori",
+    type: "Kamin, kopalnica in WC",
+    desc: "Gostom so na voljo skupni prostori koče, kjer se po pohodu zbere družba, spočije ob kaminu in uporabi osnovne sanitarije. Vse skupaj ohranja topel in domač planinski značaj.",
     details: [
-      { icon: "🔥", label: "Kamin", value: "Drva, pravi gorski ambient" },
-      { icon: "🛋️", label: "Prostor", value: "Skupni, za vse goste" },
+      { icon: "🔥", label: "Kamin", value: "Skupni dnevni prostor" },
+      { icon: "🚿", label: "Sanitarije", value: "Kopalnica in WC za goste" },
     ],
-    amenities: ["Kamin z drvmi", "Sedeži in mize", "Pogled na pokrajino", "Topli napitki"],
-    images: ["/kamin1.jpg", "/kamin2.jpg", "/kamin3.jpg"],
+    amenities: ["Kamin z drvmi", "Sedeži in mize", "Topla voda", "Skupna raba"],
+    images: [
+      "/sobe_Sony/skupni_prostori/Sobe_Sony-1.jpg",
+      "/sobe_Sony/skupni_prostori/Sobe_Sony-2.jpg",
+      "/sobe_Sony/skupni_prostori/Sobe_Sony-4.jpg",
+      "/sobe_Sony/skupni_prostori/Sobe_Sony-10.jpg",
+      "/sobe_Sony/skupni_prostori/Sobe_Sony-23.jpg",
+    ],
+    panoramaImages: [
+      "/sobe_Sony/skupni_prostori/PHOTO_0004.jpg",
+      "/sobe_Sony/skupni_prostori/PHOTO_0006.jpg",
+      "/sobe_Sony/skupni_prostori/PHOTO_0008.jpg",
+      "/sobe_Sony/skupni_prostori/PHOTO_0022.jpg",
+      "/sobe_Sony/skupni_prostori/PHOTO_0023.jpg",
+      "/sobe_Sony/skupni_prostori/PHOTO_0025.jpg",
+      "/sobe_Sony/skupni_prostori/PHOTO_0029.jpg",
+    ],
   },
 ];
+
+function PanoramaGallery({
+  images,
+  roomName,
+}: {
+  images: string[];
+  roomName: string;
+}) {
+  const [selectedPanorama, setSelectedPanorama] = useState(0);
+  const [activePanorama, setActivePanorama] = useState<number | null>(null);
+
+  if (!images.length) return null;
+
+  const goToPrevious = () => {
+    setSelectedPanorama((current) => (current === 0 ? images.length - 1 : current - 1));
+  };
+
+  const goToNext = () => {
+    setSelectedPanorama((current) => (current === images.length - 1 ? 0 : current + 1));
+  };
+
+  return (
+    <>
+      <div style={{ marginTop: 28 }}>
+        <p
+          style={{
+            fontSize: 11,
+            color: GOLD,
+            fontWeight: 600,
+            letterSpacing: "0.16em",
+            textTransform: "uppercase",
+            margin: "0 0 14px",
+          }}
+        >
+          360 Pogledi
+        </p>
+
+        <div
+          style={{
+            border: "1px solid rgba(17,16,8,0.1)",
+            borderRadius: 18,
+            overflow: "hidden",
+            background: "#fff",
+          }}
+        >
+          <div style={{ position: "relative", aspectRatio: "16 / 9", overflow: "hidden" }}>
+            <img
+              src={images[selectedPanorama]}
+              alt={`${roomName} 360 ${selectedPanorama + 1}`}
+              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+            />
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                background: "linear-gradient(to top, rgba(17,16,8,0.72), rgba(17,16,8,0.08))",
+              }}
+            />
+
+            <button
+              type="button"
+              onClick={goToPrevious}
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: 14,
+                transform: "translateY(-50%)",
+                width: 42,
+                height: 42,
+                borderRadius: "50%",
+                border: "1px solid rgba(255,255,255,0.25)",
+                background: "rgba(17,16,8,0.4)",
+                color: "white",
+                cursor: "pointer",
+                fontSize: 22,
+              }}
+            >
+              ‹
+            </button>
+
+            <button
+              type="button"
+              onClick={goToNext}
+              style={{
+                position: "absolute",
+                top: "50%",
+                right: 14,
+                transform: "translateY(-50%)",
+                width: 42,
+                height: 42,
+                borderRadius: "50%",
+                border: "1px solid rgba(255,255,255,0.25)",
+                background: "rgba(17,16,8,0.4)",
+                color: "white",
+                cursor: "pointer",
+                fontSize: 22,
+              }}
+            >
+              ›
+            </button>
+
+            <div
+              style={{
+                position: "absolute",
+                left: 14,
+                bottom: 14,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "8px 12px",
+                borderRadius: 999,
+                background: "rgba(255,255,255,0.14)",
+                border: "1px solid rgba(255,255,255,0.25)",
+                color: "white",
+                fontSize: 12,
+                fontWeight: 600,
+                letterSpacing: "0.04em",
+              }}
+            >
+              360 pogled {selectedPanorama + 1} / {images.length}
+            </div>
+          </div>
+
+          <div style={{ padding: "14px 16px 16px" }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 12,
+                flexWrap: "wrap",
+              }}
+            >
+              <div>
+                <p style={{ margin: 0, fontSize: 14, color: DARK, fontWeight: 500 }}>
+                  Panorama {selectedPanorama + 1}
+                </p>
+                <p style={{ margin: "4px 0 0", fontSize: 12.5, color: "rgba(17,16,8,0.58)", lineHeight: 1.5 }}>
+                  Interaktivni pogled prostora, ki ga lahko zavrtiš v vse smeri.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setActivePanorama(selectedPanorama)}
+                style={{
+                  border: "1px solid rgba(17,16,8,0.1)",
+                  background: DARK,
+                  color: "white",
+                  borderRadius: 999,
+                  padding: "12px 16px",
+                  cursor: "pointer",
+                  fontSize: 12,
+                  fontWeight: 600,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                }}
+              >
+                Odpri 360
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <AnimatePresence>
+        {activePanorama !== null && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setActivePanorama(null)}
+            style={{
+              position: "fixed",
+              inset: 0,
+              zIndex: 1100,
+              background: "rgba(7,10,14,0.96)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: 24,
+            }}
+          >
+            <motion.div
+              initial={{ scale: 0.96, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.96, opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                width: "min(1200px, 100%)",
+                height: "min(78vh, 760px)",
+                position: "relative",
+                borderRadius: 20,
+                overflow: "hidden",
+                background: "#05080c",
+                border: "1px solid rgba(255,255,255,0.08)",
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => setActivePanorama(null)}
+                style={{
+                  position: "absolute",
+                  top: 18,
+                  right: 18,
+                  zIndex: 2,
+                  border: "1px solid rgba(255,255,255,0.18)",
+                  background: "rgba(255,255,255,0.08)",
+                  color: "white",
+                  borderRadius: 999,
+                  padding: "10px 14px",
+                  cursor: "pointer",
+                  fontSize: 12,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                }}
+              >
+                Zapri
+              </button>
+
+              <div
+                style={{
+                  position: "absolute",
+                  top: 18,
+                  left: 18,
+                  zIndex: 2,
+                  padding: "10px 14px",
+                  borderRadius: 999,
+                  background: "rgba(5,8,12,0.62)",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  color: "rgba(255,255,255,0.84)",
+                  fontSize: 12,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                }}
+              >
+                {roomName} · 360 pogled {activePanorama + 1}
+              </div>
+
+              {images.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() =>
+                    setActivePanorama((current) =>
+                      current === null
+                        ? 0
+                        : current === 0
+                          ? images.length - 1
+                          : current - 1
+                    )
+                  }
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    left: 18,
+                    transform: "translateY(-50%)",
+                    zIndex: 2,
+                    width: 46,
+                    height: 46,
+                    borderRadius: "50%",
+                    border: "1px solid rgba(255,255,255,0.18)",
+                    background: "rgba(255,255,255,0.08)",
+                    color: "white",
+                    cursor: "pointer",
+                    fontSize: 24,
+                  }}
+                >
+                  ‹
+                </button>
+              )}
+
+              {images.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() =>
+                    setActivePanorama((current) =>
+                      current === null
+                        ? 0
+                        : current === images.length - 1
+                          ? 0
+                          : current + 1
+                    )
+                  }
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    right: 18,
+                    transform: "translateY(-50%)",
+                    zIndex: 2,
+                    width: 46,
+                    height: 46,
+                    borderRadius: "50%",
+                    border: "1px solid rgba(255,255,255,0.18)",
+                    background: "rgba(255,255,255,0.08)",
+                    color: "white",
+                    cursor: "pointer",
+                    fontSize: 24,
+                  }}
+                >
+                  ›
+                </button>
+              )}
+
+              <MarzipanoViewer imageUrl={images[activePanorama]} />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+}
 
 function RoomGallery({ images, roomName }: { images: string[]; roomName: string }) {
   const [lightbox, setLightbox] = useState<number | null>(null);
@@ -86,8 +449,8 @@ function RoomGallery({ images, roomName }: { images: string[]; roomName: string 
 
   const imgStyle: React.CSSProperties = { width: "100%", height: "100%", objectFit: "cover", display: "block" };
 
-  const Cell = ({ index, style }: { index: number; style?: React.CSSProperties }) => (
-    <motion.div onClick={() => setLightbox(index)} style={{ overflow: "hidden", cursor: "pointer", ...style }}>
+  const renderCell = (index: number, style?: React.CSSProperties) => (
+    <motion.div key={`${roomName}-${index}`} onClick={() => setLightbox(index)} style={{ overflow: "hidden", cursor: "pointer", ...style }}>
       <motion.img
         src={images[index]}
         alt={`${roomName} ${index + 1}`}
@@ -101,33 +464,33 @@ function RoomGallery({ images, roomName }: { images: string[]; roomName: string 
   return (
     <>
       <div style={getGridStyle()}>
-        {count === 1 && <Cell index={0} />}
+        {count === 1 && renderCell(0)}
 
         {count === 2 && (
           <>
-            <Cell index={0} />
-            <Cell index={1} />
+            {renderCell(0)}
+            {renderCell(1)}
           </>
         )}
 
         {count === 3 && (
           <>
-            <Cell index={0} style={{ gridColumn: "1", gridRow: "1 / 3" }} />
-            <Cell index={1} style={{ gridColumn: "2", gridRow: "1" }} />
-            <Cell index={2} style={{ gridColumn: "2", gridRow: "2" }} />
+            {renderCell(0, { gridColumn: "1", gridRow: "1 / 3" })}
+            {renderCell(1, { gridColumn: "2", gridRow: "1" })}
+            {renderCell(2, { gridColumn: "2", gridRow: "2" })}
           </>
         )}
 
         {count >= 4 && (
           <>
-            <Cell index={0} style={{ gridColumn: "1", gridRow: "1 / 3" }} />
+            {renderCell(0, { gridColumn: "1", gridRow: "1 / 3" })}
             <div style={{ gridColumn: "2", gridRow: "1", display: "grid", gridTemplateColumns: count >= 3 ? "1fr 1fr" : "1fr", gap: 3 }}>
-              <Cell index={1} />
-              {count >= 3 && <Cell index={2} />}
+              {renderCell(1)}
+              {count >= 3 && renderCell(2)}
             </div>
             <div style={{ gridColumn: "2", gridRow: "2", display: "grid", gridTemplateColumns: `repeat(${Math.min(count - 3, 3)}, 1fr)`, gap: 3 }}>
               {images.slice(3, 6).map((_, i) => (
-                <Cell key={i} index={i + 3} />
+                renderCell(i + 3)
               ))}
             </div>
           </>
@@ -223,7 +586,7 @@ export default function PrenociscaPage() {
 
       {/* ── HERO ── */}
       <section style={{ position: "relative", height: "52vh", overflow: "hidden" }}>
-        <img src="/drone1.jpg" alt="Prenočišča"
+        <img src="/Drone-April-1.jpg" alt="Prenočišča"
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(17,16,8,0.3) 0%, rgba(17,16,8,0.72) 100%)" }} />
         <motion.div
@@ -232,14 +595,14 @@ export default function PrenociscaPage() {
           style={{ position: "relative", zIndex: 10, height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "0 24px" }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 20 }}>
-            <div style={{ width: 32, height: 1, background: "rgba(201,169,110,0.6)" }} />
-            <span style={{ fontSize: 11, letterSpacing: "0.26em", textTransform: "uppercase", color: "rgba(201,169,110,0.85)", fontWeight: 500 }}>Uršlja gora · Koroška</span>
-            <div style={{ width: 32, height: 1, background: "rgba(201,169,110,0.6)" }} />
+            <div style={{ width: 32, height: 1, background: "rgba(221, 204, 171, 0.91)" }} />
+            <span style={{ fontSize: 11, letterSpacing: "0.26em", textTransform: "uppercase", color: "rgba(221, 204, 171, 0.91)", fontWeight: 500 }}>Uršlja gora · Koroška</span>
+            <div style={{ width: 32, height: 1, background: "rgba(221, 204, 171, 0.91)" }} />
           </div>
           <h1 style={{ fontSize: "clamp(40px, 8vw, 80px)", fontWeight: 500, color: "white", letterSpacing: "-0.03em", lineHeight: 1.1, margin: 0 }}>
             Prenočišča<br /><span style={{ color: GOLD }}>na vrhu</span>
           </h1>
-          <p style={{ marginTop: 20, fontSize: 16, color: "rgba(255,255,255,0.52)", maxWidth: 400, lineHeight: 1.75 }}>
+          <p style={{ marginTop: 20, fontSize: 16, color: "rgba(255, 255, 255, 0.75)", maxWidth: 400, lineHeight: 1.75 }}>
             Prenoči pod zvezdami Koroške — preprosto, toplo in nepozabno.
           </p>
         </motion.div>
@@ -259,6 +622,12 @@ export default function PrenociscaPage() {
             >
               <div style={{ order: idx % 2 === 1 ? 2 : 1 }}>
                 <RoomGallery images={room.images} roomName={room.name} />
+                {"panoramaImages" in room && Array.isArray(room.panoramaImages) && (
+                  <PanoramaGallery
+                    images={room.panoramaImages}
+                    roomName={room.name}
+                  />
+                )}
               </div>
 
               <div style={{ order: idx % 2 === 1 ? 1 : 2, paddingTop: 6 }}>

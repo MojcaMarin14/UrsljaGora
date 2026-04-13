@@ -5,7 +5,7 @@ import { useRef } from "react";
 import Footer from "./components/Footer";
 import SeasonsSection from "./components/SeasonsSection";
 
-const GOLD = "#c9a96e";
+const GOLD = "rgba(221, 204, 171, 0.91)";
 const CREAM = "#f7f4ef";
 const DARK = "#111008";
 
@@ -73,15 +73,33 @@ const fadeUp: Variants = {
   return (
     <main style={{ width: "100%", backgroundColor: CREAM, overflowX: "hidden" }}>
 
-      {/* ── HERO ── */}
+      
       <section ref={heroRef} style={{ position: "relative", width: "100%", height: "100vh", overflow: "hidden" }}>
-        <motion.div style={{ y: videoY, position: "absolute", inset: 0, scale: 1.1 }}>
-          <video
-            src="/drone.mp4"
-            autoPlay muted loop playsInline
-            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
-          />
-        </motion.div>
+       <motion.div style={{ y: videoY, position: "absolute", inset: 0, scale: 1.1 }}>
+  <video
+    src="/8.mp4"
+    autoPlay
+    muted
+    loop
+    playsInline
+    style={{
+      position: "absolute",
+      inset: 0,
+      width: "100%",
+      height: "100%",
+      objectFit: "cover",
+    }}
+  />
+
+ //OVERLAY ZA BOLJSI KONTRAST - subject to change? 
+  <div
+    style={{
+      position: "absolute",
+      inset: 0,
+      background: "rgba(0, 0, 0, 0.35)", // adjust this for opacity 
+    }}
+  />
+</motion.div>
 
         {/* Hero vsebina */}
         <motion.div
@@ -93,11 +111,11 @@ const fadeUp: Variants = {
             transition={{ duration: 0.8, delay: 0.3 }}
             style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 28 }}
           >
-            <div style={{ width: 40, height: 1, background: "rgba(201,169,110,0.6)" }} />
-            <span style={{ fontSize: 12, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(101, 70, 12, 0.9)", fontWeight: 500 }}>
+            <div style={{ width: 40, height: 1, background: "rgba(221, 204, 171, 0.91)" }} />
+            <span style={{ fontSize: 12, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(221, 204, 171, 0.91)", fontWeight: 500 }}>
               Uršlja gora · Koroška
             </span>
-            <div style={{ width: 40, height: 1, background: "rgba(201,169,110,0.6)" }} />
+            <div style={{ width: 40, height: 1, background: "rgba(221, 204, 171, 0.91)" }} />
           </motion.div>
 
           <motion.h1
@@ -108,14 +126,14 @@ const fadeUp: Variants = {
           >
             Med nebom
             <br />
-            <span style={{ color: GOLD }}>in tišino</span>
+            <span style={{ color: "rgb(221, 204, 171)"}}>in tišino</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.7 }}
-            style={{ marginTop: 24, fontSize: 18, color: "rgba(255,255,255,0.55)", maxWidth: 440, lineHeight: 1.7 }}
+            style={{ marginTop: 24, fontSize: 18, color: "rgb(239, 239, 239)", maxWidth: 440, lineHeight: 1.7 }}
           >
             Koča, narava in razgledi, ki vzamejo dih na vrhu Koroške.
           </motion.p>
