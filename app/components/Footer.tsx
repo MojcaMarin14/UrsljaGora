@@ -21,7 +21,7 @@ export default function Footer({ dark = false }) {
           </h3>
           <ul className="space-y-2 text-sm opacity-80">
             <li><a href="/" className="hover:opacity-100 transition">Domov</a></li>
-            <li><a href="/o-nas" className="hover:opacity-100 transition">O nas</a></li>
+            <li><a href="/onas" className="hover:opacity-100 transition">O nas</a></li>
             <li><a href="/aktualno" className="hover:opacity-100 transition">Aktualno</a></li>
             <li><a href="/kontakt" className="hover:opacity-100 transition">Kontakt</a></li>
             <li><a href="/politikaZasebnosti" className="hover:opacity-100 transition">Politika zasebnosti</a></li>
