@@ -668,7 +668,7 @@ export default function CerkevPage() {
           >
             <img
               src={["/cer2.jpg", "/cer4.jpg", "/cer3.jpg", "/cer1.jpg", "/cer5.jpg"][lb]}
-              alt="Galerija"
+              alt="Galerija – Cerkev sv. Uršule na Uršlji gori"
               className="cer-lb-img"
             />
             <button className="cer-lb-close" onClick={() => setLb(null)}>✕ Zapri</button>

@@ -1,14 +1,17 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { pois } from "../data/pois";
 import {
   CommunityPhoto,
   savePhoto,
   generateId,
+  checkAdminPin,
+  saveAdminSession,
+  clearAdminSession,
 } from "../data/photoStore";
 import PhotoGallery from "./PhotoGallery";
-import { IconGallery, IconCamera, IconCalendar, IconPin, IconPlus, IconMap } from "./Icons";
+import { IconGallery, IconCamera, IconCalendar, IconPin } from "./Icons";
 
 interface EventsPanelProps {
   isAddingPhoto: boolean;
@@ -17,8 +20,33 @@ interface EventsPanelProps {
   photos: CommunityPhoto[];
   onPhotosChanged: () => void;
   isAdmin: boolean;
+  onAdminChange: (v: boolean) => void;
   onLocatePhoto: (lat: number, lng: number) => void;
   onLocateEvent: (lat: number, lng: number) => void;
+  defaultTab?: "upload" | "gallery" | "events";
+}
+
+function StarPicker({ value, onChange }: { value: number; onChange: (v: number) => void }) {
+  const [hovered, setHovered] = useState(0);
+  return (
+    <div className="star-picker">
+      <span className="star-picker__label">Ocena (neobvezno):</span>
+      <div className="star-picker__stars">
+        {[1, 2, 3, 4, 5].map((n) => (
+          <button
+            key={n}
+            type="button"
+            className={`star-picker__star ${(hovered || value) >= n ? "star-picker__star--active" : ""}`}
+            onMouseEnter={() => setHovered(n)}
+            onMouseLeave={() => setHovered(0)}
+            onClick={() => onChange(value === n ? 0 : n)}
+          >
+            ★
+          </button>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 export default function EventsPanel({
@@ -28,36 +56,45 @@ export default function EventsPanel({
   photos,
   onPhotosChanged,
   isAdmin,
+  onAdminChange,
   onLocatePhoto,
   onLocateEvent,
+  defaultTab,
 }: EventsPanelProps) {
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [caption, setCaption] = useState("");
   const [authorName, setAuthorName] = useState("");
-  const [activeSection, setActiveSection] = useState<"upload" | "gallery" | "events">("gallery");
+  const [rating, setRating] = useState(0);
+  const [activeSection, setActiveSection] = useState<"upload" | "gallery" | "events">(defaultTab ?? "gallery");
+
+  const [showAdminModal, setShowAdminModal] = useState(false);
+  const [pinInput, setPinInput] = useState("");
+  const [pinError, setPinError] = useState(false);
+
   const fileRef = useRef<HTMLInputElement>(null);
   const cameraRef = useRef<HTMLInputElement>(null);
 
   const events = pois.filter((p) => p.category === "dogodek");
 
+  useEffect(() => {
+    if (defaultTab) setActiveSection(defaultTab);
+  }, [defaultTab]);
+
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
-
     const reader = new FileReader();
     reader.onload = () => {
       const img = new window.Image();
       img.onload = () => {
         const canvas = document.createElement("canvas");
         const MAX = 1200;
-        let w = img.width;
-        let h = img.height;
+        let w = img.width, h = img.height;
         if (w > MAX || h > MAX) {
           if (w > h) { h = (h * MAX) / w; w = MAX; }
           else { w = (w * MAX) / h; h = MAX; }
         }
-        canvas.width = w;
-        canvas.height = h;
+        canvas.width = w; canvas.height = h;
         canvas.getContext("2d")!.drawImage(img, 0, 0, w, h);
         setPhotoPreview(canvas.toDataURL("image/jpeg", 0.8));
       };
@@ -76,11 +113,14 @@ export default function EventsPanel({
       caption,
       author: authorName || "Anonimno",
       createdAt: new Date().toISOString(),
+      rating: rating > 0 ? rating : undefined,
+      comments: [],
     };
     savePhoto(photo);
     onPhotosChanged();
     setPhotoPreview(null);
     setCaption("");
+    setRating(0);
     if (isAddingPhoto) onToggleAddPhoto();
     setActiveSection("gallery");
   }
@@ -88,11 +128,30 @@ export default function EventsPanel({
   function resetUpload() {
     setPhotoPreview(null);
     setCaption("");
+    setRating(0);
     if (isAddingPhoto) onToggleAddPhoto();
+  }
+
+  function handleAdminLogin() {
+    if (checkAdminPin(pinInput)) {
+      saveAdminSession();
+      onAdminChange(true);
+      setShowAdminModal(false);
+      setPinInput("");
+      setPinError(false);
+    } else {
+      setPinError(true);
+    }
+  }
+
+  function handleAdminLogout() {
+    clearAdminSession();
+    onAdminChange(false);
   }
 
   return (
     <div className="events-panel">
+      {/* ── Tabs ── */}
       <div className="section-tabs">
         <button
           className={`section-tab ${activeSection === "gallery" ? "section-tab--active" : ""}`}
@@ -112,8 +171,27 @@ export default function EventsPanel({
         >
           <IconCalendar size={15} /> Dogodki
         </button>
+        {isAdmin ? (
+          <button className="section-tab admin-tab admin-tab--active" onClick={handleAdminLogout} title="Odjava iz admin načina">
+            🔓
+          </button>
+        ) : (
+          <button className="section-tab admin-tab" onClick={() => setShowAdminModal(true)} title="Admin prijava">
+            🔒
+          </button>
+        )}
       </div>
 
+      {isAdmin && (
+        <div className="admin-bar">
+          <div className="admin-bar__active">
+            <span>🔓 Admin način — lahko brišeš fotografije</span>
+            <button className="admin-bar__logout" onClick={handleAdminLogout}>Odjava</button>
+          </div>
+        </div>
+      )}
+
+      {/* ── Galerija ── */}
       {activeSection === "gallery" && (
         <div className="sidebar-section">
           <h3 className="sidebar-title">
@@ -129,6 +207,7 @@ export default function EventsPanel({
         </div>
       )}
 
+      {/* ── Upload ── */}
       {activeSection === "upload" && (
         <div className="sidebar-section">
           <h3 className="sidebar-title">
@@ -160,28 +239,28 @@ export default function EventsPanel({
           )}
 
           {photoPreview && (
-            <div className="upload-fields">
-              <input
-                type="text"
-                className="input"
-                placeholder="Opis fotografije (neobvezno)"
-                value={caption}
-                onChange={(e) => setCaption(e.target.value)}
-                maxLength={120}
-              />
-              <input
-                type="text"
-                className="input"
-                placeholder="Tvoje ime (neobvezno)"
-                value={authorName}
-                onChange={(e) => setAuthorName(e.target.value)}
-                maxLength={40}
-              />
-            </div>
-          )}
-
-          {photoPreview && (
             <>
+              <div className="upload-fields">
+                <input
+                  type="text"
+                  className="input"
+                  placeholder="Opis fotografije (neobvezno)"
+                  value={caption}
+                  onChange={(e) => setCaption(e.target.value)}
+                  maxLength={120}
+                />
+                <input
+                  type="text"
+                  className="input"
+                  placeholder="Tvoje ime (neobvezno)"
+                  value={authorName}
+                  onChange={(e) => setAuthorName(e.target.value)}
+                  maxLength={40}
+                />
+              </div>
+
+              <StarPicker value={rating} onChange={setRating} />
+
               <button
                 className={`btn btn--primary ${isAddingPhoto ? "btn--active" : ""}`}
                 onClick={onToggleAddPhoto}
@@ -205,13 +284,13 @@ export default function EventsPanel({
         </div>
       )}
 
+      {/* ── Dogodki ── */}
       {activeSection === "events" && (
         <div className="sidebar-section">
           <h3 className="sidebar-title">
             <span className="sidebar-icon"><IconCalendar size={16} /></span>
             Bližnji dogodki
           </h3>
-
           <div className="events-list">
             {events.map((event) => (
               <div key={event.id} className="event-card">
@@ -226,6 +305,34 @@ export default function EventsPanel({
                 </button>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── Admin modal ── */}
+      {showAdminModal && (
+        <div className="admin-modal-overlay" onClick={() => setShowAdminModal(false)}>
+          <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
+            <h3 className="admin-modal__title">🔒 Admin prijava</h3>
+            <p className="admin-modal__desc">Vnesi geslo za upravljanje galerije.</p>
+            <input
+              type="password"
+              className={`input ${pinError ? "input--error" : ""}`}
+              placeholder="Geslo"
+              value={pinInput}
+              onChange={(e) => { setPinInput(e.target.value); setPinError(false); }}
+              onKeyDown={(e) => e.key === "Enter" && handleAdminLogin()}
+              autoFocus
+            />
+            {pinError && <p className="admin-modal__error">Napačno geslo. Poskusi znova.</p>}
+            <div className="admin-modal__actions">
+              <button className="btn btn--outline btn--sm" onClick={() => setShowAdminModal(false)}>
+                Prekliči
+              </button>
+              <button className="btn btn--primary btn--sm" onClick={handleAdminLogin}>
+                Prijava
+              </button>
+            </div>
           </div>
         </div>
       )}

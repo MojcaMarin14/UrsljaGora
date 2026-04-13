@@ -155,7 +155,7 @@ const fadeUp: Variants = {
             </motion.a>
          
           </motion.div>
-ƒ
+
           {/* Scroll indikator */}
           <motion.div
             initial={{ opacity: 0 }}

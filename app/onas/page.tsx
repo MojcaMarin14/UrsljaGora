@@ -13,6 +13,7 @@ function SimpleSlider() {
       <motion.img
         key={index}
         src={images[index]}
+        alt="Dom na Uršlji gori – galerija"
         className="w-full object-cover rounded-3xl"
         style={{ height: "480px" }}
         initial={{ opacity: 0, scale: 1.05 }}
@@ -192,6 +193,7 @@ export default function ONasPage() {
             <motion.div variants={fadeUp} style={{ borderRadius: 24, overflow: "hidden" }}>
               <motion.img
                 src="/onas1.jpg"
+                alt="Notranjost Doma na Uršlji gori"
                 style={{ width: "100%", height: 500, objectFit: "cover", display: "block" }}
                 whileHover={{ scale: 1.03 }}
                 transition={{ duration: 0.6 }}
@@ -278,6 +280,7 @@ export default function ONasPage() {
             <motion.div variants={fadeUp} style={{ borderRadius: 24, overflow: "hidden" }}>
               <motion.img
                 src="/meni2.jpg"
+                alt="Jedilnik in hrana v Domu na Uršlji gori"
                 style={{ width: "100%", height: 500, objectFit: "cover", display: "block" }}
                 whileHover={{ scale: 1.03 }}
                 transition={{ duration: 0.6 }}

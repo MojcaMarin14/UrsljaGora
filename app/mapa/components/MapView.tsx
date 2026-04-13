@@ -123,6 +123,7 @@ interface MapViewProps {
   communityPhotos?: CommunityPhoto[];
   flyTo?: { lat: number; lng: number } | null;
   onFlyToDone?: () => void;
+  onPoiAddPhoto?: (lat: number, lng: number) => void;
 }
 
 export default function MapView({
@@ -134,6 +135,7 @@ export default function MapView({
   communityPhotos = [],
   flyTo,
   onFlyToDone,
+  onPoiAddPhoto,
 }: MapViewProps) {
   const center: [number, number] = [46.48555, 14.96149];
   const [activeLayerId, setActiveLayerId] = useState("satellite");
@@ -196,6 +198,14 @@ export default function MapView({
                 <strong>{poi.name}</strong>
                 {poi.date && <span className="poi-date">{poi.date}</span>}
                 <p>{poi.description}</p>
+                {onPoiAddPhoto && (
+                  <button
+                    className="poi-popup__add-photo-btn"
+                    onClick={() => onPoiAddPhoto(poi.lat, poi.lng)}
+                  >
+                    📷 Dodaj sliko tukaj
+                  </button>
+                )}
               </div>
             </Popup>
           </Marker>

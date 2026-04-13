@@ -16,6 +16,13 @@ export default function Footer({ dark = false }) {
           <ul className="space-y-2 text-sm opacity-70">
             <li><a href="/" className="hover:opacity-100 transition">Domov</a></li>
             <li><a href="/onas" className="hover:opacity-100 transition">O nas</a></li>
+            <li><a href="/onas/jedilnik" className="hover:opacity-100 transition">Jedilnik</a></li>
+            <li><a href="/onas/cerkvica" className="hover:opacity-100 transition">Cerkev sv. Uršule</a></li>
+            <li><a href="/onas/cebelnjak" className="hover:opacity-100 transition">Čebelnjak</a></li>
+            <li><a href="/onas/knjiznjica" className="hover:opacity-100 transition">Knjižnica</a></li>
+            <li><a href="/prenocisca" className="hover:opacity-100 transition">Prenočišča</a></li>
+            <li><a href="/mapa" className="hover:opacity-100 transition">Pohodniška mapa</a></li>
+            <li><a href="/vreme" className="hover:opacity-100 transition">Vreme</a></li>
             <li><a href="/aktualno" className="hover:opacity-100 transition">Aktualno</a></li>
             <li><a href="/kontakt" className="hover:opacity-100 transition">Kontakt</a></li>
             <li><a href="/politikaZasebnosti" className="hover:opacity-100 transition">Politika zasebnosti</a></li>
