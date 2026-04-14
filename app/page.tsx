@@ -2,6 +2,7 @@
 
 import { motion, useScroll, useTransform, Variants } from "framer-motion";
 import { useRef } from "react";
+import Image from "next/image";
 import Footer from "./components/Footer";
 import SeasonsSection from "./components/SeasonsSection";
 
@@ -34,12 +35,20 @@ function ActivityCard({ img, title, desc }: { img: string; title: string; desc: 
         overflow: "hidden", display: "flex", flexDirection: "column"
       }}
     >
-      <div style={{ overflow: "hidden", height: 220 }}>
-        <motion.img
-          src={img} alt={title}
-          whileHover={{ scale: 1.06 }}
-          transition={{ duration: 0.6 }}
-          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+      {/*
+        FIX: Next.js <Image> z loading="lazy" za slike ki niso LCP
+        - activity cards so pod foldom = lazy je OK
+        - sizes="(max-width: 768px) 100vw, 33vw" = pravi format za grid
+      */}
+      <div style={{ overflow: "hidden", height: 220, position: "relative" }}>
+        <Image
+          src={img}
+          alt={title}
+          fill
+          loading="lazy"
+          sizes="(max-width: 768px) 100vw, 33vw"
+          quality={80}
+          style={{ objectFit: "cover" }}
         />
       </div>
       <div style={{ padding: "28px 28px 32px", flex: 1, display: "flex", flexDirection: "column" }}>
@@ -61,10 +70,10 @@ export default function HomePage() {
   const textY = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 44 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.85, ease: "easeOut" as const } },
-};
+  const fadeUp: Variants = {
+    hidden: { opacity: 0, y: 44 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.85, ease: "easeOut" as const } },
+  };
   const stagger = {
     hidden: {},
     show: { transition: { staggerChildren: 0.13 } },
@@ -73,37 +82,64 @@ const fadeUp: Variants = {
   return (
     <main style={{ width: "100%", backgroundColor: CREAM, overflowX: "hidden" }}>
 
-      
+      {/* ── HERO ── */}
       <section ref={heroRef} style={{ position: "relative", width: "100%", height: "100vh", overflow: "hidden" }}>
-       <motion.div style={{ y: videoY, position: "absolute", inset: 0, scale: 1.1 }}>
-  <video
-    src="/8.mp4"
-    autoPlay
-    muted
-    loop
-    playsInline
-    style={{
-      position: "absolute",
-      inset: 0,
-      width: "100%",
-      height: "100%",
-      objectFit: "cover",
-    }}
-  />
+        <motion.div style={{ y: videoY, position: "absolute", inset: 0, scale: 1.1 }}>
 
- //OVERLAY ZA BOLJSI KONTRAST - subject to change? 
-  <div
-    style={{
-      position: "absolute",
-      inset: 0,
-      background: "rgba(0, 0, 0, 0.35)", // adjust this for opacity 
-    }}
-  />
-</motion.div>
+          {/*
+            KLJUČNA OPTIMIZACIJA ZA LCP:
+
+            Problem: video blokira LCP ker se mora naložiti preden browser
+            sploh ve kaj je LCP element. Brez poster= je ekran prazen dokler
+            se video ne naloži = LCP 6.6s.
+
+            Rešitev:
+            1. poster="/hero-poster.jpg" — browser takoj prikaže sliko,
+               video se naloži v ozadju. LCP postane JPG slika, ne video.
+            2. preload="none" — browser ne prednaložuje video filea pri
+               page loadu. Video se začne nalagat šele ko je stran naložena.
+               (prej je browser takoj začel nalagat 8.mp4 = blokiral vse)
+
+            POTREBNO: ustvari /public/hero-poster.jpg
+            - vzemi frame iz 8.mp4 (VLC → Video → Snapshot)
+            - ali katerakoli lepa slika koče/gore
+            - priporočena velikost: 1920x1080, ~200KB
+          */}
+          <video
+            src="/8.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            poster="/hero-poster.jpg"
+            preload="none"
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+            }}
+          />
+
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background: "rgba(0, 0, 0, 0.35)",
+            }}
+          />
+        </motion.div>
 
         {/* Hero vsebina */}
         <motion.div
-          style={{ y: textY, opacity: heroOpacity, position: "relative", zIndex: 10, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", textAlign: "center", padding: "0 24px" }}
+          style={{
+            y: textY, opacity: heroOpacity,
+            position: "relative", zIndex: 10,
+            display: "flex", flexDirection: "column",
+            alignItems: "center", justifyContent: "center",
+            height: "100%", textAlign: "center", padding: "0 24px"
+          }}
         >
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -126,7 +162,7 @@ const fadeUp: Variants = {
           >
             Med nebom
             <br />
-            <span style={{ color: "rgb(221, 204, 171)"}}>in tišino</span>
+            <span style={{ color: "rgb(221, 204, 171)" }}>in tišino</span>
           </motion.h1>
 
           <motion.p
@@ -138,7 +174,6 @@ const fadeUp: Variants = {
             Koča, narava in razgledi, ki vzamejo dih na vrhu Koroške.
           </motion.p>
 
-          {/* CTA gumbi */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -153,10 +188,8 @@ const fadeUp: Variants = {
             >
               Obiščite nas →
             </motion.a>
-         
           </motion.div>
 
-          {/* Scroll indikator */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -170,7 +203,6 @@ const fadeUp: Variants = {
             />
           </motion.div>
         </motion.div>
-      
       </section>
 
       {/* ── DOBRODOŠLI ── */}
@@ -201,7 +233,6 @@ const fadeUp: Variants = {
             domačnost in občutek, da ste za trenutek pobegnili iz vsakdana.
           </motion.p>
 
-          {/* Statistike */}
           <motion.div
             variants={fadeUp}
             style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 2, maxWidth: 560, margin: "0 auto" }}
@@ -258,11 +289,21 @@ const fadeUp: Variants = {
       {/* ── QUOTE BANNER ── */}
       <section style={{ position: "relative", overflow: "hidden", padding: "120px 24px" }}>
         <div style={{ position: "absolute", inset: 0, backgroundColor: DARK }} />
-        <img
-          src="/razgled.jpg"
-          alt=""
-          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.2 }}
-        />
+        {/*
+          FIX: quote banner slika — lazy + sizes za polno širino
+          Je pod foldom, ni LCP = lazy je OK
+        */}
+        <div style={{ position: "absolute", inset: 0 }}>
+          <Image
+            src="/razgled.jpg"
+            alt=""
+            fill
+            loading="lazy"
+            sizes="100vw"
+            quality={75}
+            style={{ objectFit: "cover", opacity: 0.2 }}
+          />
+        </div>
         <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at center, transparent 30%, rgba(17,16,8,0.7) 100%)" }} />
 
         <motion.div
@@ -313,7 +354,19 @@ const fadeUp: Variants = {
                 whileHover={{ y: -4 }}
                 style={{ position: "relative", borderRadius: 20, overflow: "hidden", textDecoration: "none", display: "block", height: 200 }}
               >
-                <img src={item.img} alt={item.label} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                {/*
+                  FIX: nav kartice — lazy + fill + sizes
+                  4 kartice v gridu = vsaka ~25vw na desktopu
+                */}
+                <Image
+                  src={item.img}
+                  alt={item.label}
+                  fill
+                  loading="lazy"
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                  quality={75}
+                  style={{ objectFit: "cover" }}
+                />
                 <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(17,16,8,0.85) 0%, rgba(17,16,8,0.2) 60%, transparent 100%)" }} />
                 <div style={{ position: "absolute", bottom: 20, left: 20 }}>
                   <p style={{ fontSize: 18, fontWeight: 600, color: "white", margin: 0, letterSpacing: "-0.01em" }}>{item.label}</p>
