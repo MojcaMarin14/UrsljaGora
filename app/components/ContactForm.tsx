@@ -2,13 +2,13 @@
 
 import { motion } from "framer-motion";
 import { useState } from "react";
+import Link from "next/link";
 
 const GOLD = "#d4b676";
 
-// Dodaj to komponento v kontakt/page.tsx — takoj pred <Footer dark />
-
 export function ContactForm() {
   const [form, setForm] = useState({ ime: "", email: "", sporocilo: "" });
+  const [gdpr, setGdpr] = useState(false);  // ← DODANO
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -17,7 +17,7 @@ export function ContactForm() {
 
   const handleSubmit = async (e: React.MouseEvent) => {
     e.preventDefault();
-    if (!form.ime || !form.email || !form.sporocilo) return;
+    if (!form.ime || !form.email || !form.sporocilo || !gdpr) return;  // ← DODANO gdpr check
     setStatus("sending");
     try {
       const res = await fetch("/api/kontakt", {
@@ -28,6 +28,7 @@ export function ContactForm() {
       if (res.ok) {
         setStatus("sent");
         setForm({ ime: "", email: "", sporocilo: "" });
+        setGdpr(false);  // ← DODANO reset
       } else {
         setStatus("error");
       }
@@ -102,7 +103,7 @@ export function ContactForm() {
           ) : (
             <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
 
-              {/* Ime + Email v vrsti */}
+              {/* Ime + Email */}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
                 <div>
                   <label style={{ display: "block", fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", marginBottom: 8 }}>Ime in priimek</label>
@@ -146,6 +147,28 @@ export function ContactForm() {
                 />
               </div>
 
+              {/* ── GDPR CHECKBOX ── */}
+              <div style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
+                <input
+                  type="checkbox"
+                  id="gdpr"
+                  checked={gdpr}
+                  onChange={e => setGdpr(e.target.checked)}
+                  style={{
+                    marginTop: 2, width: 16, height: 16,
+                    accentColor: GOLD, flexShrink: 0, cursor: "pointer",
+                  }}
+                />
+                <label htmlFor="gdpr" style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", lineHeight: 1.65, cursor: "pointer" }}>
+                  Strinjam se z{" "}
+                  <Link href="/zasebnost" style={{ color: GOLD, textDecoration: "underline" }}>
+                    obdelavo osebnih podatkov
+                  </Link>{" "}
+                  za namen odgovora na moje povpraševanje. Soglasje lahko kadarkoli prekličem z zahtevo na{" "}
+                  <a href="mailto:info@ursljagora.si" style={{ color: GOLD }}>info@ursljagora.si</a>.
+                </label>
+              </div>
+
               {/* Error */}
               {status === "error" && (
                 <p style={{ fontSize: 13, color: "#f87171", margin: 0 }}>
@@ -153,22 +176,22 @@ export function ContactForm() {
                 </p>
               )}
 
-              {/* Submit */}
+              {/* Submit — onemogočen dokler GDPR ni obkljukan */}
               <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 4 }}>
                 <motion.button
                   onClick={handleSubmit}
-                  disabled={status === "sending"}
-                  whileHover={{ scale: status === "sending" ? 1 : 1.03 }}
+                  disabled={status === "sending" || !gdpr}
+                  whileHover={{ scale: (status === "sending" || !gdpr) ? 1 : 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   style={{
                     display: "inline-flex", alignItems: "center", gap: 8,
-                    background: status === "sending" ? "rgba(212,182,118,0.4)" : GOLD,
-                    color: "#111008",
+                    background: !gdpr ? "rgba(212,182,118,0.25)" : status === "sending" ? "rgba(212,182,118,0.4)" : GOLD,
+                    color: !gdpr ? "rgba(17,16,8,0.4)" : "#111008",
                     fontWeight: 700, padding: "13px 32px", borderRadius: 999,
                     fontSize: 14, letterSpacing: "0.02em",
-                    border: "none", cursor: status === "sending" ? "default" : "pointer",
+                    border: "none", cursor: (!gdpr || status === "sending") ? "default" : "pointer",
                     fontFamily: "inherit",
-                    transition: "background 0.2s",
+                    transition: "all 0.2s",
                   }}
                 >
                   {status === "sending" ? (

@@ -1,143 +1,122 @@
-export const metadata = {
-  title: "Politika zasebnosti – Uršlja Gora",
-  description: "Politika zasebnosti spletne strani Uršlja Gora."
-};
+import Footer from "@/app/components/Footer";
 
-export default function PrivacyPage() {
+const GOLD = "#c9a96e";
+const DARK = "#111008";
+
+export default function ZasebnostPage() {
   return (
-    <main className="max-w-4xl mx-auto px-6 pt-32 pb-20 space-y-10 text-[var(--foreground)]">
+    <main style={{ width: "100%", backgroundColor: "#f7f4ef", minHeight: "100vh" }}>
 
-      <h1 className="text-4xl font-bold">Politika zasebnosti</h1>
-
-      <p>
-        Ta politika zasebnosti opisuje, kako spletna stran <strong>Uršlja Gora</strong> 
-        zbira, uporablja in varuje osebne podatke obiskovalcev. Z uporabo spletne strani 
-        se strinjate s pogoji te politike.
-      </p>
-
-      <section>
-        <h2 className="text-2xl font-semibold mb-2">1. Upravljavec osebnih podatkov</h2>
-        <p>
-          Upravljavec osebnih podatkov je:
-          <br />
-          <strong>Dom na Uršlji gori</strong>
-          <br />
-          Uršlja gora (Plešivec), Slovenija
-          <br />
-          Telefon: 02 87 0 48 20
-          <br />
-          E‑pošta: info@ursljagora.si
-        </p>
+      {/* HERO */}
+      <section style={{
+        background: DARK, padding: "120px 24px 80px",
+        textAlign: "center",
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 16, justifyContent: "center", marginBottom: 20 }}>
+          <div style={{ width: 28, height: 1, background: "rgba(201,169,110,0.5)" }} />
+          <span style={{ fontSize: 11, letterSpacing: "0.26em", textTransform: "uppercase", color: "rgba(201,169,110,0.8)", fontWeight: 500 }}>
+            Uršlja gora · Koroška
+          </span>
+          <div style={{ width: 28, height: 1, background: "rgba(201,169,110,0.5)" }} />
+        </div>
+        <h1 style={{
+          fontSize: "clamp(36px, 6vw, 64px)", fontWeight: 500,
+          color: "white", letterSpacing: "-0.03em", lineHeight: 1.1, margin: 0,
+        }}>
+          Politika <span style={{ color: GOLD }}>zasebnosti</span>
+        </h1>
       </section>
 
-      <section>
-        <h2 className="text-2xl font-semibold mb-2">2. Katere podatke zbiramo</h2>
-        <ul className="list-disc ml-6 space-y-1">
-          <li>tehnične podatke (IP naslov, brskalnik, čas obiska, ogledane strani),</li>
-          <li>kontaktne podatke, če uporabnik izpolni obrazec (ime, e‑pošta, telefon),</li>
-          <li>piškotke, ki so potrebni za delovanje strani in analitiko.</li>
-        </ul>
+      {/* VSEBINA */}
+      <section style={{ padding: "72px 24px 100px" }}>
+        <div style={{ maxWidth: 760, margin: "0 auto", display: "flex", flexDirection: "column", gap: 40 }}>
+
+          <Block title="1. Upravljavec osebnih podatkov">
+            <p>Upravljavec osebnih podatkov je <strong>Planinsko društvo Prevalje</strong>, ki upravlja Dom na Uršlji gori.</p>
+            <p>Kontakt: <a href="mailto:info@ursljagora.si" style={{ color: GOLD }}>info@ursljagora.si</a></p>
+          </Block>
+
+          <Block title="2. Kateri osebni podatki se zbirajo">
+            <p>Na tej spletni strani zbiramo naslednje osebne podatke:</p>
+            <ul>
+              <li><strong>Kontaktni obrazec:</strong> ime in priimek, e-poštni naslov, vsebina sporočila</li>
+              <li><strong>Piškotki:</strong> tehnični piškotki za delovanje strani (seja, preferences)</li>
+            </ul>
+          </Block>
+
+          <Block title="3. Namen zbiranja podatkov">
+            <p>Osebne podatke zbiramo izključno z naslednjimi nameni:</p>
+            <ul>
+              <li>Odgovor na vaše povpraševanje ali sporočilo prek kontaktnega obrazca</li>
+              <li>Zagotavljanje tehničnega delovanja spletne strani</li>
+            </ul>
+            <p>Vaših podatkov ne posredujemo tretjim osebam in jih ne uporabljamo za trženje.</p>
+          </Block>
+
+          <Block title="4. Piškotki">
+            <p>Spletna stran uporablja tehnične piškotke, ki so nujno potrebni za delovanje strani. Ob prvem obisku vas o tem obvestimo in pridobimo vaše soglasje.</p>
+            <p>Piškotki se shranijo v vaš brskalnik in se samodejno izbrišejo po izteku veljavnosti (največ 12 mesecev).</p>
+          </Block>
+
+          <Block title="5. Čas hrambe podatkov">
+            <p>Podatke, ki jih prejmemo prek kontaktnega obrazca, hranimo največ <strong>12 mesecev</strong> od prejema sporočila, razen če je potrebno daljše hranjenje iz zakonskih razlogov.</p>
+          </Block>
+
+          <Block title="6. Vaše pravice">
+            <p>V skladu z Uredbo GDPR imate naslednje pravice:</p>
+            <ul>
+              <li><strong>Pravica do dostopa</strong> — vpogleda v svoje podatke</li>
+              <li><strong>Pravica do popravka</strong> — popravka netočnih podatkov</li>
+              <li><strong>Pravica do izbrisa</strong> — izbrisa vaših podatkov</li>
+              <li><strong>Pravica do preklica soglasja</strong> — kadarkoli brez posledic</li>
+              <li><strong>Pravica do pritožbe</strong> — pri Informacijskem pooblaščencu RS</li>
+            </ul>
+            <p>
+              Za uveljavljanje pravic nas kontaktirajte na{" "}
+              <a href="mailto:info@ursljagora.si" style={{ color: GOLD }}>info@ursljagora.si</a>.
+            </p>
+          </Block>
+
+          <Block title="7. Kontakt Informacijskega pooblaščenca">
+            <p>
+              Če menite, da vaši podatki niso obdelani v skladu z zakonom, se lahko pritožite pri{" "}
+              <a href="https://www.ip-rs.si" target="_blank" rel="noopener noreferrer" style={{ color: GOLD }}>
+                Informacijskem pooblaščencu RS (ip-rs.si)
+              </a>.
+            </p>
+          </Block>
+
+          <p style={{ fontSize: 13, color: "rgba(17,16,8,0.4)", marginTop: 8 }}>
+            Dokument je bil nazadnje posodobljen: april 2026
+          </p>
+        </div>
       </section>
 
-      <section>
-        <h2 className="text-2xl font-semibold mb-2">3. Namen obdelave podatkov</h2>
-        <ul className="list-disc ml-6 space-y-1">
-          <li>zagotavljanje pravilnega delovanja spletne strani,</li>
-          <li>izboljšanje uporabniške izkušnje,</li>
-          <li>odgovarjanje na povpraševanja,</li>
-          <li>statistična analiza obiska (če je omogočena).</li>
-        </ul>
-      </section>
-
-      <section>
-        <h2 className="text-2xl font-semibold mb-2">4. Pravna podlaga</h2>
-        <p>
-          Podatke obdelujemo na podlagi zakonitega interesa, privolitve uporabnika 
-          (piškotki, obrazci) ali pogodbenega razmerja v primeru povpraševanj.
-        </p>
-      </section>
-
-      <section>
-        <h2 className="text-2xl font-semibold mb-2">5. Hramba podatkov</h2>
-        <p>
-          Podatki se hranijo le toliko časa, kot je potrebno za izpolnitev namena:
-        </p>
-        <ul className="list-disc ml-6 space-y-1">
-          <li>kontaktni podatki: do zaključka komunikacije,</li>
-          <li>analitični podatki: skladno s politiko ponudnika,</li>
-          <li>tehnični podatki: kratkotrajno za varnost in delovanje strežnika.</li>
-        </ul>
-      </section>
-
-      <section>
-        <h2 className="text-2xl font-semibold mb-2">6. Posredovanje podatkov</h2>
-        <p>
-          Podatki se lahko posredujejo ponudnikom gostovanja, analitike ali drugim 
-          pogodbenim partnerjem, ki zagotavljajo delovanje strani. Podatkov ne 
-          posredujemo nepooblaščenim osebam in jih ne prodajamo.
-        </p>
-      </section>
-
-      <section>
-        <h2 className="text-2xl font-semibold mb-2">7. Pravice uporabnikov</h2>
-        <p>Uporabniki imajo pravico do:</p>
-        <ul className="list-disc ml-6 space-y-1">
-          <li>dostopa do svojih podatkov,</li>
-          <li>popravka ali izbrisa,</li>
-          <li>omejitve obdelave,</li>
-          <li>ugovora,</li>
-          <li>prenosa podatkov,</li>
-          <li>preklica privolitve.</li>
-        </ul>
-        <p>
-          Zahtevo lahko pošljete na e‑poštni naslov upravljavca.
-        </p>
-      </section>
-
-      <section>
-        <h2 className="text-2xl font-semibold mb-2">8. Piškotki</h2>
-        <p>
-          Spletna stran uporablja osnovne piškotke za delovanje. Če je omogočena 
-          analitika, se uporabljajo tudi analitični piškotki (npr. Google Analytics). 
-          Uporabnik lahko piškotke upravlja ali izbriše v nastavitvah brskalnika.
-        </p>
-      </section>
-
-      <section>
-        <h2 className="text-2xl font-semibold mb-2">9. Varnost podatkov</h2>
-        <p>
-          Podatki so zaščiteni z ustreznimi tehničnimi in organizacijskimi ukrepi, 
-          ki preprečujejo izgubo, zlorabo ali nepooblaščen dostop.
-        </p>
-      </section>
-
-      <section>
-        <h2 className="text-2xl font-semibold mb-2">10. Spremembe politike zasebnosti</h2>
-        <p>
-          Politika zasebnosti se lahko občasno posodobi. Zadnja posodobitev: 
-          <strong> marec 2026</strong>.
-        </p>
-      </section>
-<section>
-  <h2 className="text-2xl font-semibold mb-2">10.1 Dodatne informacije</h2>
-  <p>
-    Za vsa dodatna vprašanja v zvezi z varstvom osebnih podatkov, uporabo spletne
-    strani ali uveljavljanjem vaših pravic se lahko obrnete na upravljavca preko
-    e‑pošte ali telefona. Odgovor boste prejeli v najkrajšem možnem času, najkasneje
-    pa v roku 30 dni od prejema zahteve.
-  </p>
-  <p className="mt-2">
-    Če menite, da je prišlo do kršitve varstva osebnih podatkov, lahko vložite
-    pritožbo pri:
-    <br />
-    <strong>Informacijskem pooblaščencu Republike Slovenije</strong>
-    <br />
-    Dunajska cesta 22, 1000 Ljubljana
-    <br />
-    www.ip-rs.si
-  </p>
-</section>
-
+      <Footer />
     </main>
+  );
+}
+
+function Block({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div style={{
+      background: "white", borderRadius: 16,
+      padding: "32px 36px",
+      border: "1px solid rgba(17,16,8,0.07)",
+    }}>
+      <h2 style={{
+        fontSize: 20, fontWeight: 600, color: DARK,
+        letterSpacing: "-0.01em", marginBottom: 16,
+        borderLeft: `3px solid ${GOLD}`, paddingLeft: 14,
+      }}>
+        {title}
+      </h2>
+      <div style={{
+        fontSize: 15, color: "rgba(17,16,8,0.65)",
+        lineHeight: 1.8, display: "flex", flexDirection: "column", gap: 10,
+      }}>
+        {children}
+      </div>
+    </div>
   );
 }
