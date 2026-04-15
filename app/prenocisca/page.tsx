@@ -1,8 +1,13 @@
 "use client";
 
+import dynamic from "next/dynamic";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import MarzipanoViewer from "@/components/MarzipanoViewer";
+
+const MarzipanoViewer = dynamic(() => import("@/components/MarzipanoViewer"), {
+  ssr: false,
+});
 
 const GOLD = "#c9a96e";
 const CREAM = "#f7f4ef";
@@ -38,6 +43,7 @@ const globalStyles = `
   .pren-gallery.g3 .cell-c { grid-column: 2; grid-row: 2; }
 
   .pren-cell {
+    position: relative;
     overflow: hidden;
     cursor: pointer;
   }
@@ -144,7 +150,13 @@ function RoomGallery({ images, roomName }: { images: string[]; roomName: string 
             className={`pren-cell ${cellClass(i)}`}
             onClick={() => setLightbox(i)}
           >
-            <img src={src} alt={`${roomName} ${i + 1}`} />
+            <Image
+              src={src}
+              alt={`${roomName} ${i + 1}`}
+              fill
+              sizes="(max-width: 740px) 100vw, 50vw"
+              style={{ objectFit: "cover" }}
+            />
           </div>
         ))}
       </div>
@@ -153,8 +165,17 @@ function RoomGallery({ images, roomName }: { images: string[]; roomName: string 
       {count > 1 && (
         <div className="pren-thumbs">
           {images.map((src, i) => (
-            <img key={i} src={src} alt="" onClick={() => setLightbox(i)}
-              style={{ opacity: i === lightbox ? 1 : undefined }} />
+            <Image
+              key={i}
+              src={src}
+              alt=""
+              width={52}
+              height={36}
+              sizes="52px"
+              loading="lazy"
+              onClick={() => setLightbox(i)}
+              style={{ opacity: i === lightbox ? 1 : undefined }}
+            />
           ))}
         </div>
       )}
@@ -182,6 +203,8 @@ function RoomGallery({ images, roomName }: { images: string[]; roomName: string 
               <img
                 src={images[lightbox]}
                 alt={roomName}
+                loading="eager"
+                decoding="async"
                 style={{ width: "100%", borderRadius: 12, display: "block", maxHeight: "78vh", objectFit: "contain" }}
               />
 
@@ -213,8 +236,14 @@ function RoomGallery({ images, roomName }: { images: string[]; roomName: string 
               {/* Thumbnail strip v lightboxu */}
               <div style={{ display: "flex", gap: 6, marginTop: 14, justifyContent: "center", flexWrap: "wrap" }}>
                 {images.map((src, i) => (
-                  <img
-                    key={i} src={src} alt=""
+                  <Image
+                    key={i}
+                    src={src}
+                    alt=""
+                    width={48}
+                    height={34}
+                    sizes="48px"
+                    loading="lazy"
                     onClick={() => setLightbox(i)}
                     style={{
                       width: 48, height: 34, objectFit: "cover", borderRadius: 6,
@@ -254,7 +283,7 @@ function arrowBtn(side: "left" | "right"): React.CSSProperties {
 const rooms = [
 
   {
-    id: 2,
+    id: 1,
     name: "Samostojne sobe",
     type: "Zasebne sobe",
     desc: "Tihe, skromno opremljene sobe za posameznike ali pare. Leseni detajli, mehka svetloba in pogled na gorski svet ustvarjajo vzdušje pristne planinske domačnosti.",
@@ -264,15 +293,15 @@ const rooms = [
     ],
     amenities: ["Skupna kopalnica", "Skupni WC", "Posteljnina", "Pogled na naravo"],
     images: [
-      "/sobe_Sony/samostojne/Sobe_Sony-5.jpg",
-      "/sobe_Sony/samostojne/Sobe_Sony-7.jpg",
-      "/sobe_Sony/samostojne/Sobe_Sony-8.jpg",
-      "/sobe_Sony/samostojne/Sobe_Sony-25.jpg",
-      "/sobe_Sony/samostojne/Sobe_Sony-29.jpg",
+      "/sobe_Sony/samostojne_COMP/Sobe_Sony-5.jpg",
+      "/sobe_Sony/samostojne_COMP/Sobe_Sony-7.jpg",
+      "/sobe_Sony/samostojne_COMP/Sobe_Sony-8.jpg",
+      "/sobe_Sony/samostojne_COMP/Sobe_Sony-25.jpg",
+      "/sobe_Sony/samostojne_COMP/Sobe_Sony-29.jpg",
     ],
     panoramaImages: [
-      "/sobe_Sony/samostojne/PHOTO_0015.jpg",
-      "/sobe_Sony/samostojne/PHOTO_0031.jpg",
+      "/sobe_Sony/samostojne_COMP/PHOTO_0015.jpg",
+      "/sobe_Sony/samostojne_COMP/PHOTO_0031.jpg",
     ],
   },
   {
@@ -286,19 +315,19 @@ const rooms = [
     ],
     amenities: ["Skupna kopalnica", "Skupni WC", "Posteljnina", "Omarica z ključavnico"],
     images: [
-      "/sobe_Sony/6-8/Sobe_Sony-11.jpg",
-      "/sobe_Sony/6-8/Sobe_Sony-13.jpg",
-      "/sobe_Sony/6-8/Sobe_Sony-14.jpg",
-      "/sobe_Sony/6-8/Sobe_Sony-15.jpg",
-      "/sobe_Sony/6-8/Sobe_Sony-17.jpg",
+      "/sobe_Sony/6-8_COMP/Sobe_Sony-11.jpg",
+      "/sobe_Sony/6-8_COMP/Sobe_Sony-13.jpg",
+      "/sobe_Sony/6-8_COMP/Sobe_Sony-14.jpg",
+      "/sobe_Sony/6-8_COMP/Sobe_Sony-15.jpg",
+      "/sobe_Sony/6-8_COMP/Sobe_Sony-17.jpg",
     ],
     panoramaImages: [
-      "/sobe_Sony/6-8/PHOTO_0011.jpg",
-      "/sobe_Sony/6-8/PHOTO_0012.jpg",
-      "/sobe_Sony/6-8/PHOTO_0013.jpg",
-      "/sobe_Sony/6-8/PHOTO_0014.jpg",
-      "/sobe_Sony/6-8/PHOTO_0026.jpg",
-      "/sobe_Sony/6-8/PHOTO_0028.jpg",
+      "/sobe_Sony/6-8_COMP/PHOTO_0011.jpg",
+      "/sobe_Sony/6-8_COMP/PHOTO_0012.jpg",
+      "/sobe_Sony/6-8_COMP/PHOTO_0013.jpg",
+      "/sobe_Sony/6-8_COMP/PHOTO_0014.jpg",
+      "/sobe_Sony/6-8_COMP/PHOTO_0026.jpg",
+      "/sobe_Sony/6-8_COMP/PHOTO_0028.jpg",
     ],
   },
   {
@@ -312,16 +341,16 @@ const rooms = [
     ],
     amenities: ["Skupna kopalnica", "Skupni WC", "Posteljnina", "Planinski ambient"],
     images: [
-      "/sobe_Sony/skupinske/Sobe_Sony-18.jpg",
-      "/sobe_Sony/skupinske/Sobe_Sony-19.jpg",
-      "/sobe_Sony/skupinske/Sobe_Sony-21.jpg",
-      "/sobe_Sony/skupinske/Sobe_Sony-22.jpg",
-      "/sobe_Sony/skupinske/Sobe_Sony-30.jpg",
+      "/sobe_Sony/skupinske_COMP/Sobe_Sony-18.jpg",
+      "/sobe_Sony/skupinske_COMP/Sobe_Sony-19.jpg",
+      "/sobe_Sony/skupinske_COMP/Sobe_Sony-21.jpg",
+      "/sobe_Sony/skupinske_COMP/Sobe_Sony-22.jpg",
+      "/sobe_Sony/skupinske_COMP/Sobe_Sony-30.jpg",
     ],
     panoramaImages: [
-      "/sobe_Sony/skupinske/PHOTO_0018.jpg",
-      "/sobe_Sony/skupinske/PHOTO_0020.jpg",
-      "/sobe_Sony/skupinske/PHOTO_0030.jpg",
+      "/sobe_Sony/skupinske_COMP/PHOTO_0018.jpg",
+      "/sobe_Sony/skupinske_COMP/PHOTO_0020.jpg",
+      "/sobe_Sony/skupinske_COMP/PHOTO_0030.jpg",
     ],
   },
   {
@@ -335,20 +364,20 @@ const rooms = [
     ],
     amenities: ["Kamin z drvmi", "Sedeži in mize", "Topla voda", "Skupna raba"],
     images: [
-      "/sobe_Sony/skupni_prostori/Sobe_Sony-1.jpg",
-      "/sobe_Sony/skupni_prostori/Sobe_Sony-2.jpg",
-      "/sobe_Sony/skupni_prostori/Sobe_Sony-4.jpg",
-      "/sobe_Sony/skupni_prostori/Sobe_Sony-10.jpg",
-      "/sobe_Sony/skupni_prostori/Sobe_Sony-23.jpg",
+      "/sobe_Sony/skupni_prostori_COMP/Sobe_Sony-1.jpg",
+      "/sobe_Sony/skupni_prostori_COMP/Sobe_Sony-2.jpg",
+      "/sobe_Sony/skupni_prostori_COMP/Sobe_Sony-4.jpg",
+      "/sobe_Sony/skupni_prostori_COMP/Sobe_Sony-10.jpg",
+      "/sobe_Sony/skupni_prostori_COMP/Sobe_Sony-23.jpg",
     ],
     panoramaImages: [
-      "/sobe_Sony/skupni_prostori/PHOTO_0004.jpg",
-      "/sobe_Sony/skupni_prostori/PHOTO_0006.jpg",
-      "/sobe_Sony/skupni_prostori/PHOTO_0008.jpg",
-      "/sobe_Sony/skupni_prostori/PHOTO_0022.jpg",
-      "/sobe_Sony/skupni_prostori/PHOTO_0023.jpg",
-      "/sobe_Sony/skupni_prostori/PHOTO_0025.jpg",
-      "/sobe_Sony/skupni_prostori/PHOTO_0029.jpg",
+      "/sobe_Sony/skupni_prostori_COMP/PHOTO_0004.jpg",
+      "/sobe_Sony/skupni_prostori_COMP/PHOTO_0006.jpg",
+      "/sobe_Sony/skupni_prostori_COMP/PHOTO_0008.jpg",
+      "/sobe_Sony/skupni_prostori_COMP/PHOTO_0022.jpg",
+      "/sobe_Sony/skupni_prostori_COMP/PHOTO_0023.jpg",
+      "/sobe_Sony/skupni_prostori_COMP/PHOTO_0025.jpg",
+      "/sobe_Sony/skupni_prostori_COMP/PHOTO_0029.jpg",
     ],
   },
 ];
@@ -376,19 +405,6 @@ function PanoramaGallery({
   return (
     <>
       <div style={{ marginTop: 28 }}>
-        <p
-          style={{
-            fontSize: 11,
-            color: GOLD,
-            fontWeight: 600,
-            letterSpacing: "0.16em",
-            textTransform: "uppercase",
-            margin: "0 0 14px",
-          }}
-        >
-          360 Pogledi
-        </p>
-
         <div
           style={{
             border: "1px solid rgba(17,16,8,0.1)",
@@ -398,10 +414,13 @@ function PanoramaGallery({
           }}
         >
           <div style={{ position: "relative", aspectRatio: "16 / 9", overflow: "hidden" }}>
-            <img
+            <Image
               src={images[selectedPanorama]}
               alt={`${roomName} 360 ${selectedPanorama + 1}`}
-              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+              fill
+              sizes="(max-width: 740px) 100vw, 50vw"
+              loading="lazy"
+              style={{ objectFit: "cover", display: "block" }}
             />
             <div
               style={{
@@ -453,66 +472,30 @@ function PanoramaGallery({
               ›
             </button>
 
-            <div
+            <button
+              type="button"
+              onClick={() => setActivePanorama(selectedPanorama)}
               style={{
                 position: "absolute",
-                left: 14,
                 bottom: 14,
+                left: 14,
                 display: "inline-flex",
                 alignItems: "center",
-                gap: 8,
-                padding: "8px 12px",
+                justifyContent: "center",
+                padding: "12px 16px",
                 borderRadius: 999,
-                background: "rgba(255,255,255,0.14)",
-                border: "1px solid rgba(255,255,255,0.25)",
+                border: "1px solid rgba(255,255,255,0.24)",
+                background: "rgba(17,16,8,0.68)",
                 color: "white",
                 fontSize: 12,
                 fontWeight: 600,
-                letterSpacing: "0.04em",
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                cursor: "pointer",
               }}
             >
-              360 pogled {selectedPanorama + 1} / {images.length}
-            </div>
-          </div>
-
-          <div style={{ padding: "14px 16px 16px" }}>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                gap: 12,
-                flexWrap: "wrap",
-              }}
-            >
-              <div>
-                <p style={{ margin: 0, fontSize: 14, color: DARK, fontWeight: 500 }}>
-                  Panorama {selectedPanorama + 1}
-                </p>
-                <p style={{ margin: "4px 0 0", fontSize: 12.5, color: "rgba(17,16,8,0.58)", lineHeight: 1.5 }}>
-                  Interaktivni pogled prostora, ki ga lahko zavrtiš v vse smeri.
-                </p>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setActivePanorama(selectedPanorama)}
-                style={{
-                  border: "1px solid rgba(17,16,8,0.1)",
-                  background: DARK,
-                  color: "white",
-                  borderRadius: 999,
-                  padding: "12px 16px",
-                  cursor: "pointer",
-                  fontSize: 12,
-                  fontWeight: 600,
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                }}
-              >
-                Odpri 360
-              </button>
-            </div>
+              Odpri 360
+            </button>
           </div>
         </div>
       </div>
@@ -677,9 +660,14 @@ export default function PrenociscaPage() {
 
       {/* ── HERO ── */}
       <section style={{ position: "relative", height: "52vh", minHeight: 320, overflow: "hidden" }}>
-        <img
-          src="/drone1.jpg" alt="Prenočišča"
-          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+        <Image
+          src="/drone1.jpg"
+          alt="Prenočišča"
+          fill
+          priority
+          fetchPriority="high"
+          sizes="100vw"
+          style={{ objectFit: "cover" }}
         />
         <div style={{
           position: "absolute", inset: 0,

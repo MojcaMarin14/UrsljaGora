@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { color, motion, rgba } from "framer-motion";
 import { fetchAPI, getStrapiMedia } from "@/lib/api";
 import Link from "next/link";
 import Footer from "../components/Footer";
@@ -73,7 +73,7 @@ function FeaturedCard({ img, category, title, excerpt, href }: {
         />
         <div style={{
           position: "absolute", inset: 0,
-          background: "linear-gradient(to top, rgba(17,16,8,0.95) 0%, rgba(17,16,8,0.45) 50%, transparent 100%)",
+          background: `linear-gradient(to top, rgba(126, 126, 123, 0.6), rgba(17,16,8,0.3) 60%, transparent 100%)`,
         }} />
         <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "36px 36px 42px" }}>
           <CategoryBadge category={category} light />
@@ -198,16 +198,16 @@ export default function AktualnoPage() {
       {/* ── STATIČNI HERO — brez videa, takojšen ── */}
       <section style={{
         position: "relative", width: "100%", height: "44vh", overflow: "hidden",
-        // Elegantno temno ozadje z zlatim gradientom — enako kot homepage dark sekcije
-        background: `linear-gradient(135deg, ${DARK} 0%, #1e1c10 60%, #2a2410 100%)`,
+        backgroundImage: `url('/Drone-April-4.jpg')`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
         display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
       }}>
 
-        {/* Dekorativni zlati krog v ozadju */}
+        {/* Overlay za berljivost besedila */}
         <div style={{
-          position: "absolute", width: 600, height: 600, borderRadius: "50%",
-          background: `radial-gradient(circle, rgba(201,169,110,0.08) 0%, transparent 70%)`,
-          top: "50%", left: "50%", transform: "translate(-50%, -50%)",
+          position: "absolute", inset: 0,
+          background: "rgba(0, 0, 0, 0.53)",
           pointerEvents: "none",
         }} />
 
@@ -218,11 +218,13 @@ export default function AktualnoPage() {
           backgroundSize: "48px 48px",
         }} />
 
-        {/* Spodnji prehod */}
+        {/*
+        // Spodnji prehod 
         <div style={{
           position: "absolute", bottom: 0, left: 0, right: 0, height: 80,
-          background: `linear-gradient(to bottom, transparent, ${CREAM})`,
+          background: `linear-gradient(to bottom, transparent 0%, ${CREAM} 100%)`,
         }} />
+        */}
 
         {/* Vsebina */}
         <div style={{ position: "relative", zIndex: 10, textAlign: "center", padding: "0 24px" }}>
@@ -252,7 +254,7 @@ export default function AktualnoPage() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.18 }}
-            style={{ marginTop: 16, fontSize: 16, color: "rgba(255,255,255,0.45)", maxWidth: 380, lineHeight: 1.7, fontFamily: "sans-serif", margin: "16px auto 0" }}
+            style={{ marginTop: 16, fontSize: 16, color: "rgba(255, 255, 255, 0.76)", maxWidth: 380, lineHeight: 1.7, fontFamily: "sans-serif", margin: "16px auto 0" }}
           >
             Novice, posebne ponudbe in prihajajoči dogodki na vrhu Koroške.
           </motion.p>
