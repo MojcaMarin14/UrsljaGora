@@ -34,6 +34,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="bg-[var(--background)] text-[var(--foreground)] m-0 p-0">
         <Navbar />
         {children}
+        {/* Vercel Analytics – spremljanje obiskov, GDPR-skladno, brez piškotkov */}
         <Analytics />
         <CookieConsent />
       </body>
