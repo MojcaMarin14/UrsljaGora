@@ -7,7 +7,7 @@ import { useState } from "react";
 
 const MarzipanoViewer = dynamic(() => import("@/components/MarzipanoViewer"), {
   ssr: false,
-});
+}); //improved performance ker se marzipano viewer nalozi dinamicno samo ko je potreben
 
 const GOLD = "#c9a96e";
 const CREAM = "#f7f4ef";
