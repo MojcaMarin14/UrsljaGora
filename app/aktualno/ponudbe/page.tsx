@@ -472,7 +472,7 @@ export default function PonudbePage() {
         </div>
       </section>
 
-      <Footer />
+      <Footer dark />
     </main>
   );
 }

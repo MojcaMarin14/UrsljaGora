@@ -447,7 +447,7 @@ export default function DogodkiPage() {
         </div>
       </section>
 
-      <Footer />
+      <Footer dark />
     </main>
   );
 }

@@ -6,24 +6,26 @@ import Image from "next/image";
 import Footer from "./components/Footer";
 import SeasonsSection from "./components/SeasonsSection";
 
-const GOLD = "rgba(221, 204, 171, 0.91)";
+const GOLD = "rgba(188, 147, 72, 0.57)";
 const CREAM = "#f7f4ef";
 const DARK = "#111008";
-
+const GOLD1 = "rgba(215, 191, 148, 0.82)";
 function SectionLabel({ text, light = false }: { text: string; light?: boolean }) {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
-      <div style={{ width: 28, height: 1, background: light ? "rgba(201,169,110,0.7)" : GOLD, flexShrink: 0 }} />
+      <div style={{ width: 36, height: 2, background: light ? "rgba(203, 160, 81, 0.7)" : GOLD, flexShrink: 0 }} />
       <span style={{
-        fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase",
-        color: light ? "rgba(201,169,110,0.85)" : GOLD, fontWeight: 600
+        fontSize: 22,
+        letterSpacing: "0.18em",
+        textTransform: "uppercase",
+        color: light ? "rgba(167, 141, 91, 0.9)" : "#8B6914",  // temnejši gold na svetlem ozadju
+        fontWeight: 700
       }}>
         {text}
       </span>
     </div>
   );
 }
-
 function ActivityCard({ img, title, desc }: { img: string; title: string; desc: string }) {
   return (
     <motion.div
@@ -148,7 +150,7 @@ export default function HomePage() {
             style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 28 }}
           >
             <div style={{ width: 40, height: 1, background: "rgba(221, 204, 171, 0.91)" }} />
-            <span style={{ fontSize: 12, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(221, 204, 171, 0.91)", fontWeight: 500 }}>
+            <span style={{ fontSize: 21, letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(221, 204, 171, 0.91)", fontWeight: 500 }}>
               Uršlja gora · Koroška
             </span>
             <div style={{ width: 40, height: 1, background: "rgba(221, 204, 171, 0.91)" }} />
@@ -171,7 +173,7 @@ export default function HomePage() {
             transition={{ duration: 0.8, delay: 0.7 }}
             style={{ marginTop: 24, fontSize: 18, color: "rgb(239, 239, 239)", maxWidth: 440, lineHeight: 1.7 }}
           >
-            Koča, narava in razgledi, ki vzamejo dih na vrhu Koroške.
+          
           </motion.p>
 
           <motion.div
@@ -184,7 +186,7 @@ export default function HomePage() {
               href="/kontakt"
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.97 }}
-              style={{ display: "inline-flex", alignItems: "center", gap: 8, background: GOLD, color: DARK, fontWeight: 700, padding: "14px 32px", borderRadius: 999, textDecoration: "none", fontSize: 14, letterSpacing: "0.02em" }}
+              style={{ display: "inline-flex", alignItems: "center", gap: 8, background: GOLD1, color: DARK, fontWeight: 700, padding: "14px 32px", borderRadius: 999, textDecoration: "none", fontSize: 17, letterSpacing: "0.02em" }}
             >
               Obiščite nas →
             </motion.a>
@@ -382,7 +384,7 @@ export default function HomePage() {
       </section>
 
       <SeasonsSection />
-      <Footer />
+      <Footer dark />
     </main>
   );
 }

@@ -1,20 +1,33 @@
 "use client";
 
-import { color, motion, rgba } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { fetchAPI, getStrapiMedia } from "@/lib/api";
 import Link from "next/link";
 import Footer from "../components/Footer";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 const GOLD  = "#c9a96e";
 const CREAM = "#f7f4ef";
 const DARK  = "#111008";
+const DEEP  = "#1c1a10";   // temnejši odsek — toplo, ne črno
+const MID   = "#2a2718";   // srednje temna za quote banner
 
 const CATEGORY_CONFIG: Record<string, { color: string; bg: string; borderColor: string; icon: string; label: string }> = {
   Novice:  { color: "#1a6b3c", bg: "rgba(26,107,60,0.10)",  borderColor: "rgba(26,107,60,0.25)",  icon: "📰", label: "Novice"  },
   Ponudbe: { color: "#9a4e00", bg: "rgba(154,78,0,0.10)",   borderColor: "rgba(154,78,0,0.25)",   icon: "🏷️", label: "Ponudbe" },
   Dogodki: { color: "#1a3d7a", bg: "rgba(26,61,122,0.10)",  borderColor: "rgba(26,61,122,0.25)",  icon: "📅", label: "Dogodki" },
 };
+
+function SectionLabel({ text, dark = false }: { text: string; dark?: boolean }) {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
+      <div style={{ width: 32, height: 1, background: GOLD, flexShrink: 0 }} />
+      <span style={{ fontSize: 13, letterSpacing: "0.18em", textTransform: "uppercase", color: dark ? "rgba(201,169,110,0.9)" : "#8B6914", fontWeight: 700 }}>
+        {text}
+      </span>
+    </div>
+  );
+}
 
 function CategoryBadge({ category, light = false }: { category: string; light?: boolean }) {
   const cfg = CATEGORY_CONFIG[category] ?? { color: GOLD, bg: "rgba(201,169,110,0.12)", borderColor: "rgba(201,169,110,0.3)", icon: "•", label: category };
@@ -24,7 +37,7 @@ function CategoryBadge({ category, light = false }: { category: string; light?: 
         display: "inline-flex", alignItems: "center", gap: 6,
         background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.3)",
         color: "white", borderRadius: 999, fontSize: 11, fontWeight: 600,
-        letterSpacing: "0.06em", padding: "5px 14px", fontFamily: "sans-serif",
+        letterSpacing: "0.06em", padding: "5px 14px",
         textTransform: "uppercase", marginBottom: 16,
       }}>
         {cfg.icon} {cfg.label}
@@ -36,7 +49,7 @@ function CategoryBadge({ category, light = false }: { category: string; light?: 
       display: "inline-flex", alignItems: "center", gap: 6,
       background: cfg.bg, border: `1px solid ${cfg.borderColor}`,
       color: cfg.color, borderRadius: 999, fontSize: 11, fontWeight: 700,
-      letterSpacing: "0.05em", padding: "5px 14px", fontFamily: "sans-serif",
+      letterSpacing: "0.05em", padding: "5px 14px",
       textTransform: "uppercase", marginBottom: 14,
     }}>
       {cfg.icon} {cfg.label}
@@ -54,6 +67,16 @@ function Skeleton({ style }: { style?: React.CSSProperties }) {
   );
 }
 
+function GridSkeleton() {
+  return (
+    <div style={{ maxWidth: 1152, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gridTemplateRows: "auto auto", gap: 20 }}>
+      <Skeleton style={{ gridRow: "span 2", minHeight: 480, borderRadius: 24 }} />
+      <Skeleton style={{ height: 180, borderRadius: 20 }} />
+      <Skeleton style={{ height: 180, borderRadius: 20 }} />
+    </div>
+  );
+}
+
 function FeaturedCard({ img, category, title, excerpt, href }: {
   img: string; category: string; title: string; excerpt: string; href: string;
 }) {
@@ -62,7 +85,8 @@ function FeaturedCard({ img, category, title, excerpt, href }: {
       initial={{ opacity: 0, y: 32 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      style={{ position: "relative", borderRadius: 24, overflow: "hidden", gridRow: "span 2" }}
+      whileHover={{ y: -4 }}
+      style={{ position: "relative", borderRadius: 24, overflow: "hidden", gridRow: "span 2", border: "1px solid rgba(0,0,0,0.08)" }}
     >
       <Link href={href} style={{ display: "block", textDecoration: "none", height: "100%" }}>
         <motion.img
@@ -73,7 +97,7 @@ function FeaturedCard({ img, category, title, excerpt, href }: {
         />
         <div style={{
           position: "absolute", inset: 0,
-          background: `linear-gradient(to top, rgba(126, 126, 123, 0.6), rgba(17,16,8,0.3) 60%, transparent 100%)`,
+          background: "linear-gradient(to top, rgba(17,16,8,0.88) 0%, rgba(17,16,8,0.35) 55%, transparent 100%)",
         }} />
         <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "36px 36px 42px" }}>
           <CategoryBadge category={category} light />
@@ -83,16 +107,13 @@ function FeaturedCard({ img, category, title, excerpt, href }: {
           }}>
             {title}
           </h2>
-          <p style={{
-            fontFamily: "sans-serif", fontSize: 16, color: "rgba(255,255,255,0.72)",
-            lineHeight: 1.75, marginBottom: 26, maxWidth: 400,
-          }}>
+          <p style={{ fontSize: 15, color: "rgba(255,255,255,0.7)", lineHeight: 1.75, marginBottom: 26, maxWidth: 400 }}>
             {excerpt}
           </p>
           <span style={{
             display: "inline-flex", alignItems: "center", gap: 8,
             color: GOLD, fontSize: 13, fontWeight: 600,
-            letterSpacing: "0.06em", textTransform: "uppercase", fontFamily: "sans-serif",
+            letterSpacing: "0.06em", textTransform: "uppercase",
           }}>
             Preberi vse →
           </span>
@@ -110,7 +131,7 @@ function SmallCard({ img, category, title, excerpt, href, delay = 0 }: {
     <motion.div
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
-     transition={{ duration: 0.5, delay, ease: "easeOut" }}
+      transition={{ duration: 0.5, delay, ease: "easeOut" }}
       whileHover={{ y: -4 }}
       style={{
         background: "white", borderRadius: 20, overflow: "hidden",
@@ -136,15 +157,14 @@ function SmallCard({ img, category, title, excerpt, href, delay = 0 }: {
               {title}
             </h3>
           </Link>
-          <p style={{ fontFamily: "sans-serif", fontSize: 14, color: "rgba(17,16,8,0.6)", lineHeight: 1.7, margin: 0 }}>
+          <p style={{ fontSize: 14, color: "rgba(17,16,8,0.6)", lineHeight: 1.7, margin: 0 }}>
             {excerpt}
           </p>
         </div>
         <Link href={href} style={{
           display: "inline-flex", alignItems: "center", gap: 6, marginTop: 14,
           color: cfg?.color ?? GOLD, fontSize: 11, fontWeight: 700,
-          letterSpacing: "0.06em", textTransform: "uppercase",
-          textDecoration: "none", fontFamily: "sans-serif",
+          letterSpacing: "0.06em", textTransform: "uppercase", textDecoration: "none",
         }}>
           Preberi vse →
         </Link>
@@ -153,17 +173,12 @@ function SmallCard({ img, category, title, excerpt, href, delay = 0 }: {
   );
 }
 
-function GridSkeleton() {
-  return (
-    <div style={{ maxWidth: 1152, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gridTemplateRows: "auto auto", gap: 20 }}>
-      <Skeleton style={{ gridRow: "span 2", minHeight: 480, borderRadius: 24 }} />
-      <Skeleton style={{ height: 180, borderRadius: 20 }} />
-      <Skeleton style={{ height: 180, borderRadius: 20 }} />
-    </div>
-  );
-}
-
 export default function AktualnoPage() {
+  const heroRef = useRef(null);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+  const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+
   const [novica,  setNovica]  = useState<any>(null);
   const [ponudba, setPonudba] = useState<any>(null);
   const [dogodek, setDogodek] = useState<any>(null);
@@ -194,140 +209,162 @@ export default function AktualnoPage() {
           100% { background-position: -200% 0; }
         }
       `}</style>
+{/* ── HERO ── */}
+<section ref={heroRef} style={{ position: "relative", width: "100%", height: "100vh", overflow: "hidden" }}>
+  <motion.div
+    style={{ y: heroY, position: "absolute", inset: 0 }}
+    initial={{ scale: 1.1 }}
+    animate={{ scale: 1 }}
+    transition={{ duration: 1.5, ease: "easeOut" }}
+  >
+    <img
+      src="/Drone-April-4.jpg"
+      alt="Aktualno — Uršlja gora"
+      style={{ width: "100%", height: "100%", objectFit: "cover" }}
+    />
+    <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.5) 60%, #1e1e1e 100%)" }} />
+  </motion.div>
 
-      {/* ── STATIČNI HERO — brez videa, takojšen ── */}
-      <section style={{
-        position: "relative", width: "100%", height: "44vh", overflow: "hidden",
-        backgroundImage: `url('/Drone-April-4.jpg')`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-      }}>
+  <motion.div
+    style={{
+      opacity: heroOpacity,
+      position: "relative", zIndex: 10,
+      display: "flex", flexDirection: "column",
+      alignItems: "center", justifyContent: "center",
+      height: "100%", textAlign: "center", padding: "0 24px", paddingTop: 96,
+    }}
+  >
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, delay: 0.2 }}
+      style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 28 }}
+    >
+      <div style={{ width: 36, height: 1, background: "rgba(201,169,110,0.7)" }} />
+      <span style={{ fontSize: 22, letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(201,169,110,0.9)", fontWeight: 500 }}>
+        Uršlja gora · Koroška
+      </span>
+      <div style={{ width: 36, height: 1, background: "rgba(201,169,110,0.7)" }} />
+    </motion.div>
 
-        {/* Overlay za berljivost besedila */}
-        <div style={{
-          position: "absolute", inset: 0,
-          background: "rgba(0, 0, 0, 0.53)",
-          pointerEvents: "none",
-        }} />
+    <motion.h1
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.9, delay: 0.3 }}
+      style={{ fontSize: "clamp(64px, 12vw, 120px)", fontWeight: 500, letterSpacing: "-0.03em", lineHeight: 1, color: "white", margin: 0 }}
+    >
+      Aktu<span style={{ color: GOLD }}>alno</span>
+    </motion.h1>
 
-        {/* Subtilna grid tekstura */}
-        <div style={{
-          position: "absolute", inset: 0,
-          backgroundImage: "linear-gradient(rgba(201,169,110,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(201,169,110,0.04) 1px, transparent 1px)",
-          backgroundSize: "48px 48px",
-        }} />
+    <motion.div
+      initial={{ width: 0 }}
+      animate={{ width: 80 }}
+      transition={{ duration: 0.8, delay: 0.6 }}
+      style={{ height: 1, background: "rgba(201,169,110,0.6)", marginTop: 32, borderRadius: 999 }}
+    />
 
-        {/*
-        // Spodnji prehod 
-        <div style={{
-          position: "absolute", bottom: 0, left: 0, right: 0, height: 80,
-          background: `linear-gradient(to bottom, transparent 0%, ${CREAM} 100%)`,
-        }} />
-        */}
+    <motion.p
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, delay: 0.7 }}
+      style={{ marginTop: 24, fontSize: 22, color: "rgba(255,255,255,0.65)", maxWidth: 400, lineHeight: 1.7 }}
+    >
+      Novice, posebne ponudbe in prihajajoči dogodki na vrhu Koroške.
+    </motion.p>
 
-        {/* Vsebina */}
-        <div style={{ position: "relative", zIndex: 10, textAlign: "center", padding: "0 24px" }}>
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            style={{ display: "flex", alignItems: "center", gap: 16, justifyContent: "center", marginBottom: 20 }}
-          >
-            <div style={{ width: 36, height: 1, background: "rgba(201,169,110,0.5)" }} />
-            <span style={{ fontSize: 11, letterSpacing: "0.26em", textTransform: "uppercase", color: "rgba(201,169,110,0.8)", fontWeight: 500, fontFamily: "sans-serif" }}>
-              Uršlja gora · Koroška
-            </span>
-            <div style={{ width: 36, height: 1, background: "rgba(201,169,110,0.5)" }} />
-          </motion.div>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 1.2 }}
+      style={{ position: "absolute", bottom: 40, display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}
+    >
+      <span style={{ fontSize: 16, letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)" }}>
+        Pomakni navzdol
+      </span>
+      <motion.div
+        animate={{ y: [0, 8, 0] }}
+        transition={{ duration: 1.5, repeat: Infinity }}
+        style={{ width: 1, height: 32, background: "linear-gradient(to bottom, rgba(255,255,255,0.4), transparent)" }}
+      />
+    </motion.div>
+  </motion.div>
+</section>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.1 }}
-            style={{ fontSize: "clamp(40px, 8vw, 80px)", fontWeight: 500, color: "white", letterSpacing: "-0.03em", lineHeight: 1.08, margin: 0 }}
-          >
-            Aktu<span style={{ color: GOLD }}>alno</span>
-          </motion.h1>
+{/* ── TEMNA SEKCIJA ── */}
+<section style={{ backgroundColor: "#1e1e1e", padding: "100px 24px 120px" }}>
+  <motion.div
+    initial={{ opacity: 0, y: 24 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.7 }}
+    style={{ maxWidth: 860, margin: "0 auto", textAlign: "center" }}
+  >
+    <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20, justifyContent: "center" }}>
+      <div style={{ width: 32, height: 1, background: GOLD }} />
+      <span style={{ fontSize: 13, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(201,169,110,0.9)", fontWeight: 700 }}>
+        Vse novosti
+      </span>
+    </div>
+    <h2 style={{ fontSize: "clamp(28px, 4vw, 46px)", fontWeight: 500, color: "white", letterSpacing: "-0.025em", lineHeight: 1.2, marginBottom: 20 }}>
+      Vse na enem <span style={{ color: GOLD }}>mestu</span>
+    </h2>
+    <p style={{ fontSize: 17, color: "rgba(255,255,255,0.45)", lineHeight: 1.8, maxWidth: 560, margin: "0 auto 40px" }}>
+      Spremljajte dogajanje na Uršlji gori — od svežih novic in sezonskih ponudb do prihajajočih dogodkov, ki jih ne smete zamuditi.
+    </p>
+    <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center" }}>
+      {Object.entries(CATEGORY_CONFIG).map(([key, cfg]) => (
+        <span key={key} style={{
+          display: "inline-flex", alignItems: "center", gap: 6,
+          background: cfg.bg, border: `1px solid ${cfg.borderColor}`,
+          color: cfg.color, borderRadius: 999,
+          fontSize: 11, fontWeight: 700, padding: "5px 14px",
+          letterSpacing: "0.04em", textTransform: "uppercase",
+        }}>
+          {cfg.icon} {cfg.label}
+        </span>
+      ))}
+    </div>
+  </motion.div>
+</section>
 
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.18 }}
-            style={{ marginTop: 16, fontSize: 16, color: "rgba(255, 255, 255, 0.76)", maxWidth: 380, lineHeight: 1.7, fontFamily: "sans-serif", margin: "16px auto 0" }}
-          >
-            Novice, posebne ponudbe in prihajajoči dogodki na vrhu Koroške.
-          </motion.p>
-        </div>
-      </section>
+{/* ── GRID — svetlo ── */}
+<section style={{ backgroundColor: CREAM, padding: "80px 24px 100px" }}>
+  {loading ? <GridSkeleton /> : (
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6 }}
+      style={{ maxWidth: 1152, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gridTemplateRows: "auto auto", gap: 20 }}
+    >
+      <FeaturedCard
+        img={novinaImg}
+        category="Novice"
+        title={novica?.naslov ?? "Novosti s koče"}
+        excerpt={(novica?.opis ?? "").slice(0, 160) + "…"}
+        href="/aktualno/novice"
+      />
+      <SmallCard
+        img={ponudbaImg}
+        category="Ponudbe"
+        title={ponudba?.naslov ?? "Posebne ponudbe"}
+        excerpt={(ponudba?.opis ?? "").slice(0, 120) + "…"}
+        href="/aktualno/ponudbe"
+        delay={0.08}
+      />
+      <SmallCard
+        img={dogodekImg}
+        category="Dogodki"
+        title={dogodek?.naslov ?? "Prihajajoči dogodki"}
+        excerpt={(dogodek?.opis ?? "").slice(0, 120) + "…"}
+        href="/aktualno/dogodki"
+        delay={0.16}
+      />
+    </motion.div>
+  )}
+</section>
 
-      {/* ── GRID ── */}
-      <section style={{ backgroundColor: CREAM, padding: "56px 24px 100px" }}>
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45 }}
-          style={{ maxWidth: 1152, margin: "0 auto 40px", textAlign: "center" }}
-        >
-          {/* Legenda */}
-          <div style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap", marginBottom: 24 }}>
-            {Object.entries(CATEGORY_CONFIG).map(([key, cfg]) => (
-              <span key={key} style={{
-                display: "inline-flex", alignItems: "center", gap: 6,
-                background: cfg.bg, border: `1px solid ${cfg.borderColor}`,
-                color: cfg.color, borderRadius: 999,
-                fontSize: 11, fontWeight: 700, padding: "4px 14px",
-                fontFamily: "sans-serif", letterSpacing: "0.04em",
-              }}>
-                {cfg.icon} {cfg.label}
-              </span>
-            ))}
-          </div>
-
-          <h2 style={{
-            fontSize: "clamp(24px, 4vw, 40px)", fontWeight: 500, color: DARK,
-            letterSpacing: "-0.025em", lineHeight: 1.2, margin: 0,
-          }}>
-            Vse na enem <span style={{ color: GOLD }}>mestu</span>
-          </h2>
-        </motion.div>
-
-        {loading ? (
-          <GridSkeleton />
-        ) : (
-          <div style={{
-            maxWidth: 1152, margin: "0 auto",
-            display: "grid", gridTemplateColumns: "1fr 1fr",
-            gridTemplateRows: "auto auto", gap: 20,
-          }}>
-            <FeaturedCard
-              img={novinaImg}
-              category="Novice"
-              title={novica?.naslov ?? "Novosti s koče"}
-              excerpt={(novica?.opis ?? "").slice(0, 160) + "…"}
-              href="/aktualno/novice"
-            />
-            <SmallCard
-              img={ponudbaImg}
-              category="Ponudbe"
-              title={ponudba?.naslov ?? "Posebne ponudbe"}
-              excerpt={(ponudba?.opis ?? "").slice(0, 120) + "…"}
-              href="/aktualno/ponudbe"
-              delay={0.08}
-            />
-            <SmallCard
-              img={dogodekImg}
-              category="Dogodki"
-              title={dogodek?.naslov ?? "Prihajajoči dogodki"}
-              excerpt={(dogodek?.opis ?? "").slice(0, 120) + "…"}
-              href="/aktualno/dogodki"
-              delay={0.16}
-            />
-          </div>
-        )}
-      </section>
-
-      <Footer />
+      <Footer dark />
     </main>
   );
 }

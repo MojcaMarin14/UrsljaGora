@@ -55,7 +55,7 @@ export default function SeasonsSection() {
         <div style={{ textAlign: "center", marginBottom: 64 }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, marginBottom: 16 }}>
             <div style={{ width: 28, height: 1, background: GOLD }} />
-            <span style={{ fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: GOLD, fontWeight: 600 }}>
+            <span style={{ fontSize: 22, letterSpacing: "0.22em", textTransform: "uppercase", color: GOLD, fontWeight: 600 }}>
               Letni časi
             </span>
             <div style={{ width: 28, height: 1, background: GOLD }} />

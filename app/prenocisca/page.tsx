@@ -2,8 +2,9 @@
 
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { useState, useRef } from "react";
+
 
 const MarzipanoViewer = dynamic(() => import("@/components/MarzipanoViewer"), {
   ssr: false,
@@ -652,56 +653,124 @@ function PanoramaGallery({
    PAGE
 ───────────────────────────────────────── */
 export default function PrenociscaPage() {
+  const heroRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+  const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+
   return (
     <main style={{ width: "100%", backgroundColor: CREAM, overflowX: "hidden" }}>
 
       {/* Inject global responsive styles */}
       <style>{globalStyles}</style>
 
-      {/* ── HERO ── */}
-      <section style={{ position: "relative", height: "52vh", minHeight: 320, overflow: "hidden" }}>
-        <Image
-          src="/drone1.jpg"
-          alt="Prenočišča"
-          fill
-          priority
-          fetchPriority="high"
-          sizes="100vw"
-          style={{ objectFit: "cover" }}
-        />
-        <div style={{
-          position: "absolute", inset: 0,
-          background: "linear-gradient(to bottom, rgba(17,16,8,0.3) 0%, rgba(17,16,8,0.72) 100%)",
-        }} />
-        <motion.div
-          initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.2 }}
-          style={{
-            position: "relative", zIndex: 10, height: "100%",
-            display: "flex", flexDirection: "column",
-            alignItems: "center", justifyContent: "center",
-            textAlign: "center", padding: "0 24px",
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 20 }}>
-            <div style={{ width: 28, height: 1, background: "rgba(201,169,110,0.6)" }} />
-            <span style={{ fontSize: 11, letterSpacing: "0.26em", textTransform: "uppercase", color: "rgba(201,169,110,0.85)", fontWeight: 500 }}>
-              Uršlja gora · Koroška
-            </span>
-            <div style={{ width: 28, height: 1, background: "rgba(201,169,110,0.6)" }} />
-          </div>
-          <h1 style={{
-            fontSize: "clamp(38px, 8vw, 80px)", fontWeight: 500, color: "white",
-            letterSpacing: "-0.03em", lineHeight: 1.1, margin: 0,
-          }}>
-            Prenočišča<br /><span style={{ color: GOLD }}>na vrhu</span>
-          </h1>
-          <p style={{ marginTop: 20, fontSize: 16, color: "rgba(255, 255, 255, 0.75)", maxWidth: 400, lineHeight: 1.75 }}>
-            Prenoči pod zvezdami Koroške — preprosto, toplo in nepozabno.
-          </p>
-        </motion.div>
-      </section>
+     {/* ── HERO ── */}
+<div ref={heroRef} style={{ position: "relative", width: "100%", height: "100vh", overflow: "hidden" }}>
+  <motion.div
+    style={{ y: heroY, position: "absolute", inset: 0 }}
+    initial={{ scale: 1.1 }}
+    animate={{ scale: 1 }}
+    transition={{ duration: 1.5, ease: "easeOut" }}
+  >
+    <Image
+      src="/drone1.jpg"
+      alt="Prenočišča"
+      fill
+      priority
+      sizes="100vw"
+      style={{ objectFit: "cover" }}
+    />
+    <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.5) 60%, #1e1e1e 100%)" }} />
+  </motion.div>
 
+  <motion.div
+    style={{
+      opacity: heroOpacity,
+      position: "relative", zIndex: 10,
+      display: "flex", flexDirection: "column",
+      alignItems: "center", justifyContent: "center",
+      height: "100%", textAlign: "center", padding: "0 24px", paddingTop: 96,
+    }}
+  >
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, delay: 0.2 }}
+      style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 28 }}
+    >
+      <div style={{ width: 36, height: 1, background: "rgba(201,169,110,0.7)" }} />
+      <span style={{ fontSize: 22, letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(201,169,110,0.9)", fontWeight: 500 }}>
+        Uršlja gora · Koroška
+      </span>
+      <div style={{ width: 36, height: 1, background: "rgba(201,169,110,0.7)" }} />
+    </motion.div>
+
+    <motion.h1
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.9, delay: 0.3 }}
+      style={{ fontSize: "clamp(64px, 12vw, 120px)", fontWeight: 500, letterSpacing: "-0.03em", lineHeight: 1, color: "white", margin: 0 }}
+    >
+      Prenočišča<br /><span style={{ color: GOLD }}>na vrhu</span>
+    </motion.h1>
+
+    <motion.div
+      initial={{ width: 0 }}
+      animate={{ width: 80 }}
+      transition={{ duration: 0.8, delay: 0.6 }}
+      style={{ height: 1, background: "rgba(201,169,110,0.6)", marginTop: 32, borderRadius: 999 }}
+    />
+
+    <motion.p
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, delay: 0.7 }}
+      style={{ marginTop: 24, fontSize: 21, color: "rgba(255,255,255,0.65)", maxWidth: 400, lineHeight: 1.7 }}
+    >
+      Prenoči pod zvezdami Koroške — preprosto, toplo in nepozabno.
+    </motion.p>
+
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 1.2 }}
+      style={{ position: "absolute", bottom: 40, display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}
+    >
+      <span style={{ fontSize: 16, letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)" }}>
+        Pomakni navzdol
+      </span>
+      <motion.div
+        animate={{ y: [0, 8, 0] }}
+        transition={{ duration: 1.5, repeat: Infinity }}
+        style={{ width: 1, height: 32, background: "linear-gradient(to bottom, rgba(255,255,255,0.4), transparent)" }}
+      />
+    </motion.div>
+  </motion.div>
+</div>
+
+{/* ── TEMNA SEKCIJA Z OPISOM ── */}
+<section style={{ backgroundColor: "#1e1e1e", padding: "100px 24px 120px" }}>
+  <motion.div
+    initial={{ opacity: 0, y: 24 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.7 }}
+    style={{ maxWidth: 860, margin: "0 auto", textAlign: "center" }}
+  >
+    <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20, justifyContent: "center" }}>
+      <div style={{ width: 32, height: 1, background: GOLD }} />
+      <span style={{ fontSize: 13, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(201,169,110,0.9)", fontWeight: 700 }}>
+        Prenočišča
+      </span>
+    </div>
+    <h2 style={{ fontSize: "clamp(28px, 4vw, 46px)", fontWeight: 500, color: "white", letterSpacing: "-0.025em", lineHeight: 1.2, marginBottom: 20 }}>
+      Počitek <span style={{ color: GOLD }}>na vrhu gore</span>
+    </h2>
+    <p style={{ fontSize: 17, color: "rgba(255,255,255,0.45)", lineHeight: 1.8, maxWidth: 560, margin: "0 auto" }}>
+      Izberite med zasebnimi sobami, večposteljnimi sobami za skupine in skupnimi prenočišči — vse v pristnem planinskem vzdušju koče na Uršlji gori.
+    </p>
+  </motion.div>
+</section>
       {/* ── SOBE ── */}
       <section style={{ backgroundColor: "white", padding: "64px 20px 100px" }}>
         <div style={{ maxWidth: 1040, margin: "0 auto", display: "flex", flexDirection: "column", gap: 80 }}>
@@ -836,3 +905,4 @@ export default function PrenociscaPage() {
     </main>
   );
 }
+

@@ -74,7 +74,7 @@ function SectionLabel({ text }: { text: string }) {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
       <div style={{ width: 32, height: 1, background: "#d4b676", flexShrink: 0 }} />
-      <span style={{ fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", color: "#d4b676", fontWeight: 500 }}>
+      <span style={{ fontSize: 16, letterSpacing: "0.2em", textTransform: "uppercase", color: "#d4b676", fontWeight: 500 }}>
         {text}
       </span>
     </div>
@@ -132,7 +132,7 @@ export default function ONasPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", color: GOLD, border: `1px solid rgba(212,182,118,0.3)`, padding: "6px 16px", borderRadius: 999, marginBottom: 32 }}
+            style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 17, letterSpacing: "0.2em", textTransform: "uppercase", color: GOLD, border: `1px solid rgba(212,182,118,0.3)`, padding: "6px 16px", borderRadius: 999, marginBottom: 32 }}
           >
             <motion.span
               style={{ width: 6, height: 6, borderRadius: "50%", background: GOLD, display: "inline-block" }}
@@ -173,7 +173,7 @@ export default function ONasPage() {
             transition={{ delay: 1.2 }}
             style={{ position: "absolute", bottom: 40, display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}
           >
-            <span style={{ fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(255,255,255,0.25)" }}>
+            <span style={{ fontSize: 16, letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(255,255,255,0.25)" }}>
               Pomakni navzdol
             </span>
             <motion.div
