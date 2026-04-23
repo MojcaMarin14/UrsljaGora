@@ -26,10 +26,10 @@ const KATEGORIJE: { label: Kategorija; icon: string }[] = [
 function SectionLabel({ text, light = false }: { text: string; light?: boolean }) {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
-      <div style={{ width: 28, height: 1, background: light ? "rgba(201,169,110,0.7)" : GOLD, flexShrink: 0 }} />
+      <div style={{ width: 28, height: 1, background: light ? "rgba(255, 255, 255, 0.7)" : GOLD, flexShrink: 0 }} />
       <span style={{
-        fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase",
-        color: light ? "rgba(201,169,110,0.85)" : GOLD, fontWeight: 600,
+        fontSize: 15, letterSpacing: "0.22em", textTransform: "uppercase",
+        color: light ? "rgba(255, 255, 255, 0.85)" : GOLD, fontWeight: 600,
         fontFamily: "sans-serif",
       }}>
         {text}
@@ -215,7 +215,7 @@ function FeaturedCard({ img, title, excerpt, href, veljavnost, kategorija }: {
         )}
         <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "40px 44px 44px" }}>
           {veljavnost && (
-            <p style={{ fontFamily: "sans-serif", fontSize: 11, color: "rgba(201,169,110,0.7)", letterSpacing: "0.12em", marginBottom: 12, textTransform: "uppercase" }}>
+            <p style={{ fontFamily: "sans-serif", fontSize: 19, color: "rgba(249, 249, 249, 0.93)", letterSpacing: "0.12em", marginBottom: 12, textTransform: "uppercase" }}>
               Velja do: {new Date(veljavnost).toLocaleDateString("sl-SI", { day: "numeric", month: "long", year: "numeric" })}
             </p>
           )}

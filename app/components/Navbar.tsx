@@ -20,18 +20,15 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
 
-  // Zapri meni ob spremembi poti
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
 
-  // Zaklenjena scroll ko je meni odprt
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [open]);
 
-  // Scroll shadow
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll);
@@ -80,15 +77,12 @@ export default function Navbar() {
           </a>
 
           {/* Desktop links */}
-          <div style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 28,
-          }}
+          <div
+            style={{ display: "flex", alignItems: "center", gap: 28 }}
             className="navbar-desktop"
           >
             {links.map((l) => {
-              const isActive = pathname === l.href || pathname.startsWith(l.href + "/");
+              const isActive = pathname === l.href;
               return (
                 <a
                   key={l.href}
@@ -197,7 +191,7 @@ export default function Navbar() {
         </a>
 
         {links.map((l, i) => {
-          const isActive = pathname === l.href || pathname.startsWith(l.href + "/");
+          const isActive = pathname === l.href;
           return (
             <a
               key={l.href}

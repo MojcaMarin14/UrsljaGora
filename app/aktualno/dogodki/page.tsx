@@ -16,10 +16,10 @@ const PER_PAGE = 6;
 function SectionLabel({ text, light = false }: { text: string; light?: boolean }) {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
-      <div style={{ width: 28, height: 1, background: light ? "rgba(201,169,110,0.7)" : GOLD, flexShrink: 0 }} />
+      <div style={{ width: 28, height: 1, background: light ? "rgba(248, 244, 237, 0.95)" : GOLD, flexShrink: 0 }} />
       <span style={{
-        fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase",
-        color: light ? "rgba(201,169,110,0.85)" : GOLD, fontWeight: 600,
+        fontSize: 17, letterSpacing: "0.22em", textTransform: "uppercase",
+        color: light ? "rgba(243, 241, 239, 0.85)" : GOLD, fontWeight: 600,
         fontFamily: "sans-serif",
       }}>
         {text}
@@ -147,13 +147,13 @@ function Pagination({ page, totalPages, onChange }: { page: number; totalPages: 
 }
 
 function EventMeta({ datum, lokacija, light = false }: { datum?: string; lokacija?: string; light?: boolean }) {
-  const color = light ? "rgba(201,169,110,0.75)" : "rgba(17,16,8,0.35)";
+  const color = light ? "rgba(246, 244, 241, 1)" : "rgba(17,16,8,0.35)";
   if (!datum && !lokacija) return null;
   return (
-    <p style={{ fontFamily: "sans-serif", fontSize: 11, color, letterSpacing: "0.1em", marginBottom: 10, textTransform: "uppercase" }}>
+    <p style={{ fontFamily: "sans-serif", fontSize: 15, color, letterSpacing: "0.1em", marginBottom: 10, textTransform: "uppercase" }}>
       {datum && new Date(datum).toLocaleString("sl-SI", { dateStyle: "medium", timeStyle: "short" })}
       {datum && lokacija && <span style={{ margin: "0 8px", opacity: 0.5 }}>·</span>}
-      {lokacija && <span style={{ color: light ? "rgba(201,169,110,0.9)" : GOLD }}>{lokacija}</span>}
+      {lokacija && <span style={{ color: light ? "rgba(252, 248, 239, 0.9)" : GOLD }}>{lokacija}</span>}
     </p>
   );
 }

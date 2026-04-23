@@ -21,7 +21,7 @@ const globalStyles = `
   .pren-room-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 56px;
+    gap: 72px;
     align-items: start;
   }
   .pren-room-row .col-img  { order: 1; }
@@ -77,7 +77,7 @@ const globalStyles = `
   .pren-amenity-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 9px 12px;
+    gap: 12px 16px;
   }
 
   /* ── MOBILE ── */
@@ -117,7 +117,7 @@ function SectionLabel({ text, light = false }: { text: string; light?: boolean }
     <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
       <div style={{ width: 28, height: 1, background: gold, flexShrink: 0 }} />
       <span style={{
-        fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase",
+        fontSize: 19, letterSpacing: "0.22em", textTransform: "uppercase",
         color: gold, fontWeight: 600,
       }}>
         {text}
@@ -467,7 +467,7 @@ function PanoramaGallery({
                 background: "rgba(17,16,8,0.4)",
                 color: "white",
                 cursor: "pointer",
-                fontSize: 22,
+                fontSize: 25,
               }}
             >
               ›
@@ -771,9 +771,10 @@ export default function PrenociscaPage() {
     </p>
   </motion.div>
 </section>
+
       {/* ── SOBE ── */}
-      <section style={{ backgroundColor: "white", padding: "64px 20px 100px" }}>
-        <div style={{ maxWidth: 1040, margin: "0 auto", display: "flex", flexDirection: "column", gap: 80 }}>
+      <section style={{ backgroundColor: "white", padding: "80px 20px 120px" }}>
+        <div style={{ maxWidth: 1040, margin: "0 auto", display: "flex", flexDirection: "column", gap: 96 }}>
 
           {rooms.map((room, idx) => (
             <motion.div
@@ -785,7 +786,7 @@ export default function PrenociscaPage() {
             >
               {/* Divider med sobami */}
               {idx > 0 && (
-                <div style={{ width: "100%", height: 1, background: "rgba(17,16,8,0.07)", marginBottom: 80 }} />
+                <div style={{ width: "100%", height: 1, background: "rgba(17,16,8,0.07)", marginBottom: 96 }} />
               )}
 
               <div className={`pren-room-row${idx % 2 === 1 ? " flip" : ""}`}>
@@ -802,42 +803,65 @@ export default function PrenociscaPage() {
               </div>
 
                 {/* Info */}
-                <div className="col-info" style={{ paddingTop: 6 }}>
+                <div className="col-info" style={{ paddingTop: 8 }}>
                   <SectionLabel text={room.type} />
 
                   <h2 style={{
-                    fontSize: "clamp(22px, 3vw, 34px)", fontWeight: 500, color: DARK,
-                    letterSpacing: "-0.025em", lineHeight: 1.2, margin: "0 0 14px",
+                    fontSize: "clamp(24px, 3vw, 36px)", fontWeight: 500, color: DARK,
+                    letterSpacing: "-0.025em", lineHeight: 1.2, margin: "0 0 18px",
                   }}>
                     {room.name}
                   </h2>
 
-                  <p style={{ fontSize: 15, color: "rgba(17,16,8,0.6)", lineHeight: 1.82, marginBottom: 28 }}>
+                  {/* ── Opis — večji, bolj berljiv ── */}
+                  <p style={{
+                    fontSize: 18,
+                    color: "rgba(17,16,8,0.72)",
+                    lineHeight: 1.9,
+                    marginBottom: 36,
+                    fontWeight: 400,
+                    letterSpacing: "0.005em",
+                  }}>
                     {room.desc}
                   </p>
 
                   {/* Details */}
-                  <div style={{ display: "flex", flexDirection: "column", gap: 11, marginBottom: 28 }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 32 }}>
                     {room.details.map((d, i) => (
-                      <div key={i} style={{ display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap" }}>
-                        <span style={{ fontSize: 15 }}>{d.icon}</span>
+                      <div key={i} style={{
+                        display: "flex", alignItems: "center", gap: 12,
+                        padding: "14px 16px",
+                        background: "rgba(17,16,8,0.03)",
+                        borderRadius: 10,
+                        border: "1px solid rgba(17,16,8,0.06)",
+                      }}>
+                        <span style={{ fontSize: 18 }}>{d.icon}</span>
                         <span style={{
-                          fontSize: 11, color: GOLD, fontWeight: 600,
-                          letterSpacing: "0.12em", textTransform: "uppercase", minWidth: 88,
+                          fontSize: 11, color: GOLD, fontWeight: 700,
+                          letterSpacing: "0.14em", textTransform: "uppercase", minWidth: 96,
                         }}>{d.label}</span>
-                        <span style={{ fontSize: 14, color: "rgba(17,16,8,0.62)" }}>{d.value}</span>
+                        <span style={{
+                          fontSize: 15,
+                          color: "rgba(17,16,8,0.75)",
+                          fontWeight: 500,
+                        }}>{d.value}</span>
                       </div>
                     ))}
                   </div>
 
-                  <div style={{ width: "100%", height: 1, background: "rgba(17,16,8,0.08)", marginBottom: 22 }} />
+                  <div style={{ width: "100%", height: 1, background: "rgba(17,16,8,0.08)", marginBottom: 28 }} />
 
                   {/* Amenities */}
                   <div className="pren-amenity-grid">
                     {room.amenities.map((a, i) => (
-                      <div key={i} style={{ display: "flex", alignItems: "center", gap: 9 }}>
-                        <div style={{ width: 5, height: 5, borderRadius: "50%", background: GOLD, flexShrink: 0 }} />
-                        <span style={{ fontSize: 13, color: "rgba(17,16,8,0.62)" }}>{a}</span>
+                      <div key={i} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <div style={{ width: 6, height: 6, borderRadius: "50%", background: GOLD, flexShrink: 0 }} />
+                        <span style={{
+                          fontSize: 16,
+                          color: "rgba(17,16,8,0.68)",
+                          fontWeight: 450,
+                          lineHeight: 1.4,
+                        }}>{a}</span>
                       </div>
                     ))}
                   </div>
@@ -905,4 +929,3 @@ export default function PrenociscaPage() {
     </main>
   );
 }
-

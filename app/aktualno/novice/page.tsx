@@ -15,10 +15,10 @@ const PER_PAGE = 6;
 function SectionLabel({ text, light = false }: { text: string; light?: boolean }) {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
-      <div style={{ width: 28, height: 1, background: light ? "rgba(201,169,110,0.7)" : GOLD, flexShrink: 0 }} />
+      <div style={{ width: 28, height: 1, background: light ? "rgba(244, 243, 241, 0.96)" : GOLD, flexShrink: 0 }} />
       <span style={{
-        fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase",
-        color: light ? "rgba(201,169,110,0.85)" : GOLD, fontWeight: 600,
+        fontSize: 17, letterSpacing: "0.22em", textTransform: "uppercase",
+        color: light ? "rgba(241, 238, 233, 0.85)" : GOLD, fontWeight: 600,
         fontFamily: "sans-serif",
       }}>
         {text}
@@ -52,7 +52,7 @@ function FeaturedCard({ img, title, excerpt, href, datum }: {
         }} />
         <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "40px 44px 44px" }}>
           {datum && (
-            <p style={{ fontFamily: "sans-serif", fontSize: 11, color: "rgba(201,169,110,0.7)", letterSpacing: "0.12em", marginBottom: 12, textTransform: "uppercase" }}>
+            <p style={{ fontFamily: "sans-serif", fontSize: 11, color: "rgba(255, 255, 255, 0.99)", letterSpacing: "0.12em", marginBottom: 12, textTransform: "uppercase" }}>
               {new Date(datum).toLocaleDateString("sl-SI", { day: "numeric", month: "long", year: "numeric" })}
             </p>
           )}
