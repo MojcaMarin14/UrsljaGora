@@ -15,14 +15,28 @@ const links = [
   { label: "Kontakt",     href: "/kontakt" },
 ];
 
+const InstagramIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+    <circle cx="12" cy="12" r="4"/>
+    <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/>
+  </svg>
+);
+
+const PhoneIcon = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.18 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.57a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+  </svg>
+);
+
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
 
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
+  const forceDark = pathname === "/mapa";
+
+  useEffect(() => { setOpen(false); }, [pathname]);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -42,11 +56,11 @@ export default function Navbar() {
           position: "fixed",
           top: 0, left: 0, right: 0,
           zIndex: 100,
-          background: scrolled ? "rgba(17,16,8,0.85)" : "rgba(0,0,0,0.2)",
+          background: (scrolled || forceDark) ? "rgb(17, 16, 8)" : "rgba(0,0,0,0.2)",
           backdropFilter: "blur(12px)",
           WebkitBackdropFilter: "blur(12px)",
           transition: "background 0.3s",
-          borderBottom: scrolled ? "1px solid rgba(201,169,110,0.12)" : "none",
+          borderBottom: (scrolled || forceDark) ? "1px solid rgba(201,169,110,0.12)" : "none",
         }}
       >
         <div style={{
@@ -57,6 +71,7 @@ export default function Navbar() {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
+          gap: 16,
         }}>
           {/* Logo */}
           <a
@@ -78,7 +93,7 @@ export default function Navbar() {
 
           {/* Desktop links */}
           <div
-            style={{ display: "flex", alignItems: "center", gap: 28 }}
+            style={{ display: "flex", alignItems: "center", gap: 24, flex: 1, justifyContent: "center" }}
             className="navbar-desktop"
           >
             {links.map((l) => {
@@ -90,12 +105,13 @@ export default function Navbar() {
                   style={{
                     color: isActive ? GOLD : "white",
                     textDecoration: "none",
-                    fontSize: 16,
+                    fontSize: 15,
                     fontWeight: isActive ? 600 : 400,
                     letterSpacing: "0.01em",
                     transition: "color 0.2s",
                     borderBottom: isActive ? `1px solid ${GOLD}` : "1px solid transparent",
                     paddingBottom: 2,
+                    whiteSpace: "nowrap",
                   }}
                   onMouseEnter={e => (e.currentTarget.style.color = GOLD)}
                   onMouseLeave={e => (e.currentTarget.style.color = isActive ? GOLD : "white")}
@@ -104,6 +120,56 @@ export default function Navbar() {
                 </a>
               );
             })}
+          </div>
+
+          {/* Desna stran — Instagram + telefon */}
+          <div
+            className="navbar-desktop"
+            style={{ display: "flex", alignItems: "center", gap: 14, flexShrink: 0 }}
+          >
+            {/* Telefon */}
+            <a
+              href="tel:+386641323851"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 5,
+                color: "white",
+                textDecoration: "none",
+                fontSize: 13,
+                whiteSpace: "nowrap",
+                transition: "color 0.2s",
+                opacity: 0.85,
+              }}
+              onMouseEnter={e => (e.currentTarget.style.color = GOLD)}
+              onMouseLeave={e => (e.currentTarget.style.color = "white")}
+            >
+              <PhoneIcon />
+              064 132 385
+            </a>
+
+            {/* Separator */}
+            <span style={{ width: 1, height: 16, background: "rgba(255,255,255,0.2)" }} />
+
+            {/* Instagram */}
+            <a
+              href="https://www.instagram.com/dom_na_urslji_gori/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+              style={{
+                color: "white",
+                textDecoration: "none",
+                display: "flex",
+                alignItems: "center",
+                transition: "color 0.2s",
+                opacity: 0.85,
+              }}
+              onMouseEnter={e => (e.currentTarget.style.color = GOLD)}
+              onMouseLeave={e => (e.currentTarget.style.color = "white")}
+            >
+              <InstagramIcon />
+            </a>
           </div>
 
           {/* Hamburger — mobile only */}
@@ -170,7 +236,6 @@ export default function Navbar() {
           pointerEvents: open ? "all" : "none",
         }}
       >
-        {/* Zlata dekoracija */}
         <div style={{
           position: "absolute",
           width: 400, height: 400,
@@ -215,9 +280,47 @@ export default function Navbar() {
             </a>
           );
         })}
+
+        {/* Instagram + telefon v mobilnem meniju */}
+        <div style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 20,
+          marginTop: 32,
+          opacity: open ? 1 : 0,
+          transition: "opacity 0.3s",
+          transitionDelay: open ? `${links.length * 0.04}s` : "0s",
+        }}>
+          <a
+            href="tel:+38641323851"
+            style={{
+              display: "flex", alignItems: "center", gap: 6,
+              color: "rgba(255,255,255,0.7)", textDecoration: "none", fontSize: 14,
+              transition: "color 0.2s",
+            }}
+            onMouseEnter={e => (e.currentTarget.style.color = GOLD)}
+            onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.7)")}
+          >
+            <PhoneIcon />
+            064 132 385
+          </a>
+          <a
+            href="https://www.instagram.com/dom_na_urslji_gori/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              color: "rgba(255,255,255,0.7)", textDecoration: "none",
+              display: "flex", alignItems: "center",
+              transition: "color 0.2s",
+            }}
+            onMouseEnter={e => (e.currentTarget.style.color = GOLD)}
+            onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.7)")}
+          >
+            <InstagramIcon />
+          </a>
+        </div>
       </div>
 
-      {/* CSS za responsive */}
       <style>{`
         @media (max-width: 768px) {
           .navbar-desktop { display: none !important; }

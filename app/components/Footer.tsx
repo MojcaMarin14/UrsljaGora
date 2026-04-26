@@ -37,9 +37,8 @@ export default function Footer({ dark = false }) {
           <h3 className="text-lg font-semibold tracking-wide">Kontakt</h3>
           <div className="space-y-1 text-sm opacity-70 leading-relaxed">
             <p>Dom na Uršlji gori</p>
-            <p>02 87 0 48 20</p>
-            <p>041 743 442</p>
-            <p>info@ursljagora.si</p>
+            <p>064 132 385</p>
+            <p>juvan.nejc2@gmail.com</p>
           </div>
         </div>
       </div>

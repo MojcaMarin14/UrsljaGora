@@ -33,7 +33,7 @@ export default function ZasebnostPage() {
 
           <Block title="1. Upravljavec osebnih podatkov">
             <p>Upravljavec osebnih podatkov je <strong>Planinsko društvo Prevalje</strong>, ki upravlja Dom na Uršlji gori.</p>
-            <p>Kontakt: <a href="mailto:info@ursljagora.si" style={{ color: GOLD }}>info@ursljagora.si</a></p>
+            <p>Kontakt: <a href="mailto:juvan.nejc2@gmail.com" style={{ color: GOLD }}>juvan.nejc2@gmail.com</a></p>
           </Block>
 
           <Block title="2. Kateri osebni podatki se zbirajo">
@@ -73,7 +73,7 @@ export default function ZasebnostPage() {
             </ul>
             <p>
               Za uveljavljanje pravic nas kontaktirajte na{" "}
-              <a href="mailto:info@ursljagora.si" style={{ color: GOLD }}>info@ursljagora.si</a>.
+              <a href="mailto:juvan.nejc2@gmail.com" style={{ color: GOLD }}>juvan.nejc2@gmail.com</a>.
             </p>
           </Block>
 

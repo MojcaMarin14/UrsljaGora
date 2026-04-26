@@ -235,7 +235,7 @@ export function ContactForm() {
                   obdelavo osebnih podatkov
                 </Link>{" "}
                 za namen odgovora na moje povpraševanje. Soglasje lahko kadarkoli prekličem z zahtevo na{" "}
-                <a href="mailto:info@ursljagora.si" style={{ color: GOLD }}>info@ursljagora.si</a>.
+                <a href="mailto:juvan.nejc2@gmail.com" style={{ color: GOLD }}>juvan.nejc2@gmail.com</a>.
               </label>
             </div>
 

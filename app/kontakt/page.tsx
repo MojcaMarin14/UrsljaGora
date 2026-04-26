@@ -46,9 +46,8 @@ const contacts = [
     title: "Dom na Uršlji gori",
     subtitle: "Plešivec",
     items: [
-      { label: "Telefon",  value: "02 87 0 48 20",           href: "tel:028704820" },
-      { label: "Mobilni",  value: "041 743 442",              href: "tel:041743442" },
-      { label: "E-pošta",  value: "info@ursljagora.si",       href: "mailto:info@ursljagora.si" },
+      { label: "Mobilni",  value: "064 132 385",              href: "tel:041743442" },
+      { label: "E-pošta",  value: "juvan.nejc2@gmail.com",       href: "mailto:juvan.nejc2@gmail.com" },
       { label: "Naslov",   value: "Jazbina 19, 2393 Črna na Koroškem", href: null },
     ],
   },
@@ -73,8 +72,8 @@ const contacts = [
 ];
 
 const pills = [
-  { label: "02 87 0 48 20",               icon: "📞" },
-  { label: "info@ursljagora.si",           icon: "✉️" },
+  { label: "064 132 385",               icon: "📞" },
+  { label: "juvan.nejc2@gmail.com",           icon: "✉️" },
   { label: "Jazbina 19, Črna na Koroškem", icon: "📍" },
 ];
 
