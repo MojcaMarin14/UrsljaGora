@@ -102,6 +102,15 @@ export default function TrailSidebar({
               </div>
             )}
           </div>
+          {activeTrail.gpxFile && (
+            <a
+              href={activeTrail.gpxFile}
+              download
+              className="trail-detail__gpx-btn"
+            >
+              ⬇ Prenesi GPX
+            </a>
+          )}
           {activeTrail.source && (
             <p className="trail-detail__source">Vir: {activeTrail.source}</p>
           )}

@@ -208,6 +208,21 @@
   padding-left: 4px;
 }
 
+.trail-detail__gpx-btn {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 6px 14px;
+  background: #2d6a4f;
+  color: #fff;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.trail-detail__gpx-btn:hover {
+  background: #1b4332;
+}
+
 .trail-detail__source {
   font-size: 11px;
   color: #b0a89e;
