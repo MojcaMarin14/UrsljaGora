@@ -60,6 +60,8 @@ export default function EventsPanel({
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState(false);
   const [gdprAccepted, setGdprAccepted] = useState(false);
+  const [kraj, setKraj] = useState("");
+  const [geocoding, setGeocoding] = useState(false);
 
   const fileRef = useRef<HTMLInputElement>(null);
   const cameraRef = useRef<HTMLInputElement>(null);
@@ -69,6 +71,23 @@ export default function EventsPanel({
   useEffect(() => {
     if (defaultTab) setActiveSection(defaultTab);
   }, [defaultTab]);
+
+  useEffect(() => {
+    if (!photoMarker) return;
+    setGeocoding(true);
+    fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${photoMarker.lat}&lon=${photoMarker.lng}&accept-language=sl`,
+      { headers: { "User-Agent": "UrsljaGoraApp/1.0" } }
+    )
+      .then((r) => r.json())
+      .then((data) => {
+        const a = data.address;
+        const name = a?.peak || a?.village || a?.hamlet || a?.suburb || a?.town || a?.city || a?.county || "";
+        setKraj(name);
+      })
+      .catch(() => setKraj(""))
+      .finally(() => setGeocoding(false));
+  }, [photoMarker]);
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -106,6 +125,7 @@ export default function EventsPanel({
         caption,
         author: authorName || "Anonimno",
         rating: rating > 0 ? rating : undefined,
+        kraj: kraj.trim() || undefined,
       });
       setSubmitSuccess(true);
       setPhotoPreview(null);
@@ -128,6 +148,7 @@ export default function EventsPanel({
     setPhotoBlob(null);
     setCaption("");
     setRating(0);
+    setKraj("");
     setSubmitError(false);
     setGdprAccepted(false);
     if (isAddingPhoto) onToggleAddPhoto();
@@ -229,6 +250,14 @@ export default function EventsPanel({
                       value={authorName}
                       onChange={(e) => setAuthorName(e.target.value)}
                       maxLength={40}
+                    />
+                    <input
+                      type="text"
+                      className="input"
+                      placeholder={geocoding ? "Iščem kraj..." : "Ime kraja (neobvezno)"}
+                      value={kraj}
+                      onChange={(e) => setKraj(e.target.value)}
+                      maxLength={80}
                     />
                   </div>
 

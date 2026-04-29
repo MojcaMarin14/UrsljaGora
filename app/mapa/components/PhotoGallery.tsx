@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { CommunityPhoto } from "../data/photoStore";
-import { IconCamera, IconPin, IconCalendar } from "./Icons";
+import { IconCamera, IconPin, IconCalendar, IconMountain } from "./Icons";
 
 interface PhotoGalleryProps {
   photos: CommunityPhoto[];
@@ -90,6 +90,9 @@ export default function PhotoGallery({ photos, onLocatePhoto }: PhotoGalleryProp
                   <IconCalendar size={14} />{" "}
                   {new Date(lightbox.createdAt).toLocaleDateString("sl-SI")}
                 </span>
+                {lightbox.kraj && (
+                  <span><IconMountain size={14} /> {lightbox.kraj}</span>
+                )}
               </div>
 
               <div className="lightbox__actions">

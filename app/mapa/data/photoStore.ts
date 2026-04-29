@@ -9,6 +9,7 @@ export interface CommunityPhoto {
   author: string;
   createdAt: string;
   rating?: number;
+  kraj?: string;
 }
 
 export async function loadPhotos(): Promise<CommunityPhoto[]> {
@@ -25,6 +26,7 @@ export async function loadPhotos(): Promise<CommunityPhoto[]> {
       author: (item.avtor as string) ?? "Anonimno",
       createdAt: item.createdAt,
       rating: (item.ocena as number) ?? undefined,
+      kraj: (item.kraj as string) ?? undefined,
     }));
   } catch {
     return [];
@@ -38,6 +40,7 @@ export async function submitPhoto(data: {
   caption: string;
   author: string;
   rating?: number;
+  kraj?: string;
 }): Promise<void> {
   const fileId = await uploadFileToStrapi(data.blob, "foto.jpg");
   await fetchAPI("mapa-fotografijas", {
@@ -51,6 +54,7 @@ export async function submitPhoto(data: {
         lng: data.lng,
         ocena: data.rating ?? null,
         odobrena: false,
+        kraj: data.kraj ?? null,
       },
     }),
   });

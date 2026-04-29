@@ -681,6 +681,7 @@ export interface ApiMapaFotografijaMapaFotografija
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    kraj: Schema.Attribute.String;
     lat: Schema.Attribute.Decimal & Schema.Attribute.Required;
     lng: Schema.Attribute.Decimal & Schema.Attribute.Required;
     locale: Schema.Attribute.String & Schema.Attribute.Private;

@@ -36,6 +36,9 @@
     "odobrena": {
       "type": "boolean",
       "default": false
+    },
+    "kraj": {
+      "type": "string"
     }
   }
 }
