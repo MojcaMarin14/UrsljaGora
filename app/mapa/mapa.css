@@ -501,6 +501,22 @@
   display: none;
 }
 
+.upload-success {
+  background: #d8f3dc;
+  color: #1b4332;
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.upload-error {
+  color: #9d0208;
+  font-size: 12px;
+  margin: 6px 0;
+}
+
 .upload-preview {
   position: relative;
   margin-bottom: 12px;

@@ -1,84 +1,57 @@
-/**
- * Community photo store — persists to localStorage.
- * In production this would be a backend API + database.
- */
-
-export interface PhotoComment {
-  id: string;
-  text: string;
-  author: string;
-  createdAt: string;
-}
+import { fetchAPI, uploadFileToStrapi, getStrapiMedia } from "../../../lib/api";
 
 export interface CommunityPhoto {
-  id: string;
+  id: number;
   lat: number;
   lng: number;
-  imageData: string; // base64 data-url
+  imageUrl: string;
   caption: string;
   author: string;
-  createdAt: string; // ISO string
-  rating?: number;   // 1–5 zvezdic
-  comments?: PhotoComment[];
+  createdAt: string;
+  rating?: number;
 }
 
-const STORAGE_KEY = "urslja_community_photos";
-const ADMIN_KEY   = "urslja_admin_session";
-
-// ── Photos ──────────────────────────────────────────────────────────────────
-
-export function loadPhotos(): CommunityPhoto[] {
-  if (typeof window === "undefined") return [];
+export async function loadPhotos(): Promise<CommunityPhoto[]> {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
+    const res = await fetchAPI(
+      "mapa-fotografijas?filters[odobrena][$eq]=true&populate=slika&sort=createdAt:desc"
+    );
+    return res.data.map((item: Record<string, unknown> & { slika?: { url?: string } }) => ({
+      id: item.id,
+      lat: item.lat,
+      lng: item.lng,
+      imageUrl: getStrapiMedia(item.slika?.url),
+      caption: (item.opis as string) ?? "",
+      author: (item.avtor as string) ?? "Anonimno",
+      createdAt: item.createdAt,
+      rating: (item.ocena as number) ?? undefined,
+    }));
   } catch {
     return [];
   }
 }
 
-export function savePhoto(photo: CommunityPhoto): void {
-  const photos = loadPhotos();
-  photos.unshift(photo);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(photos));
-}
-
-export function deletePhoto(id: string): void {
-  const photos = loadPhotos().filter((p) => p.id !== id);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(photos));
-}
-
-export function addComment(photoId: string, comment: PhotoComment): void {
-  const photos = loadPhotos().map((p) =>
-    p.id === photoId
-      ? { ...p, comments: [...(p.comments ?? []), comment] }
-      : p
-  );
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(photos));
-}
-
-export function generateId(): string {
-  return `photo-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-}
-
-// ── Admin session ────────────────────────────────────────────────────────────
-
-// Geslo za admina — lastnik ga ve, v produkciji bi bilo to na serverju
-const ADMIN_PIN = "urslja2025";
-
-export function checkAdminPin(pin: string): boolean {
-  return pin === ADMIN_PIN;
-}
-
-export function loadAdminSession(): boolean {
-  if (typeof window === "undefined") return false;
-  return localStorage.getItem(ADMIN_KEY) === "1";
-}
-
-export function saveAdminSession(): void {
-  localStorage.setItem(ADMIN_KEY, "1");
-}
-
-export function clearAdminSession(): void {
-  localStorage.removeItem(ADMIN_KEY);
+export async function submitPhoto(data: {
+  blob: Blob;
+  lat: number;
+  lng: number;
+  caption: string;
+  author: string;
+  rating?: number;
+}): Promise<void> {
+  const fileId = await uploadFileToStrapi(data.blob, "foto.jpg");
+  await fetchAPI("mapa-fotografijas", {
+    method: "POST",
+    body: JSON.stringify({
+      data: {
+        slika: fileId,
+        opis: data.caption,
+        avtor: data.author,
+        lat: data.lat,
+        lng: data.lng,
+        ocena: data.rating ?? null,
+        odobrena: false,
+      },
+    }),
+  });
 }
