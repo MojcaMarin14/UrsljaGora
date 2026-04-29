@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
 import { Trail } from "./data/trails";
 import { POICategory } from "./data/pois";
-import { CommunityPhoto, loadPhotos } from "./data/photoStore";
+import { CommunityPhoto, AdminPoi, loadPhotos, loadAdminPois } from "./data/photoStore";
 import TrailSidebar from "./components/TrailSidebar";
 import FilterBar from "./components/FilterBar";
 import EventsPanel from "./components/EventsPanel";
@@ -22,12 +22,14 @@ export default function MapPage() {
   const [isAddingPhoto, setIsAddingPhoto] = useState(false);
   const [photoMarker, setPhotoMarker] = useState<{ lat: number; lng: number } | null>(null);
   const [photos, setPhotos] = useState<CommunityPhoto[]>([]);
+  const [adminPois, setAdminPois] = useState<AdminPoi[]>([]);
   const [flyTo, setFlyTo] = useState<{ lat: number; lng: number } | null>(null);
   const [mobilePanel, setMobilePanel] = useState<MobilePanel>(null);
   const [mobileUploadTab, setMobileUploadTab] = useState(false);
 
   useEffect(() => {
     loadPhotos().then(setPhotos);
+    loadAdminPois().then(setAdminPois);
   }, []);
 
   function handleToggleFilter(cat: POICategory) {
@@ -82,6 +84,7 @@ export default function MapPage() {
           onMapClick={handleMapClick}
           photoMarker={photoMarker}
           communityPhotos={photos}
+          adminPois={adminPois}
           flyTo={flyTo}
           onFlyToDone={() => setFlyTo(null)}
           onPoiAddPhoto={handlePoiAddPhoto}

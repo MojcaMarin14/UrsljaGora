@@ -13,7 +13,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { trails, Trail } from "../data/trails";
 import { pois, categoryConfig, POICategory } from "../data/pois";
-import { CommunityPhoto } from "../data/photoStore";
+import { CommunityPhoto, AdminPoi } from "../data/photoStore";
 
 interface TileLayerConfig {
   id: string;
@@ -121,6 +121,7 @@ interface MapViewProps {
   onMapClick?: (lat: number, lng: number) => void;
   photoMarker?: { lat: number; lng: number } | null;
   communityPhotos?: CommunityPhoto[];
+  adminPois?: AdminPoi[];
   flyTo?: { lat: number; lng: number } | null;
   onFlyToDone?: () => void;
   onPoiAddPhoto?: (lat: number, lng: number) => void;
@@ -133,6 +134,7 @@ export default function MapView({
   onMapClick,
   photoMarker,
   communityPhotos = [],
+  adminPois = [],
   flyTo,
   onFlyToDone,
   onPoiAddPhoto,
@@ -247,18 +249,54 @@ export default function MapView({
                 box-shadow: 0 2px 8px rgba(0,0,0,0.3);
                 overflow: hidden;
                 background: #e07a5f;
-              "><img src="${photo.imageData}" style="width:100%;height:100%;object-fit:cover;" alt="" /></div>`,
+              "><img src="${photo.imageUrl}" style="width:100%;height:100%;object-fit:cover;" alt="" /></div>`,
               iconSize: [36, 36],
               iconAnchor: [18, 18],
             })}
           >
             <Popup>
               <div className="poi-popup">
-                <img src={photo.imageData} alt={photo.caption} style={{ width: "100%", borderRadius: 6, marginBottom: 6 }} />
+                <img src={photo.imageUrl} alt={photo.caption} style={{ width: "100%", borderRadius: 6, marginBottom: 6 }} />
                 {photo.caption && <strong>{photo.caption}</strong>}
                 <p style={{ fontSize: "0.75rem", color: "#6b6b6b" }}>
-                  {photo.author} · {new Date(photo.createdAt).toLocaleDateString("sl-SI")}
+                  {photo.author}{photo.kraj ? ` · ${photo.kraj}` : ""} · {new Date(photo.createdAt).toLocaleDateString("sl-SI")}
                 </p>
+              </div>
+            </Popup>
+          </Marker>
+        ))}
+
+        {/* Admin POI markers (tocka-na-mapi) */}
+        {adminPois.map((poi) => (
+          <Marker
+            key={`admin-${poi.id}`}
+            position={[poi.lat, poi.lng]}
+            icon={L.divIcon({
+              className: "custom-marker",
+              html: `<div style="
+                width: 36px; height: 36px;
+                border-radius: 8px;
+                border: 3px solid #fff;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                overflow: hidden;
+                background: #c9a96e;
+                display: flex; align-items: center; justify-content: center;
+              ">${poi.imageUrl
+                ? `<img src="${poi.imageUrl}" style="width:100%;height:100%;object-fit:cover;" alt="" />`
+                : `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>`
+              }</div>`,
+              iconSize: [36, 36],
+              iconAnchor: [18, 18],
+              popupAnchor: [0, -20],
+            })}
+          >
+            <Popup>
+              <div className="poi-popup">
+                {poi.imageUrl && (
+                  <img src={poi.imageUrl} alt={poi.ime} style={{ width: "100%", borderRadius: 6, marginBottom: 6 }} />
+                )}
+                <strong>{poi.ime}</strong>
+                {poi.opis && <p>{poi.opis}</p>}
               </div>
             </Popup>
           </Marker>

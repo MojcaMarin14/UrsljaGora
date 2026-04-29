@@ -33,6 +33,33 @@ export async function loadPhotos(): Promise<CommunityPhoto[]> {
   }
 }
 
+export interface AdminPoi {
+  id: number;
+  ime: string;
+  opis?: string;
+  lat: number;
+  lng: number;
+  imageUrl?: string;
+  kategorija?: string;
+}
+
+export async function loadAdminPois(): Promise<AdminPoi[]> {
+  try {
+    const res = await fetchAPI("tocka-na-mapis?populate=fotografija&publicationState=live");
+    return res.data.map((item: Record<string, unknown> & { fotografija?: { url?: string } }) => ({
+      id: item.id,
+      ime: item.ime as string,
+      opis: (item.opis as string) ?? undefined,
+      lat: item.lat as number,
+      lng: item.lng as number,
+      imageUrl: item.fotografija?.url ? getStrapiMedia(item.fotografija.url) : undefined,
+      kategorija: (item.kategorija as string) ?? undefined,
+    }));
+  } catch {
+    return [];
+  }
+}
+
 export async function submitPhoto(data: {
   blob: Blob;
   lat: number;
