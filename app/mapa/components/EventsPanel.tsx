@@ -59,6 +59,7 @@ export default function EventsPanel({
   const [uploading, setUploading] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState(false);
+  const [gdprAccepted, setGdprAccepted] = useState(false);
 
   const fileRef = useRef<HTMLInputElement>(null);
   const cameraRef = useRef<HTMLInputElement>(null);
@@ -128,6 +129,7 @@ export default function EventsPanel({
     setCaption("");
     setRating(0);
     setSubmitError(false);
+    setGdprAccepted(false);
     if (isAddingPhoto) onToggleAddPhoto();
   }
 
@@ -232,6 +234,20 @@ export default function EventsPanel({
 
                   <StarPicker value={rating} onChange={setRating} />
 
+                  <label className="gdpr-checkbox">
+                    <input
+                      type="checkbox"
+                      checked={gdprAccepted}
+                      onChange={(e) => setGdprAccepted(e.target.checked)}
+                    />
+                    <span>
+                      Strinjam se, da se moja fotografija in ime javno objavita na tej spletni strani.{" "}
+                      <a href="/politikaZasebnosti" target="_blank" rel="noopener noreferrer">
+                        Politika zasebnosti
+                      </a>
+                    </span>
+                  </label>
+
                   <button
                     className={`btn btn--primary ${isAddingPhoto ? "btn--active" : ""}`}
                     onClick={onToggleAddPhoto}
@@ -253,7 +269,7 @@ export default function EventsPanel({
                     <button
                       className="btn btn--success"
                       onClick={handlePublish}
-                      disabled={uploading}
+                      disabled={uploading || !gdprAccepted}
                     >
                       {uploading ? "Pošiljam..." : "✓ Objavi fotografijo"}
                     </button>

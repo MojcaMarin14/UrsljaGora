@@ -501,6 +501,26 @@
   display: none;
 }
 
+.gdpr-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12px;
+  color: rgba(17,16,8,0.65);
+  line-height: 1.5;
+  cursor: pointer;
+  margin: 4px 0;
+}
+.gdpr-checkbox input[type="checkbox"] {
+  margin-top: 2px;
+  flex-shrink: 0;
+  accent-color: #2d6a4f;
+}
+.gdpr-checkbox a {
+  color: #2d6a4f;
+  text-decoration: underline;
+}
+
 .upload-success {
   background: #d8f3dc;
   color: #1b4332;
