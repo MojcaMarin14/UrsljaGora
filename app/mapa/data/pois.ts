@@ -58,8 +58,8 @@ export const pois: POI[] = [
     id: "poi-1",
     name: "Cerkev sv. Uršule",
     category: "cerkev",
-    lat: 46.48427,
-    lng: 14.96497,
+    lat: 46.477351,
+    lng: 14.966088,
     description:
       "Najvišje ležeča cerkev v Sloveniji (1699 m). Gotska cerkev, prvič omenjena leta 1363. Po njej je gora dobila ime.",
   },
@@ -103,8 +103,8 @@ export const pois: POI[] = [
     id: "poi-6",
     name: "Oddajnik Plešivec",
     category: "oddajnik",
-    lat: 46.48508,
-    lng: 14.96384,
+    lat: 46.485119,
+    lng: 14.963674,
     description:
       "RTV oddajnik, postavljen leta 1962. Leži nad cerkvijo in planinsko kočo. Pokriva Koroško in Štajersko regijo.",
   },
