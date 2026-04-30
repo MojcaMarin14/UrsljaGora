@@ -680,6 +680,9 @@ export interface ApiPonudbePonudbe extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    kategorija: Schema.Attribute.Enumeration<
+      ['Hrana', 'Preno\u010Di\u0161\u010De', 'Paket', 'Akcija']
+    >;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
