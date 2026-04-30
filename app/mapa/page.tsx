@@ -10,6 +10,7 @@ import FilterBar from "./components/FilterBar";
 import EventsPanel from "./components/EventsPanel";
 import Legend from "./components/Legend";
 import MobileNav, { MobilePanel } from "./components/MobileNav";
+import PhotoUploadModal from "./components/PhotoUploadModal";
 import "./mapa.css";
 
 const MapView = dynamic(() => import("./components/MapView"), { ssr: false });
@@ -26,6 +27,7 @@ export default function MapPage() {
   const [flyTo, setFlyTo] = useState<{ lat: number; lng: number } | null>(null);
   const [mobilePanel, setMobilePanel] = useState<MobilePanel>(null);
   const [mobileUploadTab, setMobileUploadTab] = useState(false);
+  const [poiUploadTarget, setPoiUploadTarget] = useState<{ lat: number; lng: number; name: string } | null>(null);
 
   useEffect(() => {
     loadPhotos().then(setPhotos);
@@ -46,12 +48,8 @@ export default function MapPage() {
     setPhotos(await loadPhotos());
   }
 
-  function handlePoiAddPhoto(lat: number, lng: number) {
-    setPhotoMarker({ lat, lng });
-    setIsAddingPhoto(false);
-    setFlyTo({ lat, lng });
-    setMobileUploadTab(true);
-    setMobilePanel("gallery");
+  function handlePoiAddPhoto(lat: number, lng: number, name: string) {
+    setPoiUploadTarget({ lat, lng, name });
   }
 
   function handleMobileNav(panel: MobilePanel) {
@@ -101,7 +99,6 @@ export default function MapPage() {
           onPhotosChanged={handlePhotosChanged}
           onLocatePhoto={(lat, lng) => setFlyTo({ lat, lng })}
           onLocateEvent={(lat, lng) => setFlyTo({ lat, lng })}
-          defaultTab={mobileUploadTab ? "upload" : undefined}
         />
       </aside>
 
@@ -140,6 +137,16 @@ export default function MapPage() {
         onAddClick={handleMobileAddClick}
         photoCount={photos.length}
       />
+
+      {poiUploadTarget && (
+        <PhotoUploadModal
+          lat={poiUploadTarget.lat}
+          lng={poiUploadTarget.lng}
+          poiName={poiUploadTarget.name}
+          onClose={() => setPoiUploadTarget(null)}
+          onSuccess={handlePhotosChanged}
+        />
+      )}
     </div>
   );
 }

@@ -70,7 +70,7 @@ function PoiMarkers({
   onPoiAddPhoto,
 }: {
   filteredPois: POI[];
-  onPoiAddPhoto?: (lat: number, lng: number) => void;
+  onPoiAddPhoto?: (lat: number, lng: number, name: string) => void;
 }) {
   const map = useMap();
   return (
@@ -87,7 +87,7 @@ function PoiMarkers({
                   className="poi-popup__add-photo-btn"
                   onClick={() => {
                     map.closePopup();
-                    onPoiAddPhoto(poi.lat, poi.lng);
+                    onPoiAddPhoto(poi.lat, poi.lng, poi.name);
                   }}
                 >
                   📷 Dodaj sliko tukaj
@@ -160,7 +160,7 @@ interface MapViewProps {
   adminPois?: AdminPoi[];
   flyTo?: { lat: number; lng: number } | null;
   onFlyToDone?: () => void;
-  onPoiAddPhoto?: (lat: number, lng: number) => void;
+  onPoiAddPhoto?: (lat: number, lng: number, name: string) => void;
 }
 
 export default function MapView({
