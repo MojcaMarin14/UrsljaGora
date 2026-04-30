@@ -4,9 +4,9 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Footer from "./Footer";
 
-const GOLD  = "#c9a96e";
-const CREAM = "#f7f4ef";
-const DARK  = "#111008";
+const GOLD = "var(--accent)";
+const CREAM = "var(--section-bg)";
+const DARK = "var(--heading)";
 
 
 const ICONS: { [key: number]: string } = {

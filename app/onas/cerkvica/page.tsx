@@ -3,13 +3,11 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useState } from "react";
 import Image from "next/image";
-import Footer from "@/app/components/Footer";
 
 /* ── TOKENS — enako kot homepage ── */
-const GOLD      = "#c9a96e";
-const GOLD_DIM  = "rgba(201,169,110,0.7)";
-const CREAM     = "#f7f4ef";
-const DARK      = "#111008";
+const GOLD = "var(--accent)";
+const CREAM = "var(--section-bg)";
+const DARK = "var(--heading)";
 const WARM      = "#1a1812";
 
 /* ── GLOBAL STYLES ── */
@@ -163,10 +161,10 @@ const G = `
 function SectionLabel({ text, light = false }: { text: string; light?: boolean }) {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
-      <div style={{ width: 36, height: 2, background: light ? "rgba(203, 160, 81, 0.51)" : GOLD_DIM, flexShrink: 0 }} />
+      <div style={{ width: 36, height: 2, background: "var(--accent)", flexShrink: 0 }} />
       <span style={{
-        fontSize: 19, letterSpacing: "0.18em", textTransform: "uppercase",
-        color: light ? "rgba(167,141,91,0.9)" : GOLD, fontWeight: 700,
+        fontSize: 22, letterSpacing: "0.18em", textTransform: "uppercase",
+        color: light ? "var(--label-inv)" : "var(--label)", fontWeight: 700,
       }}>
         {text}
       </span>
@@ -295,14 +293,14 @@ export default function CerkevPage() {
       </section>
 
       {/* ── UVOD + STATISTIKE — svetla sekcija ── */}
-      <section style={{ backgroundColor: CREAM, padding: "100px 24px" }}>
+      <section style={{ backgroundColor: "var(--section-bg)", padding: "100px 24px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "center" }}>
           <motion.div {...fadUp(0)}>
             <SectionLabel text="O cerkvi" />
             <h2 style={{ fontSize: "clamp(30px, 4vw, 50px)", fontWeight: 500, color: DARK, letterSpacing: "-0.025em", lineHeight: 1.15, marginBottom: 24 }}>
               Kjer se nebo dotakne <span style={{ color: GOLD }}>gore</span>
             </h2>
-            <div style={{ fontSize: 16, color: "rgba(17,16,8,0.6)", lineHeight: 1.88, display: "flex", flexDirection: "column", gap: 14 }}>
+            <div style={{ fontSize: 16, color: "var(--text-muted)", lineHeight: 1.88, display: "flex", flexDirection: "column", gap: 14 }}>
               <p>Na nadmorski višini 1699 metrov stoji ena redkih gorskih sakralnih stavb v Evropi, ki je bila ohranjena in aktivna brez prekinitve že skoraj tisočletje.</p>
               <p>Njena bela fasada sijé v pokrajino, ki se razteza od Karavank do Pohorja — kot svetilnik za vse, ki hodijo po gorah Koroške.</p>
             </div>
@@ -331,11 +329,11 @@ export default function CerkevPage() {
       </section>
 
       {/* ── GALERIJA — temna sekcija ── */}
-      <section style={{ backgroundColor: DARK, padding: "80px 0 100px" }}>
+      <section style={{ backgroundColor: "var(--section-bg-dark)", padding: "80px 0 100px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px" }}>
           <motion.div {...fadUp(0)} style={{ marginBottom: 36 }}>
             <SectionLabel text="Fotografije" light />
-            <h2 style={{ fontSize: "clamp(24px, 3vw, 36px)", fontWeight: 500, color: CREAM, letterSpacing: "-0.025em", margin: 0 }}>
+            <h2 style={{ fontSize: "clamp(24px, 3vw, 36px)", fontWeight: 500, color: "var(--heading-inv)", letterSpacing: "-0.025em", margin: 0 }}>
               Skozi letne <span style={{ color: GOLD }}>čase</span>
             </h2>
           </motion.div>
@@ -388,7 +386,7 @@ export default function CerkevPage() {
 
       {/* ── QUOTE — enako kot homepage ── */}
       <section style={{ position: "relative", overflow: "hidden", padding: "120px 24px" }}>
-        <div style={{ position: "absolute", inset: 0, backgroundColor: DARK }} />
+        <div style={{ position: "absolute", inset: 0, backgroundColor: "var(--section-bg-dark)" }} />
         <div style={{ position: "absolute", inset: 0 }}>
           <Image src="/cer2.jpg" alt="" fill loading="lazy" sizes="100vw" quality={60}
             style={{ objectFit: "cover", opacity: 0.18 }} />
@@ -400,25 +398,25 @@ export default function CerkevPage() {
           style={{ position: "relative", zIndex: 10, maxWidth: 760, margin: "0 auto", textAlign: "center" }}
         >
           <div style={{ fontSize: 64, color: GOLD, lineHeight: 0.5, marginBottom: 24, opacity: 0.5 }}>"</div>
-          <p style={{ fontSize: "clamp(22px, 4vw, 36px)", color: "white", fontWeight: 400, lineHeight: 1.5, letterSpacing: "-0.01em", fontStyle: "italic" }}>
+          <p style={{ fontSize: "clamp(22px, 4vw, 36px)", color: "var(--heading-inv)", fontWeight: 400, lineHeight: 1.5, letterSpacing: "-0.01em", fontStyle: "italic" }}>
             Kdor stopi na Uršljo goro, ne pride le na vrh gore — pride na kraj, kjer čas teče drugače.
           </p>
           <div style={{ width: 40, height: 1, background: GOLD, margin: "32px auto 0" }} />
-          <p style={{ marginTop: 20, fontSize: 12, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(201,169,110,0.55)" }}>
+          <p style={{ marginTop: 20, fontSize: 14, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-primary-inv)" }}>
             Gorski izrek · Koroška
           </p>
         </motion.div>
       </section>
 
       {/* ── OBISK — svetla sekcija ── */}
-      <section style={{ backgroundColor: CREAM, padding: "100px 24px" }}>
+      <section style={{ backgroundColor: "var(--section-bg)", padding: "100px 24px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 60, alignItems: "start" }}>
           <motion.div {...fadUp(0)}>
             <SectionLabel text="Načrtuj obisk" />
             <h2 style={{ fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 500, color: DARK, letterSpacing: "-0.025em", lineHeight: 1.15, marginBottom: 20 }}>
               Pot do <span style={{ color: GOLD }}>vrha</span>
             </h2>
-            <p style={{ fontSize: 16, color: "rgba(17,16,8,0.58)", lineHeight: 1.85, marginBottom: 0 }}>
+            <p style={{ fontSize: 16, color: "var(--text-muted)", lineHeight: 1.85, marginBottom: 0 }}>
               Na Uršljo goro vodijo markirane poti iz več strani — iz Koprivne, Mežice in Slovenj Gradca. Pohod traja od 2 do 4 ure, odvisno od izhodiščne točke. Pozimi je pot dostopna s krpljami ali smučmi.
             </p>
           </motion.div>

@@ -6,20 +6,19 @@ import { fetchAPI, getStrapiMedia } from "@/lib/api";
 import Link from "next/link";
 import { useEffect, useState, useCallback } from "react";
 
-const GOLD = "#c9a96e";
-const CREAM = "#f7f4ef";
-const DARK = "#111008";
+const GOLD = "var(--accent)";
+const CREAM = "var(--section-bg)";
+const DARK = "var(--heading)";
 
 const PER_PAGE = 6;
 
 function SectionLabel({ text, light = false }: { text: string; light?: boolean }) {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
-      <div style={{ width: 28, height: 1, background: light ? "rgba(244, 243, 241, 0.96)" : GOLD, flexShrink: 0 }} />
+      <div style={{ width: 36, height: 2, background: "var(--accent)", flexShrink: 0 }} />
       <span style={{
-        fontSize: 17, letterSpacing: "0.22em", textTransform: "uppercase",
-        color: light ? "rgba(241, 238, 233, 0.85)" : GOLD, fontWeight: 600,
-        fontFamily: "sans-serif",
+        fontSize: 22, letterSpacing: "0.18em", textTransform: "uppercase",
+        color: light ? "var(--label-inv)" : "var(--label)", fontWeight: 700,
       }}>
         {text}
       </span>
@@ -50,7 +49,7 @@ function FeaturedCard({ img, title, excerpt, href, datum }: {
           position: "absolute", inset: 0,
           background: "linear-gradient(to top, rgba(17,16,8,0.93) 0%, rgba(17,16,8,0.4) 50%, transparent 100%)",
         }} />
-        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "40px 44px 44px" }}>
+        <div className="novice-featured-body" style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "40px 44px 44px" }}>
           {datum && (
             <p style={{ fontFamily: "sans-serif", fontSize: 11, color: "rgba(255, 255, 255, 0.99)", letterSpacing: "0.12em", marginBottom: 12, textTransform: "uppercase" }}>
               {new Date(datum).toLocaleDateString("sl-SI", { day: "numeric", month: "long", year: "numeric" })}
@@ -305,7 +304,7 @@ export default function NovicePage() {
   const gridItems = showFeatured ? rest : novice;
 
   return (
-    <main style={{ width: "100%", backgroundColor: CREAM, overflowX: "hidden" }}>
+    <main style={{ width: "100%", backgroundColor: "var(--section-bg)", overflowX: "hidden" }}>
 
       {/* ── MINI HERO ── */}
       <section style={{ position: "relative", width: "100%", height: "52vh", overflow: "hidden" }}>
@@ -361,7 +360,7 @@ export default function NovicePage() {
       </section>
 
       {/* ── VSEBINA ── */}
-      <section style={{ backgroundColor: CREAM, padding: "64px 24px 100px" }}>
+      <section style={{ backgroundColor: "var(--section-bg)", padding: "64px 24px 100px" }}>
         <div style={{ maxWidth: 1152, margin: "0 auto" }}>
 
           <motion.div
@@ -447,7 +446,7 @@ export default function NovicePage() {
         </div>
       </section>
 
-      <Footer dark/>
+      <Footer />
     </main>
   );
 }

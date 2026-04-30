@@ -3,13 +3,11 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useState } from "react";
 import Image from "next/image";
-import Footer from "@/app/components/Footer";
 
 /* ── TOKENS — enako kot homepage ── */
-const GOLD       = "#c9a96e";
-const GOLD_DIM   = "rgba(201,169,110,0.7)";
-const CREAM      = "#f7f4ef";
-const DARK       = "#111008";
+const GOLD = "var(--accent)";
+const CREAM = "var(--section-bg)";
+const DARK = "var(--heading)";
 const WARM       = "#1a1812";
 
 /* ── GLOBAL STYLES ── */
@@ -128,10 +126,10 @@ const G = `
 function SectionLabel({ text, light = false }: { text: string; light?: boolean }) {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
-      <div style={{ width: 36, height: 2, background: light ? "rgba(203,160,81,0.7)" : GOLD_DIM, flexShrink: 0 }} />
+      <div style={{ width: 36, height: 2, background: "var(--accent)", flexShrink: 0 }} />
       <span style={{
-        fontSize: 13, letterSpacing: "0.18em", textTransform: "uppercase",
-        color: light ? "rgba(167,141,91,0.9)" : GOLD, fontWeight: 700,
+        fontSize: 22, letterSpacing: "0.18em", textTransform: "uppercase",
+        color: light ? "var(--label-inv)" : "var(--label)", fontWeight: 700,
       }}>
         {text}
       </span>
@@ -276,7 +274,7 @@ export default function KnjiznicaPage() {
       </div>
 
       {/* ── UVOD — svetla sekcija kot "Dobrodošli" na homepage ── */}
-      <section style={{ backgroundColor: CREAM, padding: "100px 24px" }}>
+      <section style={{ backgroundColor: "var(--section-bg)", padding: "100px 24px" }}>
         <motion.div
           style={{ maxWidth: 1152, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "center" }}
           {...fadUp(0)}
@@ -307,7 +305,7 @@ export default function KnjiznicaPage() {
             <h2 style={{ fontSize: "clamp(28px, 3.5vw, 44px)", fontWeight: 500, color: DARK, letterSpacing: "-0.025em", lineHeight: 1.2, marginBottom: 24 }}>
               Kjer se knjiga in gora <span style={{ color: GOLD }}>srečata</span>
             </h2>
-            <div style={{ fontSize: 16, color: "rgba(17,16,8,0.6)", lineHeight: 1.85, display: "flex", flexDirection: "column", gap: 14 }}>
+            <div style={{ fontSize: 16, color: "var(--text-muted)", lineHeight: 1.85, display: "flex", flexDirection: "column", gap: 14 }}>
               <p>V soboto, 21. junija 2025 — na poletni solsticij — je Koroška osrednja knjižnica dr. Franca Sušnika slovesno odprla deveto knjižnično enoto: izposojevališče Uršlja gora.</p>
               <p>S tem je Uršlja gora postala najvišje ležeče izposojevališče knjig v Sloveniji. Skupaj z najvišje ležečo cerkvijo sv. Ursula in čebelnjakom — gora sedi na vrhu tudi kulturno.</p>
               <p>Med police so zašle planinska literatura, knjige o Koroški, otroški kotiček in domači avtorji.</p>
@@ -317,7 +315,7 @@ export default function KnjiznicaPage() {
       </section>
 
       {/* ── GALERIJA — temna sekcija ── */}
-      <section style={{ backgroundColor: DARK, padding: "80px 0 100px" }}>
+      <section style={{ backgroundColor: "var(--section-bg-dark)", padding: "80px 0 100px" }}>
         <div style={{ maxWidth: 1152, margin: "0 auto", padding: "0 24px" }}>
           <motion.div
             {...fadUp(0)}
@@ -325,7 +323,7 @@ export default function KnjiznicaPage() {
           >
             <div>
               <SectionLabel text="Fotografije" light />
-              <h2 style={{ fontSize: "clamp(24px, 3vw, 36px)", fontWeight: 500, color: CREAM, letterSpacing: "-0.025em", margin: 0 }}>
+              <h2 style={{ fontSize: "clamp(24px, 3vw, 36px)", fontWeight: 500, color: "var(--heading-inv)", letterSpacing: "-0.025em", margin: 0 }}>
                 Prostori <span style={{ color: GOLD }}>izposojevališča</span>
               </h2>
             </div>
@@ -366,7 +364,7 @@ export default function KnjiznicaPage() {
               >
                 <span style={{ fontSize: 28, marginBottom: 16, display: "block" }}>{f.icon}</span>
                 <h3 style={{ fontSize: 18, fontWeight: 600, color: DARK, marginBottom: 10, letterSpacing: "-0.01em" }}>{f.title}</h3>
-                <p style={{ fontSize: 14, color: "rgba(17,16,8,0.58)", lineHeight: 1.8 }}>{f.body}</p>
+                <p style={{ fontSize: 14, color: "var(--text-muted)", lineHeight: 1.8 }}>{f.body}</p>
               </motion.div>
             ))}
           </div>
@@ -375,7 +373,7 @@ export default function KnjiznicaPage() {
 
       {/* ── QUOTE BANNER — enako kot homepage ── */}
       <section style={{ position: "relative", overflow: "hidden", padding: "120px 24px" }}>
-        <div style={{ position: "absolute", inset: 0, backgroundColor: DARK }} />
+        <div style={{ position: "absolute", inset: 0, backgroundColor: "var(--section-bg-dark)" }} />
         <div style={{ position: "absolute", inset: 0 }}>
           <Image src="/knji3.jpg" alt="" fill loading="lazy" sizes="100vw" quality={60}
             style={{ objectFit: "cover", opacity: 0.15 }} />
@@ -387,25 +385,25 @@ export default function KnjiznicaPage() {
           style={{ position: "relative", zIndex: 10, maxWidth: 760, margin: "0 auto", textAlign: "center" }}
         >
           <div style={{ fontSize: 64, color: GOLD, lineHeight: 0.5, marginBottom: 24, opacity: 0.5 }}>"</div>
-          <p style={{ fontSize: "clamp(20px, 3.5vw, 34px)", color: "white", fontWeight: 400, lineHeight: 1.55, letterSpacing: "-0.01em", fontStyle: "italic" }}>
+          <p style={{ fontSize: "clamp(20px, 3.5vw, 34px)", color: "var(--heading-inv)", fontWeight: 400, lineHeight: 1.55, letterSpacing: "-0.01em", fontStyle: "italic" }}>
             Knjižnica se je povzpela do pohodnikov — da ni treba izbirati med knjigo in goro.
           </p>
           <div style={{ width: 40, height: 1, background: GOLD, margin: "32px auto 0" }} />
-          <p style={{ marginTop: 20, fontSize: 12, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(201,169,110,0.55)" }}>
+          <p style={{ marginTop: 20, fontSize: 14, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-primary-inv)" }}>
             Aljaž Verhovnik · Direktor KOK dr. Franca Sušnika
           </p>
         </motion.div>
       </section>
 
       {/* ── INFO — svetla sekcija ── */}
-      <section style={{ backgroundColor: CREAM, padding: "100px 24px" }}>
+      <section style={{ backgroundColor: "var(--section-bg)", padding: "100px 24px" }}>
         <div style={{ maxWidth: 1152, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "start" }}>
           <motion.div {...fadUp(0)}>
             <SectionLabel text="Praktično" />
             <h2 style={{ fontSize: "clamp(26px, 3.5vw, 42px)", fontWeight: 500, color: DARK, letterSpacing: "-0.025em", lineHeight: 1.2, marginBottom: 20 }}>
               Načrtuj <span style={{ color: GOLD }}>obisk</span>
             </h2>
-            <p style={{ fontSize: 16, color: "rgba(17,16,8,0.58)", lineHeight: 1.88, marginBottom: 28 }}>
+            <p style={{ fontSize: 16, color: "var(--text-muted)", lineHeight: 1.88, marginBottom: 28 }}>
               Izposojevališče je del Doma na Uršlji gori in deluje v skladu z urnikom koče. Za izposojo knjig potrebuješ člansko izkaznico Koroške osrednje knjižnice.
             </p>
             <motion.a
@@ -456,7 +454,7 @@ export default function KnjiznicaPage() {
         </motion.div>
       )}
 
-      <div style={{ backgroundColor: DARK }}>
+      <div style={{ backgroundColor: "var(--section-bg-dark)" }}>
     
       </div>
        

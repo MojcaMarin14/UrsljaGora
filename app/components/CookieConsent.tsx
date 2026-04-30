@@ -47,7 +47,7 @@ export default function CookieConsent() {
       <p style={{ fontSize: 13, color: "#6b6460", lineHeight: 1.7, margin: "0 0 20px" }}>
         Ta spletna stran uporablja piškotke za analitiko obiskov in shranjevanje vaših nastavitev.
         Podatki so anonimni in ne vsebujejo osebnih informacij.{" "}
-        <Link href="/politikaZasebnosti" style={{ color: "#c9a96e", textDecoration: "underline" }}>
+        <Link href="/politikaZasebnosti" style={{ color: "var(--accent)", textDecoration: "underline" }}>
           Več o zasebnosti →
         </Link>
       </p>
@@ -58,7 +58,7 @@ export default function CookieConsent() {
           style={{
             flex: 1,
             padding: "11px 0",
-            background: "#c9a96e",
+            background: "var(--accent)",
             color: "#fff",
             border: "none",
             borderRadius: 10,

@@ -30,11 +30,13 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="sl">
-      <body className="bg-[var(--background)] text-[var(--foreground)] m-0 p-0">
+    <html lang="sl" data-theme="dark">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();` }} />
+      </head>
+      <body className="m-0 p-0" style={{ backgroundColor: "var(--page-bg)", color: "var(--text-primary)" }}>
         <Navbar />
         {children}
-        {/* Vercel Analytics – spremljanje obiskov, GDPR-skladno, brez piškotkov */}
         <Analytics />
         <CookieConsent />
       </body>

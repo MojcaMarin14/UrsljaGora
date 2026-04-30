@@ -5,15 +5,14 @@ import { useRef } from "react";
 import Image from "next/image";
 import Footer from "@/app/components/Footer";
 
-const GOLD = "#d4b676";
-const GOLD2 = "#745b24";
-const BG = "#080808";
+const GOLD = "var(--accent)";
+const BG = "var(--background)";
 
 function SectionLabel({ text }: { text: string }) {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
       <div style={{ width: 32, height: 1, background: GOLD, flexShrink: 0 }} />
-      <span style={{ fontSize: 13, letterSpacing: "0.18em", textTransform: "uppercase", color: GOLD, fontWeight: 700 }}>
+      <span style={{ fontSize: 22, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--label)", fontWeight: 700 }}>
         {text}
       </span>
     </div>
@@ -43,7 +42,7 @@ export default function JedilnikPage() {
   ];
 
   return (
-    <main style={{ width: "100%", backgroundColor: BG, color: "white", overflowX: "hidden" }}>
+    <main style={{ width: "100%", backgroundColor: BG, color: "var(--text-primary-inv)", overflowX: "hidden" }}>
 
       {/* ── HERO ── */}
       <section ref={heroRef} style={{ position: "relative", width: "100%", height: "100vh", overflow: "hidden" }}>
@@ -62,7 +61,7 @@ export default function JedilnikPage() {
             quality={85}
             style={{ objectFit: "cover" }}
           />
-          <div style={{ position: "absolute", inset: 0, background: `linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.5), ${BG})` }} />
+          <div className="hero-overlay" style={{ position: "absolute", inset: 0 }} />
         </motion.div>
 
         <motion.div
@@ -80,7 +79,8 @@ export default function JedilnikPage() {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.3 }}
-            style={{ fontSize: "clamp(64px, 12vw, 120px)", fontWeight: 500, letterSpacing: "-0.03em", lineHeight: 1, color: "white", margin: 0 }}
+            className="hero-title"
+            style={{ fontSize: "clamp(64px, 12vw, 120px)", fontWeight: 500, letterSpacing: "-0.03em", lineHeight: 1, margin: 0 }}
           >
             Jedil<span style={{ color: GOLD }}>nik</span>
           </motion.h1>
@@ -96,7 +96,7 @@ export default function JedilnikPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.7 }}
-            style={{ marginTop: 24, fontSize: 20, color: "rgba(255,255,255,0.55)", maxWidth: 400, lineHeight: 1.7 }}
+            style={{ marginTop: 24, fontSize: 20, color: "rgba(255,255,255,0.65)", maxWidth: 400, lineHeight: 1.7 }}
           >
             Domače jedi, pripravljene iz lokalnih sestavin.
           </motion.p>
@@ -133,13 +133,13 @@ export default function JedilnikPage() {
           </motion.div>
           <motion.h2
             variants={fadeUp}
-            style={{ fontSize: "clamp(32px, 5vw, 52px)", fontWeight: 500, letterSpacing: "-0.025em", lineHeight: 1.2, color: "white", marginBottom: 24 }}
+            style={{ fontSize: "clamp(32px, 5vw, 52px)", fontWeight: 500, letterSpacing: "-0.025em", lineHeight: 1.2, color: "var(--heading-inv)", marginBottom: 24 }}
           >
             Okusi <span style={{ color: GOLD }}>domačega</span>
           </motion.h2>
           <motion.p
             variants={fadeUp}
-            style={{ fontSize: 18, color: "rgba(255,255,255,0.55)", lineHeight: 1.8 }}
+            style={{ fontSize: 18, color: "var(--text-muted-inv)", lineHeight: 1.8 }}
           >
             Naša stalna izbira domačih jedi, pripravljenih iz lokalnih sestavin in postreženih v prijetnem ambientu naše koče.
           </motion.p>
@@ -162,22 +162,22 @@ export default function JedilnikPage() {
               variants={fadeUp}
               whileHover={{ y: -6 }}
               transition={{ duration: 0.35 }}
-              style={{ borderRadius: 24, overflow: "hidden", border: "1px solid rgba(255,255,255,0.08)", display: "flex", flexDirection: "column", background: "#111" }}
+              style={{ borderRadius: 24, overflow: "hidden", border: "1px solid var(--border)", display: "flex", flexDirection: "column", background: "var(--section-bg-dark)" }}
             >
               <div style={{ position: "relative", height: 240, overflow: "hidden" }}>
                 <Image src={j.slika} alt={j.ime} fill loading="lazy" sizes="(max-width: 768px) 100vw, 33vw" quality={80} style={{ objectFit: "cover" }} />
                 <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(8,8,8,0.6), transparent)" }} />
               </div>
               <div style={{ padding: "28px 28px 32px", flex: 1, display: "flex", flexDirection: "column" }}>
-                <h3 style={{ fontSize: 22, fontWeight: 500, color: "white", marginBottom: 10, letterSpacing: "-0.01em" }}>
+                <h3 style={{ fontSize: 22, fontWeight: 500, color: "var(--heading-inv)", marginBottom: 10, letterSpacing: "-0.01em" }}>
                   {j.ime}
                 </h3>
-                <p style={{ fontSize: 15, color: "rgba(255,255,255,0.5)", lineHeight: 1.7, flex: 1 }}>
+                <p style={{ fontSize: 15, color: "var(--text-muted-inv)", lineHeight: 1.7, flex: 1 }}>
                   {j.opis}
                 </p>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 24, paddingTop: 20, borderTop: "1px solid rgba(255,255,255,0.07)" }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 24, paddingTop: 20, borderTop: "1px solid var(--border)" }}>
                   <span style={{ fontSize: 24, fontWeight: 600, color: GOLD, letterSpacing: "-0.02em" }}>{j.cena}</span>
-                  <span style={{ fontSize: 12, color: "rgba(255,255,255,0.25)", letterSpacing: "0.1em", textTransform: "uppercase" }}>Domača jed</span>
+                  <span style={{ fontSize: 12, color: "var(--text-muted-2)", letterSpacing: "0.1em", textTransform: "uppercase" }}>Domača jed</span>
                 </div>
               </div>
             </motion.div>
@@ -187,7 +187,7 @@ export default function JedilnikPage() {
 
       {/* ── QUOTE BANNER ── */}
       <section style={{ position: "relative", overflow: "hidden", padding: "120px 24px" }}>
-        <div style={{ position: "absolute", inset: 0, backgroundColor: "#0d0d0d" }} />
+        <div style={{ position: "absolute", inset: 0, backgroundColor: "var(--section-bg-dark)" }} />
         <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at center, rgba(212,182,118,0.07) 0%, transparent 70%)" }} />
         <motion.div
           initial={{ opacity: 0, y: 40 }}
@@ -197,7 +197,7 @@ export default function JedilnikPage() {
           style={{ position: "relative", zIndex: 10, maxWidth: 760, margin: "0 auto", textAlign: "center" }}
         >
           <div style={{ fontSize: 64, color: GOLD, lineHeight: 0.5, marginBottom: 24, opacity: 0.4 }}>"</div>
-          <p style={{ fontSize: "clamp(20px, 3vw, 32px)", color: "white", fontWeight: 400, lineHeight: 1.6, letterSpacing: "-0.01em", fontStyle: "italic", opacity: 0.85 }}>
+          <p style={{ fontSize: "clamp(20px, 3vw, 32px)", color: "var(--text-primary-inv)", fontWeight: 400, lineHeight: 1.6, letterSpacing: "-0.01em", fontStyle: "italic", opacity: 0.85 }}>
             Vsak obrok je pripravljen z ljubeznijo — tako kot ga pripravi domača roka.
           </p>
           <div style={{ width: 40, height: 1, background: GOLD, margin: "32px auto 0", opacity: 0.5 }} />
@@ -213,15 +213,15 @@ export default function JedilnikPage() {
           transition={{ duration: 0.8 }}
           style={{ maxWidth: 760, margin: "0 auto" }}
         >
-          <div style={{ position: "relative", borderRadius: 24, overflow: "hidden", border: "1px solid rgba(255,255,255,0.08)", padding: "80px 48px", textAlign: "center" }}>
+          <div style={{ position: "relative", borderRadius: 24, overflow: "hidden", border: "1px solid var(--border)", padding: "80px 48px", textAlign: "center" }}>
             <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(212,182,118,0.08), transparent)", pointerEvents: "none" }} />
             <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: 1, height: 64, background: "linear-gradient(to bottom, rgba(212,182,118,0.6), transparent)" }} />
             <div style={{ position: "relative", zIndex: 10 }}>
               <SectionLabel text="Posebne ponudbe" />
-              <h2 style={{ fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 500, letterSpacing: "-0.02em", color: "white", marginBottom: 16 }}>
+              <h2 style={{ fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 500, letterSpacing: "-0.02em", color: "var(--heading-inv)", marginBottom: 16 }}>
                 Sezonske <span style={{ color: GOLD }}>specialitete</span>
               </h2>
-              <p style={{ fontSize: 17, color: "rgba(255,255,255,0.5)", maxWidth: 360, margin: "0 auto 36px", lineHeight: 1.7 }}>
+              <p style={{ fontSize: 17, color: "var(--text-muted-inv)", maxWidth: 360, margin: "0 auto 36px", lineHeight: 1.7 }}>
                 Posebne jedi glede na sezono in razpoložljive sestavine.
               </p>
               <motion.a
@@ -237,7 +237,7 @@ export default function JedilnikPage() {
         </motion.div>
       </section>
 
-      <Footer dark />
+      <Footer />
     </main>
   );
 }

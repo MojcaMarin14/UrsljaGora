@@ -1,11 +1,11 @@
 import Footer from "@/app/components/Footer";
 
-const GOLD = "#c9a96e";
-const DARK = "#111008";
+const GOLD = "var(--accent)";
+const DARK = "var(--heading)";
 
 export default function ZasebnostPage() {
   return (
-    <main style={{ width: "100%", backgroundColor: "#f7f4ef", minHeight: "100vh" }}>
+    <main style={{ width: "100%", backgroundColor: "var(--section-bg)", minHeight: "100vh" }}>
 
       {/* HERO */}
       <section style={{
@@ -14,14 +14,14 @@ export default function ZasebnostPage() {
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 16, justifyContent: "center", marginBottom: 20 }}>
           <div style={{ width: 28, height: 1, background: "rgba(201,169,110,0.5)" }} />
-          <span style={{ fontSize: 11, letterSpacing: "0.26em", textTransform: "uppercase", color: "rgba(201,169,110,0.8)", fontWeight: 500 }}>
+          <span className="hero-subtitle" style={{ fontSize: 11, letterSpacing: "0.26em", textTransform: "uppercase", fontWeight: 500 }}>
             Uršlja gora · Koroška
           </span>
           <div style={{ width: 28, height: 1, background: "rgba(201,169,110,0.5)" }} />
         </div>
-        <h1 style={{
+        <h1 className="hero-title" style={{
           fontSize: "clamp(36px, 6vw, 64px)", fontWeight: 500,
-          color: "white", letterSpacing: "-0.03em", lineHeight: 1.1, margin: 0,
+          letterSpacing: "-0.03em", lineHeight: 1.1, margin: 0,
         }}>
           Politika <span style={{ color: GOLD }}>zasebnosti</span>
         </h1>

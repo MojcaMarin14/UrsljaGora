@@ -8,22 +8,252 @@
   --font-premium: 'Playfair Display', serif;
 }
 
+/* ── DARK THEME (privzeto) ── */
+:root, [data-theme="dark"] {
+  --page-bg: #111008;
+  --section-bg: #f7f4ef;
+  --section-bg-dark: #111008;
+  --section-bg-white: #ffffff;
+  --card-bg: rgba(247,244,239,0.05);
+  --card-bg-light: #ffffff;
 
-:root {
-  --background: #f4faf5;      /* zelo svetla pastelna zelena */
-  --foreground: #1a1a1a;      /* temno siv tekst */
-  --brand: #8bcf9b;           /* pastelna zelena (glavna) */
-  --brand-dark: #5fae72;      /* malo temnejša pastelna zelena */
-  --brand-light: #e6f5ea;     /* zelo nežna zelena za ozadja */
+  --text-primary: #111008;
+  --text-primary-inv: #f7f4ef;
+  --text-muted: rgba(17,16,8,0.6);
+  --text-muted-2: rgba(17,16,8,0.45);
+  --text-muted-inv: rgba(247,244,239,0.5);
+  --text-high-inv: rgba(247,244,239,0.74);
+
+  --accent: #c9a96e;
+  --accent-hover: #b8934f;
+  --accent-muted: rgba(201,169,110,0.7);
+  --accent-subtle: rgba(201,169,110,0.12);
+  --accent-hero-bg: rgba(215,191,148,0.82);
+  --accent-hero-text: #111008;
+
+  --border: rgba(201,169,110,0.12);
+  --border-light: rgba(17,16,8,0.08);
+
+  --heading: #111008;
+  --heading-inv: #f7f4ef;
+
+  --label: #8B6914;
+  --label-inv: rgba(167,141,91,0.9);
+
+  /* Hero accent — always warm gold (hero is always over dark image) */
+  --hero-accent: rgba(201,169,110,0.92);
+  --hero-line: rgba(201,169,110,0.7);
+
+  /* Hero colors for dark theme */
+  --hero-text: white;
+  --hero-span: rgb(221,204,171);
+  --hero-subtitle: rgba(221,204,171,0.91);
+  --hero-shadow: transparent;
+  --hero-cta-bg: rgba(215,191,148,0.82);
+  --hero-cta-text: #111008;
+  --hero-next-bg: rgba(247,244,239,0.12);
+  --hero-next-border: rgba(247,244,239,0.16);
+
+  /* Footer */
+  --footer-bg: #111008;
+  --footer-text: #f7f4ef;
+
+  --background: #111008;
+  --foreground: #f7f4ef;
+}
+
+/* ── LIGHT THEME ── */
+[data-theme="light"] {
+  --page-bg: #FAFAFA;
+  --section-bg: #F5F5F5;
+  --section-bg-dark: #F5F5F5;
+  --section-bg-white: #FFFFFF;
+  --section-bg-info: #F2F7F3;
+  --card-bg: rgba(255,255,255,0.95);
+  --card-bg-light: #FFFFFF;
+
+  --text-primary: #2A2A2A;
+  --text-primary-inv: #2A2A2A;
+  --text-muted: rgba(42,42,42,0.7);
+  --text-muted-2: rgba(42,42,42,0.5);
+  --text-muted-inv: rgba(42,42,42,0.7);
+  --text-high-inv: rgba(42,42,42,0.85);
+
+  --accent: #C9A86A;
+  --accent-hover: #8C6B32;
+  --accent-muted: rgba(201,168,106,0.8);
+  --accent-subtle: rgba(201,168,106,0.14);
+  --accent-hero-bg: #C9A86A;
+  --accent-hero-text: #FFFFFF;
+  --accent-hero-hover: #8C6B32;
+
+  --border: #E5E5E5;
+  --border-light: rgba(42,42,42,0.08);
+
+  --heading: #1A1A1A;
+  --heading-inv: #1A1A1A;
+
+  --label: #7A5218;
+  --label-inv: #7A5218;
+
+  /* Hero colors for light theme */
+  --hero-text: white;
+  --hero-span: rgb(221,204,171);
+  --hero-subtitle: rgba(221,204,171,0.91);
+  --hero-accent: rgba(201,169,110,0.92);
+  --hero-line: rgba(201,169,110,0.7);
+  --hero-shadow: transparent;
+  --hero-cta-bg: rgba(215,191,148,0.82);
+  --hero-cta-text: #111008;
+
+  /* Footer */
+  --footer-bg: #F5F5F5;
+  --footer-text: #1A1A1A;
+  --footer-link: #5C3A0E;
+  --footer-link-hover: #7A5218;
+
+  --background: #FAFAFA;
+  --foreground: #2A2A2A;
+}
+
+/* Light theme headings */
+[data-theme="light"] h1,
+[data-theme="light"] h2,
+[data-theme="light"] h3,
+[data-theme="light"] h4 {
+  color: var(--heading);
+}
+
+/* Hero styles */
+.hero-overlay,
+.hero-overlay--video {
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.35),
+    rgba(0, 0, 0, 0.25)
+  );
+}
+
+[data-theme="dark"] .hero-overlay {
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.28) 0%,
+    rgba(0, 0, 0, 0.38) 45%,
+    rgba(0, 0, 0, 0.68) 100%
+  );
+}
+
+[data-theme="light"] .hero-overlay {
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.35),
+    rgba(0, 0, 0, 0.25)
+  );
+}
+
+.hero-title,
+.hero-subtitle {
+  text-shadow: 0 2px 6px rgba(0,0,0,0.25);
+}
+
+.hero-title {
+  color: var(--hero-text);
+}
+
+.hero-subtitle {
+  color: var(--hero-subtitle);
+}
+
+.hero-cta {
+  background: var(--hero-cta-bg);
+  color: var(--hero-cta-text);
+}
+
+.hero-next {
+  background: var(--hero-next-bg);
+  border: 1px solid var(--hero-next-border);
+  border-radius: 0;
+}
+
+.hero-next h2 {
+  color: var(--heading);
+}
+
+.hero-next p {
+  color: var(--text-muted);
+}
+
+.hero-next .hero-next-number {
+  color: var(--text-primary);
+}
+
+.hero-next .hero-next-label {
+  color: var(--text-muted-2);
+}
+
+[data-theme="dark"] .hero-next {
+  background: rgba(247,244,239,0.92);
+  border-color: rgba(17,16,8,0.08);
+}
+
+[data-theme="dark"] .hero-next h2 {
+  color: var(--heading);
+}
+
+[data-theme="dark"] .hero-next p {
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] .hero-next .hero-next-number {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .hero-next .hero-next-label {
+  color: var(--text-muted-2);
+}
+
+[data-theme="light"] .hero-title {
+  color: white;
+}
+
+[data-theme="light"] .hero-subtitle {
+  color: rgba(221,204,171,0.91);
+}
+
+[data-theme="light"] .hero-cta {
+  background: rgba(215,191,148,0.82);
+  color: #111008;
+}
+
+[data-theme="light"] .hero-overlay {
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.35),
+    rgba(0, 0, 0, 0.25)
+  );
+}
+
+/* Stronger dark overlay — dark mode only, light mode same as base */
+.hero-overlay--strong {
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.35),
+    rgba(0, 0, 0, 0.25)
+  );
+}
+[data-theme="dark"] .hero-overlay--strong {
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.38) 0%,
+    rgba(0, 0, 0, 0.48) 45%,
+    rgba(0, 0, 0, 0.72) 100%
+  );
 }
 
 /* Tailwind theme binding */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-brand: var(--brand);
-  --color-brand-dark: var(--brand-dark);
-  --color-brand-light: var(--brand-light);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -100,4 +330,82 @@ body {
     transform: translateY(380px) translateX(calc(var(--sway) * 40px)) rotate(180deg);
     opacity: 0;
   }
+}
+footer a:hover {
+  color: var(--footer-link-hover) !important;
+}
+
+/* ── MOBILE RESPONSIVE ── */
+@media (max-width: 640px) {
+  /* FeaturedCard: 2-stolpni grid → navpično */
+  .featured-card {
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: auto !important;
+  }
+  .featured-card > *:first-child { min-height: 220px; }
+  .featured-card-body { padding: 24px 20px !important; }
+
+  /* Skupni section padding */
+  .mobile-pad {
+    padding-top: 60px !important;
+    padding-bottom: 60px !important;
+  }
+
+  /* onas */
+  .onas-content-wrap {
+    padding-top: 64px !important;
+    padding-bottom: 64px !important;
+  }
+  .onas-blocks-gap { gap: 64px !important; }
+  .onas-col-grid { gap: 28px !important; }
+  .onas-img-tall { height: 260px !important; }
+  .onas-cta-box { padding: 44px 20px !important; }
+
+  /* aktualno 2-stolpni grid */
+  .aktualno-2col { grid-template-columns: 1fr !important; }
+
+  /* kontakt mapa */
+  .map-section { height: 260px !important; }
+
+  /* novice / dogodki / ponudbe featured card spodnja vsebina */
+  .novice-featured-body { padding: 24px 20px 28px !important; }
+
+  /* Vreme */
+  .weather-grid {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto 1fr !important;
+    padding-top: 56px !important;
+  }
+  .weather-days-panel {
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    border-right: none !important;
+    border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+    max-height: 160px;
+  }
+  .weather-days-panel > .weather-days-header { display: none !important; }
+  .weather-days-list {
+    flex-direction: row !important;
+    padding: 8px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    gap: 4px;
+  }
+  .weather-day-btn {
+    flex-direction: column !important;
+    align-items: center !important;
+    min-width: 68px !important;
+    padding: 8px 6px !important;
+    gap: 3px !important;
+  }
+  .weather-day-btn .weather-day-info { display: none !important; }
+  .weather-detail-header {
+    padding: 14px 18px 12px !important;
+    flex-wrap: wrap;
+  }
+  .weather-detail-header .weather-stats { gap: 6px !important; }
+  .weather-detail-header .weather-stats > div { padding: 7px 12px !important; }
+  .weather-detail-body { padding: 14px 18px 16px !important; }
 }

@@ -7,9 +7,9 @@ import { fetchAPI, getStrapiMedia } from "@/lib/api";
 import Link from "next/link";
 import { useEffect, useState, useCallback } from "react";
 
-const GOLD = "#c9a96e";
-const CREAM = "#f7f4ef";
-const DARK = "#111008";
+const GOLD = "var(--accent)";
+const CREAM = "var(--section-bg)";
+const DARK = "var(--heading)";
 
 const PER_PAGE = 6;
 
@@ -26,11 +26,10 @@ const KATEGORIJE: { label: Kategorija; icon: string }[] = [
 function SectionLabel({ text, light = false }: { text: string; light?: boolean }) {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
-      <div style={{ width: 28, height: 1, background: light ? "rgba(255, 255, 255, 0.7)" : GOLD, flexShrink: 0 }} />
+      <div style={{ width: 36, height: 2, background: "var(--accent)", flexShrink: 0 }} />
       <span style={{
-        fontSize: 15, letterSpacing: "0.22em", textTransform: "uppercase",
-        color: light ? "rgba(255, 255, 255, 0.85)" : GOLD, fontWeight: 600,
-        fontFamily: "sans-serif",
+        fontSize: 22, letterSpacing: "0.18em", textTransform: "uppercase",
+        color: light ? "var(--label-inv)" : "var(--label)", fontWeight: 700,
       }}>
         {text}
       </span>
@@ -213,7 +212,7 @@ function FeaturedCard({ img, title, excerpt, href, veljavnost, kategorija }: {
             </span>
           </div>
         )}
-        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "40px 44px 44px" }}>
+        <div className="novice-featured-body" style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "40px 44px 44px" }}>
           {veljavnost && (
             <p style={{ fontFamily: "sans-serif", fontSize: 19, color: "rgba(249, 249, 249, 0.93)", letterSpacing: "0.12em", marginBottom: 12, textTransform: "uppercase" }}>
               Velja do: {new Date(veljavnost).toLocaleDateString("sl-SI", { day: "numeric", month: "long", year: "numeric" })}
@@ -329,7 +328,7 @@ export default function PonudbePage() {
   const gridItems = showFeatured ? rest : ponudbe;
 
   return (
-    <main style={{ width: "100%", backgroundColor: CREAM, overflowX: "hidden" }}>
+    <main style={{ width: "100%", backgroundColor: "var(--section-bg)", overflowX: "hidden" }}>
 
       {/* ── MINI HERO ── */}
       <section style={{ position: "relative", width: "100%", height: "52vh", overflow: "hidden" }}>
@@ -385,7 +384,7 @@ export default function PonudbePage() {
       </section>
 
       {/* ── VSEBINA ── */}
-      <section style={{ backgroundColor: CREAM, padding: "64px 24px 100px" }}>
+      <section style={{ backgroundColor: "var(--section-bg)", padding: "64px 24px 100px" }}>
         <div style={{ maxWidth: 1152, margin: "0 auto" }}>
 
           <motion.div
@@ -472,7 +471,7 @@ export default function PonudbePage() {
         </div>
       </section>
 
-      <Footer dark />
+      <Footer />
     </main>
   );
 }
