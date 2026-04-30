@@ -49,6 +49,7 @@ export default function MapPage() {
   function handlePoiAddPhoto(lat: number, lng: number) {
     setPhotoMarker({ lat, lng });
     setIsAddingPhoto(false);
+    setFlyTo({ lat, lng });
     setMobileUploadTab(true);
     setMobilePanel("gallery");
   }
@@ -100,6 +101,7 @@ export default function MapPage() {
           onPhotosChanged={handlePhotosChanged}
           onLocatePhoto={(lat, lng) => setFlyTo({ lat, lng })}
           onLocateEvent={(lat, lng) => setFlyTo({ lat, lng })}
+          defaultTab={mobileUploadTab ? "upload" : undefined}
         />
       </aside>
 

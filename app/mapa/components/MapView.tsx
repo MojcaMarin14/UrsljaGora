@@ -12,7 +12,7 @@ import {
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { trails, Trail } from "../data/trails";
-import { pois, categoryConfig, POICategory } from "../data/pois";
+import { pois, categoryConfig, POICategory, POI } from "../data/pois";
 import { CommunityPhoto, AdminPoi } from "../data/photoStore";
 
 interface TileLayerConfig {
@@ -63,6 +63,42 @@ function createCategoryIcon(category: POICategory) {
     iconAnchor: [16, 16],
     popupAnchor: [0, -18],
   });
+}
+
+function PoiMarkers({
+  filteredPois,
+  onPoiAddPhoto,
+}: {
+  filteredPois: POI[];
+  onPoiAddPhoto?: (lat: number, lng: number) => void;
+}) {
+  const map = useMap();
+  return (
+    <>
+      {filteredPois.map((poi) => (
+        <Marker key={poi.id} position={[poi.lat, poi.lng]} icon={createCategoryIcon(poi.category)}>
+          <Popup>
+            <div className="poi-popup">
+              <strong>{poi.name}</strong>
+              {poi.date && <span className="poi-date">{poi.date}</span>}
+              <p>{poi.description}</p>
+              {onPoiAddPhoto && (
+                <button
+                  className="poi-popup__add-photo-btn"
+                  onClick={() => {
+                    map.closePopup();
+                    onPoiAddPhoto(poi.lat, poi.lng);
+                  }}
+                >
+                  📷 Dodaj sliko tukaj
+                </button>
+              )}
+            </div>
+          </Popup>
+        </Marker>
+      ))}
+    </>
+  );
 }
 
 function FitBounds({ activeTrail }: { activeTrail: Trail | null }) {
@@ -193,25 +229,7 @@ export default function MapView({
         ))}
 
         {/* POI markers */}
-        {filteredPois.map((poi) => (
-          <Marker key={poi.id} position={[poi.lat, poi.lng]} icon={createCategoryIcon(poi.category)}>
-            <Popup>
-              <div className="poi-popup">
-                <strong>{poi.name}</strong>
-                {poi.date && <span className="poi-date">{poi.date}</span>}
-                <p>{poi.description}</p>
-                {onPoiAddPhoto && (
-                  <button
-                    className="poi-popup__add-photo-btn"
-                    onClick={() => onPoiAddPhoto(poi.lat, poi.lng)}
-                  >
-                    📷 Dodaj sliko tukaj
-                  </button>
-                )}
-              </div>
-            </Popup>
-          </Marker>
-        ))}
+        <PoiMarkers filteredPois={filteredPois} onPoiAddPhoto={onPoiAddPhoto} />
 
         {/* Photo placement marker */}
         {photoMarker && (
