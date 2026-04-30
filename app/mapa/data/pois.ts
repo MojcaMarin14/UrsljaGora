@@ -9,6 +9,7 @@ export interface POI {
   description: string;
   date?: string;
   imageUrl?: string;
+  allowPhoto?: boolean;
 }
 
 export const categoryConfig: Record<
@@ -62,6 +63,7 @@ export const pois: POI[] = [
     lng: 14.96497,
     description:
       "Najvišje ležeča cerkev v Sloveniji (1699 m). Gotska cerkev, prvič omenjena leta 1363. Po njej je gora dobila ime.",
+    allowPhoto: true,
   },
   {
     id: "poi-2",
@@ -107,6 +109,7 @@ export const pois: POI[] = [
     lng: 14.963674,
     description:
       "RTV oddajnik, postavljen leta 1962. Leži nad cerkvijo in planinsko kočo. Pokriva Koroško in Štajersko regijo.",
+    allowPhoto: true,
   },
   {
     id: "poi-7",
@@ -116,6 +119,7 @@ export const pois: POI[] = [
     lng: 14.96149,
     description:
       "Vrh Uršlje gore (1699 m) z križem in razgledno ploščo. Najvzhodnejši vrh Karavank. Panoramski 360° razgled.",
+    allowPhoto: true,
   },
   {
     id: "poi-8",

@@ -82,12 +82,66 @@ function PoiMarkers({
               <strong>{poi.name}</strong>
               {poi.date && <span className="poi-date">{poi.date}</span>}
               <p>{poi.description}</p>
-              {onPoiAddPhoto && (
+              {onPoiAddPhoto && poi.allowPhoto && (
                 <button
                   className="poi-popup__add-photo-btn"
                   onClick={() => {
                     map.closePopup();
                     onPoiAddPhoto(poi.lat, poi.lng, poi.name);
+                  }}
+                >
+                  📷 Dodaj sliko tukaj
+                </button>
+              )}
+            </div>
+          </Popup>
+        </Marker>
+      ))}
+    </>
+  );
+}
+
+function CommunityPhotoMarkers({
+  communityPhotos,
+  onPoiAddPhoto,
+}: {
+  communityPhotos: CommunityPhoto[];
+  onPoiAddPhoto?: (lat: number, lng: number, name: string) => void;
+}) {
+  const map = useMap();
+  return (
+    <>
+      {communityPhotos.map((photo) => (
+        <Marker
+          key={photo.id}
+          position={[photo.lat, photo.lng]}
+          icon={L.divIcon({
+            className: "custom-marker",
+            html: `<div style="
+              width: 36px; height: 36px;
+              border-radius: 50%;
+              border: 3px solid #fff;
+              box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+              overflow: hidden;
+              background: #e07a5f;
+            "><img src="${photo.imageUrl}" style="width:100%;height:100%;object-fit:cover;" alt="" /></div>`,
+            iconSize: [36, 36],
+            iconAnchor: [18, 18],
+          })}
+        >
+          <Popup>
+            <div className="poi-popup">
+              <img src={photo.imageUrl} alt={photo.caption} style={{ width: "100%", borderRadius: 6, marginBottom: 6 }} />
+              {photo.caption && <strong>{photo.caption}</strong>}
+              <p style={{ fontSize: "0.75rem", color: "#6b6b6b" }}>
+                {photo.author}{photo.kraj ? ` · ${photo.kraj}` : ""} · {new Date(photo.createdAt).toLocaleDateString("sl-SI")}
+              </p>
+              {onPoiAddPhoto && (
+                <button
+                  className="poi-popup__add-photo-btn"
+                  onClick={() => {
+                    map.closePopup();
+                    onPoiAddPhoto(photo.lat, photo.lng, photo.kraj || "Ista lokacija");
                   }}
                 >
                   📷 Dodaj sliko tukaj
@@ -254,35 +308,7 @@ export default function MapView({
         )}
 
         {/* Community photo markers */}
-        {communityPhotos.map((photo) => (
-          <Marker
-            key={photo.id}
-            position={[photo.lat, photo.lng]}
-            icon={L.divIcon({
-              className: "custom-marker",
-              html: `<div style="
-                width: 36px; height: 36px;
-                border-radius: 50%;
-                border: 3px solid #fff;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-                overflow: hidden;
-                background: #e07a5f;
-              "><img src="${photo.imageUrl}" style="width:100%;height:100%;object-fit:cover;" alt="" /></div>`,
-              iconSize: [36, 36],
-              iconAnchor: [18, 18],
-            })}
-          >
-            <Popup>
-              <div className="poi-popup">
-                <img src={photo.imageUrl} alt={photo.caption} style={{ width: "100%", borderRadius: 6, marginBottom: 6 }} />
-                {photo.caption && <strong>{photo.caption}</strong>}
-                <p style={{ fontSize: "0.75rem", color: "#6b6b6b" }}>
-                  {photo.author}{photo.kraj ? ` · ${photo.kraj}` : ""} · {new Date(photo.createdAt).toLocaleDateString("sl-SI")}
-                </p>
-              </div>
-            </Popup>
-          </Marker>
-        ))}
+        <CommunityPhotoMarkers communityPhotos={communityPhotos} onPoiAddPhoto={onPoiAddPhoto} />
 
         {/* Admin POI markers (tocka-na-mapi) */}
         {adminPois.map((poi) => (
