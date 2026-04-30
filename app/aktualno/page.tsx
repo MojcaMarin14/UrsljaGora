@@ -6,28 +6,15 @@ import Link from "next/link";
 import Footer from "../components/Footer";
 import { useEffect, useState, useRef } from "react";
 
-const GOLD  = "#c9a96e";
-const CREAM = "#f7f4ef";
-const DARK  = "#111008";
-const DEEP  = "#1c1a10";   // temnejši odsek — toplo, ne črno
-const MID   = "#2a2718";   // srednje temna za quote banner
+const GOLD  = "var(--accent)";
+const CREAM = "var(--section-bg)";
+const DARK  = "var(--heading)";
 
 const CATEGORY_CONFIG: Record<string, { color: string; bg: string; borderColor: string; icon: string; label: string }> = {
   Novice:  { color: "#1a6b3c", bg: "rgba(26,107,60,0.10)",  borderColor: "rgba(26,107,60,0.25)",  icon: "📰", label: "Novice"  },
   Ponudbe: { color: "#9a4e00", bg: "rgba(154,78,0,0.10)",   borderColor: "rgba(154,78,0,0.25)",   icon: "🏷️", label: "Ponudbe" },
   Dogodki: { color: "#1a3d7a", bg: "rgba(26,61,122,0.10)",  borderColor: "rgba(26,61,122,0.25)",  icon: "📅", label: "Dogodki" },
 };
-
-function SectionLabel({ text, dark = false }: { text: string; dark?: boolean }) {
-  return (
-    <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
-      <div style={{ width: 32, height: 1, background: GOLD, flexShrink: 0 }} />
-      <span style={{ fontSize: 13, letterSpacing: "0.18em", textTransform: "uppercase", color: dark ? "rgba(201,169,110,0.9)" : "#8B6914", fontWeight: 700 }}>
-        {text}
-      </span>
-    </div>
-  );
-}
 
 function CategoryBadge({ category, light = false }: { category: string; light?: boolean }) {
   const cfg = CATEGORY_CONFIG[category] ?? { color: GOLD, bg: "rgba(201,169,110,0.12)", borderColor: "rgba(201,169,110,0.3)", icon: "•", label: category };
@@ -291,7 +278,7 @@ export default function AktualnoPage() {
 </section>
 
 {/* ── TEMNA SEKCIJA ── */}
-<section style={{ backgroundColor: "#1e1e1e", padding: "100px 24px 120px" }}>
+<section style={{ backgroundColor: "var(--section-bg-dark)", padding: "100px 24px 120px" }}>
   <motion.div
     initial={{ opacity: 0, y: 24 }}
     whileInView={{ opacity: 1, y: 0 }}
@@ -305,10 +292,10 @@ export default function AktualnoPage() {
         Vse novosti
       </span>
     </div>
-    <h2 style={{ fontSize: "clamp(28px, 4vw, 46px)", fontWeight: 500, color: "white", letterSpacing: "-0.025em", lineHeight: 1.2, marginBottom: 20 }}>
+    <h2 style={{ fontSize: "clamp(28px, 4vw, 46px)", fontWeight: 500, color: "var(--heading-inv)", letterSpacing: "-0.025em", lineHeight: 1.2, marginBottom: 20 }}>
       Vse na enem <span style={{ color: GOLD }}>mestu</span>
     </h2>
-    <p style={{ fontSize: 17, color: "rgba(255,255,255,0.45)", lineHeight: 1.8, maxWidth: 560, margin: "0 auto 40px" }}>
+    <p style={{ fontSize: 17, color: "var(--text-muted-inv)", lineHeight: 1.8, maxWidth: 560, margin: "0 auto 40px" }}>
       Spremljajte dogajanje na Uršlji gori — od svežih novic in sezonskih ponudb do prihajajočih dogodkov, ki jih ne smete zamuditi.
     </p>
     <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center" }}>
@@ -335,7 +322,7 @@ export default function AktualnoPage() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6 }}
-      style={{ maxWidth: 1152, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gridTemplateRows: "auto auto", gap: 20 }}
+      className="aktualno-2col" style={{ maxWidth: 1152, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gridTemplateRows: "auto auto", gap: 20 }}
     >
       <FeaturedCard
         img={novinaImg}
@@ -364,7 +351,7 @@ export default function AktualnoPage() {
   )}
 </section>
 
-      <Footer dark />
+      <Footer />
     </main>
   );
 }

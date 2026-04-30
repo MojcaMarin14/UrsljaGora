@@ -10,9 +10,9 @@ const MarzipanoViewer = dynamic(() => import("@/components/MarzipanoViewer"), {
   ssr: false,
 });
 
-const DARK = "#111111";
-const GRAY = "#717171";
-const BORDER = "#ebebeb";
+const DARK = "var(--heading)";
+const GRAY = "var(--text-muted)";
+const BORDER = "var(--border-light)";
 
 const AMENITY_ICONS: Record<string, string> = {
   "Skupna kopalnica": "🚿",
@@ -633,7 +633,7 @@ function InquiryCard({ roomName, type }: { roomName: string; type: string }) {
         href="/kontakt"
         style={{
           display: "block", textAlign: "center",
-          background: DARK, color: "white",
+          background: "var(--accent)", color: "white",
           borderRadius: 12, padding: "16px 24px",
           fontSize: 15, fontWeight: 700,
           textDecoration: "none", letterSpacing: "0.01em",
@@ -677,7 +677,7 @@ export default function PrenociscaPage() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.75], [1, 0]);
 
   return (
-    <main style={{ background: "white", overflowX: "hidden" }}>
+    <main style={{ background: "var(--section-bg-white)", overflowX: "hidden" }}>
       <style>{globalStyles}</style>
 
       {/* ── HERO ── */}
@@ -726,7 +726,7 @@ export default function PrenociscaPage() {
             style={{ fontSize: "clamp(64px, 12vw, 120px)", fontWeight: 500, letterSpacing: "-0.03em", lineHeight: 1, color: "white", margin: 0 }}
           >
             Prenočišča<br />
-            <span style={{ color: "#c9a96e" }}>na vrhu</span>
+            <span style={{ color: "var(--accent)" }}>na vrhu</span>
           </motion.h1>
 
           <motion.div
@@ -937,7 +937,7 @@ export default function PrenociscaPage() {
       </div>
 
       {/* ── FOOTER ── */}
-      <Footer dark/>
+      <Footer />
     </main>
   );
 }

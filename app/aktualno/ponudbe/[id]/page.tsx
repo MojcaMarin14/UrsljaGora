@@ -2,9 +2,9 @@ import Footer from "@/app/components/Footer";
 import { fetchAPI, getStrapiMedia } from "@/lib/api";
 import Image from "next/image";
 
-const GOLD = "#c9a96e";
-const CREAM = "#f7f4ef";
-const DARK = "#111008";
+const GOLD = "var(--accent)";
+const CREAM = "var(--section-bg)";
+const DARK = "var(--heading)";
 const WARM = "#1a1812";
 
 export default async function PonudbaDetailPage(props: { params: Promise<{ id: string }> }) {
@@ -18,7 +18,7 @@ export default async function PonudbaDetailPage(props: { params: Promise<{ id: s
 
   if (!ponudba) {
     return (
-      <main style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: CREAM }}>
+      <main style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "var(--section-bg)" }}>
         <div style={{ textAlign: "center", padding: "0 24px" }}>
           <p style={{ fontSize: 13, letterSpacing: "0.22em", textTransform: "uppercase", color: GOLD, fontWeight: 600, marginBottom: 16 }}>
             404
@@ -37,7 +37,7 @@ export default async function PonudbaDetailPage(props: { params: Promise<{ id: s
   const img = ponudba.slika?.[0]?.url ?? null;
 
   return (
-    <main style={{ width: "100%", backgroundColor: CREAM, overflowX: "hidden" }}>
+    <main style={{ width: "100%", backgroundColor: "var(--section-bg)", overflowX: "hidden" }}>
 
       {/* HERO */}
       <section style={{
@@ -122,7 +122,7 @@ export default async function PonudbaDetailPage(props: { params: Promise<{ id: s
       </section>
 
       {/* VSEBINA */}
-      <section style={{ backgroundColor: CREAM, padding: "72px clamp(24px, 6vw, 80px) 100px" }}>
+      <section style={{ backgroundColor: "var(--section-bg)", padding: "72px clamp(24px, 6vw, 80px) 100px" }}>
         <div style={{ maxWidth: 780, margin: "0 auto" }}>
 
           {ponudba.opis && (
@@ -160,7 +160,7 @@ export default async function PonudbaDetailPage(props: { params: Promise<{ id: s
         </div>
       </section>
 
-      <Footer dark />
+      <Footer />
     </main>
   );
 }

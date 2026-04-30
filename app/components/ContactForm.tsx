@@ -5,10 +5,6 @@ import Link from "next/link";
 import Script from "next/script";
 import { useEffect, useRef, useState } from "react";
 
-const GOLD  = "#c9a96e";
-const CREAM = "#f7f4ef";
-const DARK  = "#111008";
-
 const TURNSTILE_ACTION = "contact_form";
 
 declare global {
@@ -85,12 +81,12 @@ export function ContactForm() {
 
   const inputBase: React.CSSProperties = {
     width: "100%",
-    background: "#faf9f6",
-    border: "1.5px solid rgba(17,16,8,0.1)",
+    background: "var(--section-bg-white)",
+    border: "1.5px solid var(--border-light)",
     borderRadius: 12,
     padding: "13px 16px",
     fontSize: 15,
-    color: DARK,
+    color: "var(--text-primary)",
     outline: "none",
     transition: "border-color 0.2s",
     fontFamily: "inherit",
@@ -115,11 +111,11 @@ export function ContactForm() {
         viewport={{ once: true }}
         transition={{ duration: 0.75 }}
         style={{
-          background: "white",
+          background: "var(--section-bg-white)",
           borderRadius: 24,
-          border: "1px solid rgba(17,16,8,0.07)",
+          border: "1px solid var(--border-light)",
           padding: "44px 48px",
-          boxShadow: "0 2px 24px rgba(17,16,8,0.06)",
+          boxShadow: "0 2px 24px rgba(0,0,0,0.06)",
         }}
       >
         {status === "sent" ? (
@@ -129,10 +125,10 @@ export function ContactForm() {
             style={{ textAlign: "center", padding: "40px 0" }}
           >
             <div style={{ fontSize: 48, marginBottom: 20 }}>✉️</div>
-            <h3 style={{ fontSize: 24, fontWeight: 500, color: DARK, letterSpacing: "-0.02em", marginBottom: 10 }}>
+            <h3 style={{ fontSize: 24, fontWeight: 500, color: "var(--heading)", letterSpacing: "-0.02em", marginBottom: 10 }}>
               Sporočilo poslano!
             </h3>
-            <p style={{ color: "rgba(17,16,8,0.5)", fontSize: 15, lineHeight: 1.7 }}>
+            <p style={{ color: "var(--text-muted)", fontSize: 15, lineHeight: 1.7 }}>
               Odgovorili vam bomo v najkrajšem možnem času.
             </p>
             <motion.button
@@ -141,14 +137,12 @@ export function ContactForm() {
               style={{
                 marginTop: 28,
                 background: "transparent",
-                border: `1.5px solid ${GOLD}`,
-                color: GOLD,
+                border: "1.5px solid var(--accent)",
+                color: "var(--accent)",
                 padding: "10px 28px",
                 borderRadius: 999,
-                fontSize: 13,
-                fontWeight: 600,
-                cursor: "pointer",
-                fontFamily: "inherit",
+                fontSize: 13, fontWeight: 600,
+                cursor: "pointer", fontFamily: "inherit",
                 letterSpacing: "0.04em",
               }}
             >
@@ -159,41 +153,31 @@ export function ContactForm() {
           <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-              <div>
-                <label style={{ display: "block", fontSize: 17, letterSpacing: "0.12em", textTransform: "uppercase", color: "#8B6914", fontWeight: 700, marginBottom: 8 }}>
-                  Ime in priimek
-                </label>
-                <input
-                  name="ime"
-                  value={form.ime}
-                  onChange={handleChange}
-                  placeholder="Jana Novak"
-                  maxLength={100}
-                  style={inputBase}
-                  onFocus={(e) => { e.target.style.borderColor = GOLD; }}
-                  onBlur={(e)  => { e.target.style.borderColor = "rgba(17,16,8,0.1)"; }}
-                />
-              </div>
-              <div>
-                <label style={{ display: "block", fontSize: 17, letterSpacing: "0.12em", textTransform: "uppercase", color: "#8B6914", fontWeight: 700, marginBottom: 8 }}>
-                  E-pošta
-                </label>
-                <input
-                  name="email"
-                  type="email"
-                  value={form.email}
-                  onChange={handleChange}
-                  placeholder="jana@email.com"
-                  maxLength={254}
-                  style={inputBase}
-                  onFocus={(e) => { e.target.style.borderColor = GOLD; }}
-                  onBlur={(e)  => { e.target.style.borderColor = "rgba(17,16,8,0.1)"; }}
-                />
-              </div>
+              {[
+                { name: "ime", label: "Ime in priimek", placeholder: "Jana Novak", type: "text" },
+                { name: "email", label: "E-pošta", placeholder: "jana@email.com", type: "email" },
+              ].map((f) => (
+                <div key={f.name}>
+                  <label style={{ display: "block", fontSize: 17, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--label)", fontWeight: 700, marginBottom: 8 }}>
+                    {f.label}
+                  </label>
+                  <input
+                    name={f.name}
+                    type={f.type}
+                    value={(form as any)[f.name]}
+                    onChange={handleChange}
+                    placeholder={f.placeholder}
+                    maxLength={f.name === "email" ? 254 : 100}
+                    style={inputBase}
+                    onFocus={(e) => { e.target.style.borderColor = "var(--accent)"; }}
+                    onBlur={(e)  => { e.target.style.borderColor = "var(--border-light)"; }}
+                  />
+                </div>
+              ))}
             </div>
 
             <div>
-              <label style={{ display: "block", fontSize: 17, letterSpacing: "0.12em", textTransform: "uppercase", color: "#8B6914", fontWeight: 700, marginBottom: 8 }}>
+              <label style={{ display: "block", fontSize: 17, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--label)", fontWeight: 700, marginBottom: 8 }}>
                 Sporočilo
               </label>
               <textarea
@@ -204,15 +188,14 @@ export function ContactForm() {
                 rows={5}
                 maxLength={2000}
                 style={{ ...inputBase, resize: "vertical", lineHeight: 1.7 }}
-                onFocus={(e) => { e.target.style.borderColor = GOLD; }}
-                onBlur={(e)  => { e.target.style.borderColor = "rgba(17,16,8,0.1)"; }}
+                onFocus={(e) => { e.target.style.borderColor = "var(--accent)"; }}
+                onBlur={(e)  => { e.target.style.borderColor = "var(--border-light)"; }}
               />
             </div>
 
             <div>
               {!siteKey ? (
-                <p style={{ fontSize: 13, color: "#d97706", margin: 0 }}>
-                </p>
+                <p style={{ fontSize: 13, color: "#d97706", margin: 0 }} />
               ) : (
                 <div ref={widgetContainerRef} style={{ minHeight: 65 }} />
               )}
@@ -223,19 +206,17 @@ export function ContactForm() {
 
             <div style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
               <input
-                type="checkbox"
-                id="gdpr"
-                checked={gdpr}
+                type="checkbox" id="gdpr" checked={gdpr}
                 onChange={(e) => setGdpr(e.target.checked)}
-                style={{ marginTop: 2, width: 16, height: 16, accentColor: GOLD, flexShrink: 0, cursor: "pointer" }}
+                style={{ marginTop: 2, width: 16, height: 16, accentColor: "var(--accent)", flexShrink: 0, cursor: "pointer" }}
               />
-              <label htmlFor="gdpr" style={{ fontSize: 17, color: "rgba(17,16,8,0.5)", lineHeight: 1.65, cursor: "pointer" }}>
+              <label htmlFor="gdpr" style={{ fontSize: 17, color: "var(--text-muted)", lineHeight: 1.65, cursor: "pointer" }}>
                 Strinjam se z{" "}
-                <Link href="/zasebnost" style={{ color: GOLD, textDecoration: "underline" }}>
+                <Link href="/zasebnost" style={{ color: "var(--accent)", textDecoration: "underline" }}>
                   obdelavo osebnih podatkov
                 </Link>{" "}
                 za namen odgovora na moje povpraševanje. Soglasje lahko kadarkoli prekličem z zahtevo na{" "}
-                <a href="mailto:juvan.nejc2@gmail.com" style={{ color: GOLD }}>juvan.nejc2@gmail.com</a>.
+                <a href="mailto:juvan.nejc2@gmail.com" style={{ color: "var(--accent)" }}>juvan.nejc2@gmail.com</a>.
               </label>
             </div>
 
@@ -252,19 +233,13 @@ export function ContactForm() {
                 whileHover={{ scale: submitDisabled ? 1 : 1.03 }}
                 whileTap={{ scale: 0.97 }}
                 style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 8,
-                  background: submitDisabled ? "rgba(17,16,8,0.12)" : GOLD,
-                  color: submitDisabled ? "rgba(17,16,8,0.35)" : "white",
-                  border: "none",
-                  padding: "13px 32px",
-                  borderRadius: 999,
-                  fontSize: 14,
-                  fontWeight: 600,
+                  display: "inline-flex", alignItems: "center", gap: 8,
+                  background: submitDisabled ? "var(--border-light)" : "var(--accent)",
+                  color: submitDisabled ? "var(--text-muted)" : "white",
+                  border: "none", padding: "13px 32px", borderRadius: 999,
+                  fontSize: 14, fontWeight: 600,
                   cursor: submitDisabled ? "not-allowed" : "pointer",
-                  fontFamily: "inherit",
-                  letterSpacing: "0.04em",
+                  fontFamily: "inherit", letterSpacing: "0.04em",
                   transition: "background 0.2s, color 0.2s",
                 }}
               >

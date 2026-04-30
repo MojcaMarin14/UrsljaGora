@@ -4,19 +4,17 @@ import { motion, Variants } from "framer-motion";
 import type { Transition } from "framer-motion";
 import Image from "next/image";
 
-const GOLD = "#c9a96e";
-const HONEY = "#e8a020";
-const CREAM = "#f7f4ef";
-const DARK = "#111008";
+const GOLD = "var(--accent)";
+const CREAM = "var(--section-bg)";
+const DARK = "var(--heading)";
 
 function SectionLabel({ text, light = false }: { text: string; light?: boolean }) {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
-      <div style={{ width: 28, height: 1, background: light ? "rgba(201,169,110,0.7)" : GOLD, flexShrink: 0 }} />
+      <div style={{ width: 36, height: 2, background: "var(--accent)", flexShrink: 0 }} />
       <span style={{
-        fontSize: 17, letterSpacing: "0.22em", textTransform: "uppercase",
-        color: light ? "rgba(201,169,110,0.85)" : GOLD, fontWeight: 600,
-        fontFamily: "sans-serif",
+        fontSize: 22, letterSpacing: "0.18em", textTransform: "uppercase",
+        color: light ? "var(--label-inv)" : "var(--label)", fontWeight: 700,
       }}>
         {text}
       </span>
@@ -48,7 +46,7 @@ const facts = [
 
 export default function CebelnjakPage() {
   return (
-    <main style={{ width: "100%", backgroundColor: CREAM, overflowX: "hidden" }}>
+    <main style={{ width: "100%", backgroundColor: "var(--section-bg)", overflowX: "hidden" }}>
 
       {/* ── HERO — usklajen z ostalimi stranmi ── */}
       <section style={{ position: "relative", height: "100svh", minHeight: 540, overflow: "hidden" }}>
@@ -121,7 +119,7 @@ export default function CebelnjakPage() {
       {/* ── VSE OSTALO OSTANE NESPREMENJENO ── */}
 
       {/* ── ZGODBA ── */}
-      <section style={{ backgroundColor: CREAM, padding: "72px 24px 80px" }}>
+      <section style={{ backgroundColor: "var(--section-bg)", padding: "72px 24px 80px" }}>
         <div style={{ maxWidth: 1040, margin: "0 auto" }}>
           <motion.div
             variants={stagger} initial="hidden" whileInView="show"
@@ -148,13 +146,13 @@ export default function CebelnjakPage() {
               }}>
                 Rekordni čebelnjak <span style={{ color: GOLD }}>med oblaki</span>
               </h2>
-              <p style={{ fontSize: 15.5, color: "rgba(17,16,8,0.62)", lineHeight: 1.82, marginBottom: 18, fontFamily: "sans-serif" }}>
+              <p style={{ fontSize: 15.5, color: "var(--text-muted)", lineHeight: 1.82, marginBottom: 18, fontFamily: "sans-serif" }}>
                 Koroški čebelarji so leta 2018 na 1699 metrih visoki Uršlji gori postavili <strong style={{ color: DARK }}>najvišje ležeči slovenski čebelnjak</strong>. Čebelnjak je bil slovesno otvorjen in blagoslovljen ob svetovnem dnevu čebel, botra pa je postala županja Črne na Koroškem mag. Romana Lesjak.
               </p>
-              <p style={{ fontSize: 15.5, color: "rgba(17,16,8,0.62)", lineHeight: 1.82, marginBottom: 18, fontFamily: "sans-serif" }}>
+              <p style={{ fontSize: 15.5, color: "var(--text-muted)", lineHeight: 1.82, marginBottom: 18, fontFamily: "sans-serif" }}>
                 V njem bivata dve družini <strong style={{ color: DARK }}>kranjskih čebel</strong> — ponosa slovenskega čebelarstva. Vsako pomlad se čebele iz doline preselijo na goro, kjer pašejo med gorskimi cvetovi vse do jeseni.
               </p>
-              <p style={{ fontSize: 15.5, color: "rgba(17,16,8,0.62)", lineHeight: 1.82, fontFamily: "sans-serif" }}>
+              <p style={{ fontSize: 15.5, color: "var(--text-muted)", lineHeight: 1.82, fontFamily: "sans-serif" }}>
                 Posebnost čebelnjaka je sodobni <strong style={{ color: DARK }}>elektronski nadzor</strong> — panjev dnevni donos čebelarji spremljajo v realnem času prek spleta, zahvaljujoč elektronski tehtnici.
               </p>
             </motion.div>
@@ -195,7 +193,7 @@ export default function CebelnjakPage() {
               >
                 <span style={{ fontSize: 28, flexShrink: 0, marginTop: 2 }}>{f.icon}</span>
                 <div>
-                  <p style={{ fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", color: GOLD, fontWeight: 700, marginBottom: 6, fontFamily: "sans-serif" }}>
+                  <p style={{ fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--label)", fontWeight: 700, marginBottom: 6, fontFamily: "sans-serif" }}>
                     {f.label}
                   </p>
                   <p style={{ fontSize: 16, fontWeight: 500, color: DARK, margin: 0 }}>{f.value}</p>
@@ -207,7 +205,7 @@ export default function CebelnjakPage() {
       </section>
 
       {/* ── GALERIJA ── */}
-      <section style={{ backgroundColor: CREAM, padding: "72px 24px" }}>
+      <section style={{ backgroundColor: "var(--section-bg)", padding: "72px 24px" }}>
         <motion.div
           initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }} transition={{ duration: 0.7 }}
@@ -259,7 +257,7 @@ export default function CebelnjakPage() {
       </section>
 
       {/* ── DARK BANNER ── */}
-      <section style={{ backgroundColor: DARK, padding: "72px 24px" }}>
+      <section style={{ backgroundColor: "var(--section-bg-dark)", padding: "72px 24px" }}>
         <motion.div
           initial={{ opacity: 0, y: 32 }} whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }} transition={{ duration: 0.8 }}
@@ -268,15 +266,15 @@ export default function CebelnjakPage() {
           <div style={{ textAlign: "center", fontSize: 48, marginBottom: 24 }}>🍯</div>
           <SectionLabel text="Kranjska čebela" light />
           <h2 style={{
-            fontSize: "clamp(24px, 4vw, 38px)", fontWeight: 500, color: "white",
+            fontSize: "clamp(24px, 4vw, 38px)", fontWeight: 500, color: "var(--heading-inv)",
             letterSpacing: "-0.025em", marginBottom: 28,
           }}>
             Ponos <span style={{ color: GOLD }}>slovenskega čebelarstva</span>
           </h2>
-          <p style={{ fontSize: 15.5, color: "rgba(255,255,255,0.55)", lineHeight: 1.85, marginBottom: 20, fontFamily: "sans-serif" }}>
+          <p style={{ fontSize: 15.5, color: "var(--text-muted-inv)", lineHeight: 1.85, marginBottom: 20, fontFamily: "sans-serif" }}>
             Kranjska čebela (<em>Apis mellifera carnica</em>) je avtohtona slovenska pasma, znana po mirnosti, delavnosti in odpornosti na bolezni. Na Uršlji gori pašejo med redkimi gorskimi cvetovi — od planinskih travnikov do alpskih rastlin, ki uspevajo le na nadmorski višini nad 1500 m.
           </p>
-          <p style={{ fontSize: 15.5, color: "rgba(255,255,255,0.55)", lineHeight: 1.85, fontFamily: "sans-serif" }}>
+          <p style={{ fontSize: 15.5, color: "var(--text-muted-inv)", lineHeight: 1.85, fontFamily: "sans-serif" }}>
             Vsako leto koroški čebelarji organizirajo <strong style={{ color: GOLD }}>vsekoroški pohod čebelarjev na Uršljo goro</strong> z ogledom čebelnjaka. Obiskovalci si med pohodom lahko ogledajo čebelnjak in spoznajo skrivnosti gorskega čebelarstva.
           </p>
           <div style={{
@@ -289,7 +287,7 @@ export default function CebelnjakPage() {
               <p style={{ fontSize: 12, color: GOLD, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 6, fontFamily: "sans-serif" }}>
                 V medijih
               </p>
-              <p style={{ fontSize: 14.5, color: "rgba(255,255,255,0.45)", lineHeight: 1.75, margin: 0, fontFamily: "sans-serif" }}>
+              <p style={{ fontSize: 14.5, color: "var(--text-muted-inv)", lineHeight: 1.75, margin: 0, fontFamily: "sans-serif" }}>
                 O čebelnjaku so poročale Koroške Novice:{" "}
                 <a
                   href="https://www.koroskenovice.si/novice/cebele-so-se-vrnile-na-ursljo-goro-v-najvisje-lezeci-slovenski-cebelnjak/"
