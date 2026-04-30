@@ -40,6 +40,7 @@ export default function ZasebnostPage() {
             <p>Na tej spletni strani zbiramo naslednje osebne podatke:</p>
             <ul>
               <li><strong>Kontaktni obrazec:</strong> ime in priimek, e-poštni naslov, vsebina sporočila</li>
+              <li><strong>Skupna galerija na mapi:</strong> fotografija, ime avtorja (neobvezno), lokacija fotografiranja</li>
               <li><strong>Piškotki:</strong> tehnični piškotki za delovanje strani (seja, preferences)</li>
             </ul>
           </Block>
@@ -48,9 +49,23 @@ export default function ZasebnostPage() {
             <p>Osebne podatke zbiramo izključno z naslednjimi nameni:</p>
             <ul>
               <li>Odgovor na vaše povpraševanje ali sporočilo prek kontaktnega obrazca</li>
+              <li>Javna objava fotografij v skupni galeriji pohodniške mape (samo z vašim izrecnim soglasjem)</li>
               <li>Zagotavljanje tehničnega delovanja spletne strani</li>
             </ul>
             <p>Vaših podatkov ne posredujemo tretjim osebam in jih ne uporabljamo za trženje.</p>
+          </Block>
+
+          <Block title="3a. Fotografije v skupni galeriji">
+            <p>Obiskovalci lahko na pohodniški mapi objavijo fotografije iz narave. Za objavo velja naslednje:</p>
+            <ul>
+              <li>Objava je mogoča <strong>samo z izrecnim soglasjem</strong>, ki ga podate s kljukico pri nalaganju.</li>
+              <li>Fotografija in ime avtorja (če ga vpišete) sta <strong>javno vidna</strong> vsem obiskovalcem strani.</li>
+              <li>Vsaka fotografija je pred objavo pregledana s strani administratorja.</li>
+              <li>Fotografijo in ime je mogoče na vašo zahtevo kadarkoli izbrisati — kontaktirajte nas na{" "}
+                <a href="mailto:juvan.nejc2@gmail.com" style={{ color: GOLD }}>juvan.nejc2@gmail.com</a>.
+              </li>
+              <li>Ne nalagajte fotografij, na katerih so vidni obrazi oseb brez njihovega soglasja.</li>
+            </ul>
           </Block>
 
           <Block title="4. Piškotki">

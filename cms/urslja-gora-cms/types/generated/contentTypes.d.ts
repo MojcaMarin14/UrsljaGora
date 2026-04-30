@@ -665,6 +665,76 @@ export interface ApiNovicaNovica extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiMapaFotografijaMapaFotografija
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'mapa_fotografijas';
+  info: {
+    displayName: 'Mapa fotografije';
+    pluralName: 'mapa-fotografijas';
+    singularName: 'mapa-fotografija';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    avtor: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    kraj: Schema.Attribute.String;
+    lat: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    lng: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::mapa-fotografija.mapa-fotografija'
+    > &
+      Schema.Attribute.Private;
+    ocena: Schema.Attribute.Integer;
+    odobrena: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    opis: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    slika: Schema.Attribute.Media<'images'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiTockaNaMapiTockaNaMapi
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'tocka_na_mapis';
+  info: {
+    displayName: 'Točke na mapi';
+    pluralName: 'tocka-na-mapis';
+    singularName: 'tocka-na-mapi';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    fotografija: Schema.Attribute.Media<'images'>;
+    ime: Schema.Attribute.String & Schema.Attribute.Required;
+    kategorija: Schema.Attribute.String;
+    lat: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    lng: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::tocka-na-mapi.tocka-na-mapi'
+    > &
+      Schema.Attribute.Private;
+    opis: Schema.Attribute.Text;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiPonudbePonudbe extends Struct.CollectionTypeSchema {
   collectionName: 'ponudbes';
   info: {
@@ -1220,8 +1290,10 @@ declare module '@strapi/strapi' {
       'api::category.category': ApiCategoryCategory;
       'api::dogodki.dogodki': ApiDogodkiDogodki;
       'api::global.global': ApiGlobalGlobal;
+      'api::mapa-fotografija.mapa-fotografija': ApiMapaFotografijaMapaFotografija;
       'api::novica.novica': ApiNovicaNovica;
       'api::ponudbe.ponudbe': ApiPonudbePonudbe;
+      'api::tocka-na-mapi.tocka-na-mapi': ApiTockaNaMapiTockaNaMapi;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

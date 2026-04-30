@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "tocka_na_mapis",
+  "info": {
+    "singularName": "tocka-na-mapi",
+    "pluralName": "tocka-na-mapis",
+    "displayName": "Točke na mapi"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "ime": {
+      "type": "string",
+      "required": true
+    },
+    "opis": {
+      "type": "text"
+    },
+    "lat": {
+      "type": "decimal",
+      "required": true
+    },
+    "lng": {
+      "type": "decimal",
+      "required": true
+    },
+    "fotografija": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "kategorija": {
+      "type": "string"
+    }
+  }
+}

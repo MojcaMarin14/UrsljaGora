@@ -34,6 +34,16 @@ export async function fetchAPI(path: string, init?: RequestInit) {
   return res.json();
 }
 
+export async function uploadFileToStrapi(blob: Blob, filename: string): Promise<number> {
+  const base = getStrapiBaseUrl();
+  const form = new FormData();
+  form.append("files", blob, filename);
+  const res = await fetch(`${base}/api/upload`, { method: "POST", body: form });
+  if (!res.ok) throw new Error(`Upload failed: ${res.status}`);
+  const data = await res.json();
+  return data[0].id;
+}
+
 export function getStrapiMedia(url?: string | null) {
   if (!url) {
     return "/fallback.jpg";

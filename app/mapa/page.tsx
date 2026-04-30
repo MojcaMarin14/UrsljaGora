@@ -1,10 +1,10 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Trail } from "./data/trails";
 import { POICategory } from "./data/pois";
-import { CommunityPhoto, loadPhotos, loadAdminSession } from "./data/photoStore";
+import { CommunityPhoto, AdminPoi, loadPhotos, loadAdminPois } from "./data/photoStore";
 import TrailSidebar from "./components/TrailSidebar";
 import FilterBar from "./components/FilterBar";
 import EventsPanel from "./components/EventsPanel";
@@ -21,11 +21,16 @@ export default function MapPage() {
   ]);
   const [isAddingPhoto, setIsAddingPhoto] = useState(false);
   const [photoMarker, setPhotoMarker] = useState<{ lat: number; lng: number } | null>(null);
-  const [photos, setPhotos] = useState<CommunityPhoto[]>(() => loadPhotos());
+  const [photos, setPhotos] = useState<CommunityPhoto[]>([]);
+  const [adminPois, setAdminPois] = useState<AdminPoi[]>([]);
   const [flyTo, setFlyTo] = useState<{ lat: number; lng: number } | null>(null);
   const [mobilePanel, setMobilePanel] = useState<MobilePanel>(null);
   const [mobileUploadTab, setMobileUploadTab] = useState(false);
-  const [isAdmin, setIsAdmin] = useState<boolean>(() => loadAdminSession());
+
+  useEffect(() => {
+    loadPhotos().then(setPhotos);
+    loadAdminPois().then(setAdminPois);
+  }, []);
 
   function handleToggleFilter(cat: POICategory) {
     setActiveFilters((prev) =>
@@ -37,11 +42,10 @@ export default function MapPage() {
     if (isAddingPhoto) setPhotoMarker({ lat, lng });
   }
 
-  function handlePhotosChanged() {
-    setPhotos(loadPhotos());
+  async function handlePhotosChanged() {
+    setPhotos(await loadPhotos());
   }
 
-  // Triggered when user clicks "Dodaj sliko" on a POI marker
   function handlePoiAddPhoto(lat: number, lng: number) {
     setPhotoMarker({ lat, lng });
     setIsAddingPhoto(false);
@@ -63,12 +67,10 @@ export default function MapPage() {
     <div className="map-page">
       <h1 className="sr-only">Pohodniška mapa – Uršlja gora</h1>
 
-      {/* Leva stranska vrstica — poti (desktop) */}
       <aside className="map-page__left">
         <TrailSidebar activeTrail={activeTrail} onSelectTrail={setActiveTrail} />
       </aside>
 
-      {/* Mapa */}
       <div className="map-page__main">
         <FilterBar activeFilters={activeFilters} onToggleFilter={handleToggleFilter} />
         <Legend />
@@ -82,13 +84,13 @@ export default function MapPage() {
           onMapClick={handleMapClick}
           photoMarker={photoMarker}
           communityPhotos={photos}
+          adminPois={adminPois}
           flyTo={flyTo}
           onFlyToDone={() => setFlyTo(null)}
           onPoiAddPhoto={handlePoiAddPhoto}
         />
       </div>
 
-      {/* Desna stranska vrstica — galerija & dogodki (desktop) */}
       <aside className="map-page__right">
         <EventsPanel
           isAddingPhoto={isAddingPhoto}
@@ -96,25 +98,17 @@ export default function MapPage() {
           photoMarker={photoMarker}
           photos={photos}
           onPhotosChanged={handlePhotosChanged}
-          isAdmin={isAdmin}
-          onAdminChange={setIsAdmin}
           onLocatePhoto={(lat, lng) => setFlyTo({ lat, lng })}
           onLocateEvent={(lat, lng) => setFlyTo({ lat, lng })}
         />
       </aside>
 
-      {/* ── MOBILNI BOTTOM SHEETS ── */}
       <div
         className={`mobile-sheet ${mobilePanel === "trails" ? "mobile-sheet--open" : ""}`}
         aria-hidden={mobilePanel !== "trails"}
       >
         <div className="mobile-sheet__handle" onClick={() => setMobilePanel(null)} />
-        <TrailSidebar
-          activeTrail={activeTrail}
-          onSelectTrail={(trail) => {
-            setActiveTrail(trail);
-          }}
-        />
+        <TrailSidebar activeTrail={activeTrail} onSelectTrail={setActiveTrail} />
       </div>
 
       <div
@@ -128,20 +122,16 @@ export default function MapPage() {
           photoMarker={photoMarker}
           photos={photos}
           onPhotosChanged={handlePhotosChanged}
-          isAdmin={isAdmin}
-          onAdminChange={setIsAdmin}
           onLocatePhoto={(lat, lng) => { setFlyTo({ lat, lng }); setMobilePanel(null); }}
           onLocateEvent={(lat, lng) => { setFlyTo({ lat, lng }); setMobilePanel(null); }}
           defaultTab={mobileUploadTab ? "upload" : "gallery"}
         />
       </div>
 
-      {/* Overlay za zapiranje sheeta */}
       {mobilePanel && (
         <div className="mobile-sheet-overlay" onClick={() => setMobilePanel(null)} />
       )}
 
-      {/* Spodnja navigacija (samo mobile) */}
       <MobileNav
         activePanel={mobilePanel}
         onSelect={handleMobileNav}

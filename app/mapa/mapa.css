@@ -208,6 +208,21 @@
   padding-left: 4px;
 }
 
+.trail-detail__gpx-btn {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 6px 14px;
+  background: #2d6a4f;
+  color: #fff;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.trail-detail__gpx-btn:hover {
+  background: #1b4332;
+}
+
 .trail-detail__source {
   font-size: 11px;
   color: #b0a89e;
@@ -484,6 +499,42 @@
 
 .photo-upload__input {
   display: none;
+}
+
+.gdpr-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12px;
+  color: rgba(17,16,8,0.65);
+  line-height: 1.5;
+  cursor: pointer;
+  margin: 4px 0;
+}
+.gdpr-checkbox input[type="checkbox"] {
+  margin-top: 2px;
+  flex-shrink: 0;
+  accent-color: #2d6a4f;
+}
+.gdpr-checkbox a {
+  color: #2d6a4f;
+  text-decoration: underline;
+}
+
+.upload-success {
+  background: #d8f3dc;
+  color: #1b4332;
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.upload-error {
+  color: #9d0208;
+  font-size: 12px;
+  margin: 6px 0;
 }
 
 .upload-preview {

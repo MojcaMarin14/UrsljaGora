@@ -1,0 +1,44 @@
+{
+  "kind": "collectionType",
+  "collectionName": "mapa_fotografijas",
+  "info": {
+    "singularName": "mapa-fotografija",
+    "pluralName": "mapa-fotografijas",
+    "displayName": "Mapa fotografije"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "slika": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "opis": {
+      "type": "string"
+    },
+    "avtor": {
+      "type": "string"
+    },
+    "lat": {
+      "type": "decimal",
+      "required": true
+    },
+    "lng": {
+      "type": "decimal",
+      "required": true
+    },
+    "ocena": {
+      "type": "integer"
+    },
+    "odobrena": {
+      "type": "boolean",
+      "default": false
+    },
+    "kraj": {
+      "type": "string"
+    }
+  }
+}
