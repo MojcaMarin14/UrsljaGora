@@ -73,6 +73,7 @@ export const pois: POI[] = [
     lng: 14.96503,
     description:
       "Planinski dom na 1680 m nadmorske višine, tik pod vrhom. Pred domom klopi in mize z razgledom. Odprta ob vikendih in praznikih.",
+    allowPhoto: true,
   },
   {
     id: "poi-3",
