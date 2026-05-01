@@ -735,6 +735,36 @@ export interface ApiTockaNaMapiTockaNaMapi
   };
 }
 
+export interface ApiPohvalaPohvala extends Struct.CollectionTypeSchema {
+  collectionName: 'pohvalas';
+  info: {
+    singularName: 'pohvala';
+    pluralName: 'pohvalas';
+    displayName: 'Pohvale in pripombe';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    ime: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::pohvala.pohvala'
+    > &
+      Schema.Attribute.Private;
+    ocena: Schema.Attribute.Integer;
+    odobrena: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    sporocilo: Schema.Attribute.Text & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiPonudbePonudbe extends Struct.CollectionTypeSchema {
   collectionName: 'ponudbes';
   info: {
@@ -1292,6 +1322,7 @@ declare module '@strapi/strapi' {
       'api::global.global': ApiGlobalGlobal;
       'api::mapa-fotografija.mapa-fotografija': ApiMapaFotografijaMapaFotografija;
       'api::novica.novica': ApiNovicaNovica;
+      'api::pohvala.pohvala': ApiPohvalaPohvala;
       'api::ponudbe.ponudbe': ApiPonudbePonudbe;
       'api::tocka-na-mapi.tocka-na-mapi': ApiTockaNaMapiTockaNaMapi;
       'plugin::content-releases.release': PluginContentReleasesRelease;
