@@ -1,0 +1,29 @@
+{
+  "kind": "collectionType",
+  "collectionName": "pohvalas",
+  "info": {
+    "singularName": "pohvala",
+    "pluralName": "pohvalas",
+    "displayName": "Pohvale in pripombe"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "ime": {
+      "type": "string"
+    },
+    "sporocilo": {
+      "type": "text",
+      "required": true
+    },
+    "ocena": {
+      "type": "integer"
+    },
+    "odobrena": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

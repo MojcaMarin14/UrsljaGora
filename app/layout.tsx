@@ -2,6 +2,7 @@ import "./globals.css";
 import Navbar from "./components/Navbar";
 import { Analytics } from "@vercel/analytics/react";
 import CookieConsent from "./components/CookieConsent";
+import GuestBook from "./components/GuestBook";
 
 export const metadata = {
   title: {
@@ -39,6 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {children}
         <Analytics />
         <CookieConsent />
+        <GuestBook />
       </body>
     </html>
   );
