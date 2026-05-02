@@ -232,6 +232,35 @@ export default function ONasPage() {
         </div>
       </div>
 
+      {/* ── VIDEO SECTION ── */}
+      <div style={{ backgroundColor: "var(--section-bg-dark)", padding: "128px 24px" }}>
+        <div style={{ maxWidth: 1152, margin: "0 auto" }}>
+          <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}>
+            <SectionLabel text="Video" />
+            <h2 style={{ fontSize: "clamp(32px, 5vw, 48px)", fontWeight: 500, letterSpacing: "-0.02em", lineHeight: 1.15, color: "var(--heading-inv)", marginBottom: 48 }}>
+              Spoznajte <span style={{ color: "var(--accent)" }}>Uršljo goro</span>
+            </h2>
+            <div style={{ position: "relative", paddingBottom: "56.25%", height: 0, overflow: "hidden", borderRadius: 24 }}>
+              <iframe
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                  border: "none",
+                  borderRadius: 24,
+                }}
+                src="https://www.youtube.com/embed/JEQKYSHVqSE"
+                title="Uršlja gora"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+          </motion.div>
+        </div>
+      </div>
+
       <Footer />
     </main>
   );
