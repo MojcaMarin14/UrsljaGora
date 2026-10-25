@@ -42,7 +42,7 @@ const contacts = [
     title: "Dom na Uršlji gori",
     subtitle: "Plešivec",
     items: [
-      { label: "Mobilni",   value: "064 132 385",                      href: "tel:041743442" },
+      { label: "Mobilni",   value: "064 132 385",                      href: "tel:+38664132385" },
       { label: "E-pošta",   value: "juvan.nejc2@gmail.com",            href: "mailto:juvan.nejc2@gmail.com" },
       { label: "Naslov",    value: "Jazbina 19, 2393 Črna na Koroškem", href: null },
     ],

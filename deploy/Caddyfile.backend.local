@@ -1,0 +1,10 @@
+{
+    admin off
+}
+https://cms.localhost:8443 {
+    tls internal
+    request_body {
+        max_size 64MB
+    }
+    reverse_proxy strapi:1337
+}

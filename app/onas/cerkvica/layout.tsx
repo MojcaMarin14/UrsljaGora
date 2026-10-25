@@ -1,3 +1,4 @@
+import { getSiteUrl } from "@/lib/site";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
     title: "Cerkev sv. Uršule – Dom na Uršlji gori",
     description:
       "Najvišje ležeča cerkev v Sloveniji na vrhu Uršlje gore (1699 m). Zgodovinska romarska točka v srcu Koroške.",
-    url: "https://ursljagoradom.si/onas/cerkvica",
+    url: `${getSiteUrl()}/onas/cerkvica`,
   },
 };
 

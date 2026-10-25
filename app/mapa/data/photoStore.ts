@@ -18,13 +18,13 @@ export async function loadPhotos(): Promise<CommunityPhoto[]> {
       "mapa-fotografijas?filters[odobrena][$eq]=true&populate=slika&sort=createdAt:desc"
     );
     return res.data.map((item: Record<string, unknown> & { slika?: { url?: string } }) => ({
-      id: item.id,
-      lat: item.lat,
-      lng: item.lng,
+      id: Number(item.id),
+      lat: Number(item.lat),
+      lng: Number(item.lng),
       imageUrl: getStrapiMedia(item.slika?.url),
       caption: (item.opis as string) ?? "",
       author: (item.avtor as string) ?? "Anonimno",
-      createdAt: item.createdAt,
+      createdAt: String(item.createdAt),
       rating: (item.ocena as number) ?? undefined,
       kraj: (item.kraj as string) ?? undefined,
     }));
@@ -45,9 +45,9 @@ export interface AdminPoi {
 
 export async function loadAdminPois(): Promise<AdminPoi[]> {
   try {
-    const res = await fetchAPI("tocka-na-mapis?populate=fotografija&publicationState=live");
+    const res = await fetchAPI("tocka-na-mapis?populate=fotografija&status=published");
     return res.data.map((item: Record<string, unknown> & { fotografija?: { url?: string } }) => ({
-      id: item.id,
+      id: Number(item.id),
       ime: item.ime as string,
       opis: (item.opis as string) ?? undefined,
       lat: item.lat as number,

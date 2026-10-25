@@ -1,0 +1,10 @@
+[Unit]
+Description=Verified encrypted Urslja Gora backup
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/urslja-gora
+ExecStart=/opt/urslja-gora/deploy/scripts/backup.sh
+UMask=0077

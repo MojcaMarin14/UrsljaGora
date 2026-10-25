@@ -1,0 +1,13 @@
+node_modules
+.next
+.git
+cms
+deploy
+docs
+tests
+.local-test
+exports
+.env*
+*.log
+*.tsbuildinfo
+.DS_Store

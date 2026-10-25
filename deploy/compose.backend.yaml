@@ -1,0 +1,98 @@
+# Backend only: the current Next.js frontend stays on Vercel.
+name: ${COMPOSE_PROJECT_NAME:-urslja-gora-backend}
+services:
+  postgres:
+    image: postgres:16-bookworm
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME:-strapi}
+      POSTGRES_USER: ${DATABASE_ADMIN_USERNAME:-urslja_admin}
+      POSTGRES_PASSWORD: ${DATABASE_ADMIN_PASSWORD:?Set a separate database administration password}
+      DATABASE_USERNAME: ${DATABASE_USERNAME:-strapi}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:?Set DATABASE_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./scripts/init-database.sh:/docker-entrypoint-initdb.d/10-strapi.sh:ro
+    networks: [database]
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    logging: &logging
+      driver: json-file
+      options: {max-size: 10m, max-file: "3"}
+
+  strapi:
+    build:
+      context: ../cms/urslja-gora-cms
+      args:
+        PUBLIC_URL: ${NEXT_PUBLIC_STRAPI_URL:?Set the public CMS URL before building the admin panel}
+    image: ${COMPOSE_PROJECT_NAME:-urslja-gora-backend}-strapi:${RELEASE_TAG:-local}
+    restart: unless-stopped
+    init: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 256
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 1337
+      DATABASE_CLIENT: postgres
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: ${DATABASE_NAME:-strapi}
+      DATABASE_USERNAME: ${DATABASE_USERNAME:-strapi}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:?Set DATABASE_PASSWORD}
+      DATABASE_SSL: "false"
+      DATABASE_POOL_MIN: 0
+      DATABASE_POOL_MAX: 5
+      PUBLIC_URL: ${NEXT_PUBLIC_STRAPI_URL:?Set the public CMS URL}
+      CORS_ORIGINS: ${CORS_ORIGINS:?Set the exact existing Vercel frontend origins}
+      TRUST_PROXY: "true"
+      APP_KEYS: ${APP_KEYS:?Set APP_KEYS}
+      ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET:?Set ADMIN_JWT_SECRET}
+      API_TOKEN_SALT: ${API_TOKEN_SALT:?Set API_TOKEN_SALT}
+      TRANSFER_TOKEN_SALT: ${TRANSFER_TOKEN_SALT:?Set TRANSFER_TOKEN_SALT}
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:?Set ENCRYPTION_KEY}
+      STRAPI_TELEMETRY_DISABLED: "true"
+    depends_on:
+      postgres: {condition: service_healthy}
+    volumes:
+      - uploads:/app/public/uploads
+    networks: [web, database]
+    healthcheck:
+      test: [CMD, node, -e, 'fetch("http://127.0.0.1:1337/_health").then(r=>process.exit(r.status===204?0:1)).catch(()=>process.exit(1))']
+      start_period: 90s
+      interval: 15s
+      timeout: 5s
+      retries: 6
+    logging: *logging
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    environment:
+      CMS_DOMAIN: ${CMS_DOMAIN:?Set CMS_DOMAIN}
+      ACME_EMAIL: ${ACME_EMAIL:-}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile.backend:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    networks: [web]
+    logging: *logging
+
+networks:
+  web:
+  database:
+    internal: true
+volumes:
+  postgres-data:
+  uploads:
+  caddy-data:
+  caddy-config:

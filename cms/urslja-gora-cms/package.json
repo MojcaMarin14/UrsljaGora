@@ -16,10 +16,10 @@
     "upgrade:dry": "npx @strapi/upgrade latest --dry"
   },
   "dependencies": {
-    "@strapi/plugin-cloud": "5.40.0",
-    "@strapi/plugin-users-permissions": "5.40.0",
-    "@strapi/provider-upload-cloudinary": "^5.43.0",
-    "@strapi/strapi": "5.40.0",
+    "@strapi/plugin-cloud": "5.57.0",
+    "@strapi/plugin-users-permissions": "5.57.0",
+    "@strapi/provider-upload-cloudinary": "5.57.0",
+    "@strapi/strapi": "5.57.0",
     "better-sqlite3": "12.6.2",
     "fs-extra": "^10.0.0",
     "mime-types": "^2.1.27",
@@ -42,5 +42,14 @@
   "strapi": {
     "uuid": "b8182a0f-8ce5-4ef9-98db-850bb6e7032e",
     "installId": "339fda9e783af571aa91b19ed8ce565ed516987da89f7ad602906f43f74a555d"
+  },
+  "overrides": {
+    "axios": "1.20.0",
+    "handlebars": "4.7.10",
+    "sharp": "0.35.5",
+    "markdown-it": "14.3.1",
+    "nodemailer": "10.1.0",
+    "webpack-dev-middleware": "7.4.6",
+    "dompurify": "3.4.17"
   }
 }

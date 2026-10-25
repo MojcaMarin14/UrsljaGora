@@ -1,11 +1,11 @@
 import type { Core } from '@strapi/strapi';
 
-const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Server => ({
-  host: env('HOST', '0.0.0.0'),
+export default ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Server => ({
+  host: env('HOST', '127.0.0.1'),
   port: env.int('PORT', 1337),
-  app: {
-    keys: env.array('APP_KEYS'),
-  },
+  url: env('PUBLIC_URL', ''),
+  proxy: { koa: env.bool('TRUST_PROXY', false) },
+  logger: { updates: { enabled: false } },
+  transfer: { remote: { enabled: false } },
+  app: { keys: env.array('APP_KEYS') },
 });
-
-export default config;

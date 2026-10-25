@@ -1,3 +1,4 @@
+import { getSiteUrl } from "@/lib/site";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
     title: "Knjižnica – Dom na Uršlji gori",
     description:
       "Planinska knjižnica v Domu na Uršlji gori z zbirko o Koroški in slovenskem planinstvu.",
-    url: "https://ursljagoradom.si/onas/knjiznjica",
+    url: `${getSiteUrl()}/onas/knjiznjica`,
   },
 };
 

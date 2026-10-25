@@ -1,0 +1,30 @@
+# Security preparation test report — 15 October 2026
+
+All changes were made in the isolated preparation copy. The original source tree, SQLite and uploads remain unchanged; Vercel production and Strapi Cloud were not modified. No purchases, Git push, production deployment, public exposure or existing-database replacement occurred.
+
+## Results
+
+- Node 22 / Strapi 5.57.0 production/admin image builds and TypeScript checks pass. Patched webpack development middleware compiles and supplies Strapi's expected output-filesystem/close APIs; complete webpack hot reload was not tested. DOMPurify patch builds and admin browser passes.
+- Audit: frontend 0 production entries; CMS 31 high inherited entries and 3 moderate, no critical/low. Every original high entry is classified in SECURITY-DEPENDENCY-REVIEW.md. Runtime probe saw stream-json installed/loaded but no calls in exercised flows and no load of braces, micromatch, preferred-pm or webpack-dev-middleware. This is a bounded observation, not exhaustive exploitability proof.
+- Existing published news/events/offers/Article APIs work. Administrator displays all 3 original news items and all 8 original images. Browser also loads the protected pending upload preview from **API Uploads**, without runtime errors.
+- Registration rejected, including case/trailing slash. Stored `allow_register=false` verified. Remote transfer disabled in server configuration; authenticated transfer route unavailable.
+- Visitor attempts to set approval/publication are ignored. Pending list/details hidden; update/delete refused. Admin approval makes records and media visible; revocation blocks photo origin access again. Original upload, every generated test variant, forged preview signature, upload replacement, invalid file content and exact/unrelated CORS were tested.
+- A security test exposed encoded/dot-segment URL aliases bypassing the first media guard. Canonicalization was corrected before the static handler. All 7 tested direct/encoded/normalized aliases then returned 404; authenticated signed previews still worked. Route variants and spoofed forwarding addresses did not bypass submission rate limits.
+- Production Compose validation passed with test-only synthetic production settings (no DNS/request/deploy). Missing/reused credentials, local-only backups and wildcard CORS refused. Actual container: node user, capabilities dropped, no-new-privileges, private app/DB ports, persistent volumes, no admin/backup secrets in Strapi, and no runtime secrets in image configuration. PostgreSQL app role is not superuser and cannot create roles/databases. Production Caddy config validated with networking disabled; public ACME was not attempted.
+- Corrected import helper passed end to end in another new empty database, verified before-import backups, matched all 23 original media hashes, and refused re-import over existing content. Adding dropped Linux capabilities required narrowly scoped CHOWN/DAC_OVERRIDE only for the offline file-copy helper; normal Strapi retains no capabilities.
+- The first-admin helper accepts private stdin, refuses existing administrators and avoids the public first-account window. A premature connection shutdown after Strapi's asynchronous metrics hook was fixed and retested successfully in a separate new database.
+- S3-compatible integration: encrypted backup, full read of **74 packs / 4 snapshots**, verified restore, wrong-password rejection and refusal of live/existing/invalid targets passed. Final restored database matched every row in **62 tables**, with all **25 current test media files** hash-identical (23 originals plus two fixture variants). Final encrypted repository archive preserves **84 objects**, each hash-verified.
+- An extra recovery run reached the 30 GB local VM disk limit. The encrypted test repository was archived/verified first, all volumes retained, the VM disk allowance expanded to 40 GB, repository reloaded and the final new-database recovery then passed. No pruning or data deletion was used. This is why production instructions include disk monitoring and 80 GB initial storage.
+- Latest original preservation check matched **163 source/config/environment/database/upload hashes**, verified original SQLite integrity and confirmed a clean original tracked working tree. Full original-project/Git backup verification remains recorded separately from earlier preparation.
+
+## Preserved test data and evidence
+
+The `urslja-gora-security-test` project has its own PostgreSQL and upload volumes; it contains explicitly local guestbook/photo fixtures and a private test administrator. Recovery databases are `strapi_security_recovery_20261015` and `strapi_security_final_recovery_20261015`. `urslja-gora-import-review-test` holds the separate clean import test; its extra `strapi_first_admin_review_test` verifies account creation. None is a production import source. Use only the clean original-content archive with its recorded SHA256 for deployment.
+
+Private reports, screenshots, configuration/probe scripts and test credentials are in `.local-test/security-review-20261015`; they are excluded from deployment and normal source snapshots. The encrypted S3 object archive and before-change/pre-import backups are preserved separately under the preparation backup directory. The local emulator is a test facility and is absent from production Compose.
+
+## Not verified or not configured
+
+Actual Hetzner server architecture/native image scan, public firewall/DNS/ACME and certificate renewal, real S3 credentials/HTTPS/bucket policy/off-server independence, monitoring notifications, CMS SMTP reset mail, the deployed Vercel commit/configuration and real Vercel-to-new-CMS traffic. Cloud content completeness is unknown. The full frontend+backend Compose draft does not yet have the new backend database-role initialization; preserve Vercel and use the hardened backend-only stack.
+
+Launch gates are in PRODUCTION-READINESS-CHECKLIST.md. Do not treat local functional success as approval for public deployment.

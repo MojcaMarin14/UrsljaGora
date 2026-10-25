@@ -1,0 +1,15 @@
+node_modules
+.git
+.tmp
+.env*
+dist
+build
+.strapi
+.cache
+exports
+data
+public/uploads/*
+!public/uploads/.gitkeep
+*.log
+*.tsbuildinfo
+.DS_Store

@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import Footer from "@/app/components/Footer";
 import { fetchAPI, getStrapiMedia } from "@/lib/api";
 import Image from "next/image";
@@ -10,11 +11,11 @@ const WARM = "#1a1812";
 export default async function DogodekDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
 
-  const res = await fetchAPI(`dogodkis?filters[id][$eq]=${id}&populate=*`);
+  const res = await fetchAPI(`dogodkis?filters[${/^\d+$/.test(id) ? "id" : "documentId"}][$eq]=${encodeURIComponent(id)}&populate=*&status=published`);
   const dogodek = res.data?.[0];
 
   if (!dogodek) {

@@ -1,3 +1,4 @@
+import { getSiteUrl } from "@/lib/site";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
     title: "O nas – Dom na Uršlji gori",
     description:
       "Spoznajte Dom na Uršlji gori na 1680 m. Planinska koča z domačo kuhinjo, bogato zgodovino in čudovitimi razgledi na Karavanke.",
-    url: "https://ursljagoradom.si/onas",
+    url: `${getSiteUrl()}/onas`,
   },
 };
 

@@ -1,0 +1,12 @@
+{
+    email {$ACME_EMAIL}
+    admin off
+}
+{$CMS_DOMAIN} {
+    encode zstd gzip
+    header X-Content-Type-Options nosniff
+    request_body {
+        max_size 64MB
+    }
+    reverse_proxy strapi:1337
+}

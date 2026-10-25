@@ -24,6 +24,14 @@
     "odobrena": {
       "type": "boolean",
       "default": false
+    },
+    "slika": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
     }
   }
 }

@@ -40,3 +40,29 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Private preparation/testing artifacts
+deploy/.env
+deploy/.local-admin.json
+.local-test/
+exports/
+deploy/.local-ca/
+deploy/migration-backups/
+
+# Safe backend configuration template; real environment files stay ignored
+!deploy/.env.backend.example
+
+# Never publish local content, backups, generated Python caches or credentials
+**/__pycache__/
+*.pyc
+*.db
+*.db-*
+*.sqlite*
+*.dump
+*.tar
+*.tar.gz
+*.tgz
+/backups/
+!.env.example
+!deploy/contact.env.example
+!deploy/.env.backend.example

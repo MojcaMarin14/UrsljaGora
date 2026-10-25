@@ -1,0 +1,11 @@
+# Hero startup poster — 25 October 2026
+
+The homepage video used `poster="/pol2.jpg" preload="none"`, showing an unrelated old photograph before playback. Changed only these homepage video attributes to `poster="/hero-video-poster.jpg" preload="auto"`. The new 3840×2160 JPEG is the actual first frame of the unchanged `/8.mp4`, captured directly from the browser video compositor at time zero. No generated replacement scene, crop, retouching or original-video edit was used. The source photograph `pol2.jpg` remains unchanged for its other uses. Layout, typography, overlays, animation definitions, About-gallery correction, panorama gallery and CMS API code are unchanged.
+
+The native video poster is shown while media loads, as documented by [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/video#poster). Preloading is a browser hint; the matching first frame remains the fallback while playback is unavailable.
+
+A verified backup precedes the source/config change: `/Users/mojcamarin/Developer/urslja-gora-selfhost-20261011/backups/before-hero-poster-fix-20261025-112632.tar.gz`. Production compilation and TypeScript passed. Active local image: `urslja-gora-frontend-dynamic:20261025-hero-poster-final`. Only the local Compose/start helper image reference was updated. The original video, old photo, About page, panorama definition and CMS API helpers retain their recorded SHA-256 values.
+
+Four fresh browser contexts tested desktop/mobile in dark/light themes. Video requests were held until after the poster screenshot, proving the pre-video state has the matching frame. After release, muted inline autoplay started in every profile. Screenshots of the poster and the paused actual first video frame closely align (mean absolute channel differences 0.61–1.50 on a 0–255 scale; JPEG/video color rendering prevents exact pixel identity). No runtime errors occurred. The delivered poster hash matches the new source JPEG.
+
+The frontend, Strapi, news/events/offers APIs and original church photograph are healthy. No CMS content, database, Cloud account, Vercel or original project was modified. Local services remain running. Evidence and before-playback/first-frame screenshots: `.local-test/hero-poster-fix-20261025/`. Refresh https://site.localhost:8443/ with Command–Shift–R to replace an older cached page.

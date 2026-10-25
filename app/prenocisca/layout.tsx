@@ -1,3 +1,4 @@
+import { getSiteUrl } from "@/lib/site";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
     title: "Prenočišča – Dom na Uršlji gori",
     description:
       "Sobice in skupne spalnice za pohodnike na 1680 m. Nočitev v Domu na Uršlji gori v srcu Koroške.",
-    url: "https://ursljagoradom.si/prenocisca",
+    url: `${getSiteUrl()}/prenocisca`,
   },
 };
 

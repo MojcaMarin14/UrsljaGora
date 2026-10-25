@@ -1,0 +1,38 @@
+services:
+  backup:
+    profiles: [ops]
+    build:
+      context: .
+      dockerfile: Dockerfile.backup
+    image: ${COMPOSE_PROJECT_NAME:-urslja-gora}-backup:${RELEASE_TAG:-local}
+    environment:
+      PGHOST: postgres
+      PGPORT: 5432
+      PGUSER: ${DATABASE_ADMIN_USERNAME:-${DATABASE_USERNAME:-strapi}}
+      APP_DATABASE_USER: ${DATABASE_USERNAME:-strapi}
+      PGPASSWORD: ${DATABASE_ADMIN_PASSWORD:-${DATABASE_PASSWORD:?Set DATABASE_PASSWORD}}
+      PGDATABASE: ${DATABASE_NAME:-strapi}
+      RESTIC_REPOSITORY: ${RESTIC_REPOSITORY:?Configure encrypted off-server backup storage}
+      RESTIC_PASSWORD: ${RESTIC_PASSWORD:?Keep the backup password privately}
+      AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION:-us-east-1}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+      RESTIC_HOST: ${COMPOSE_PROJECT_NAME:-urslja-gora}
+    volumes:
+      - uploads:/uploads:ro
+      - ../public:/public-assets:ro
+      - ../:/project-source:ro
+      - ./:/configuration:ro
+      - backup-repository:/repository
+      - backup-restores:/restore
+    tmpfs:
+      - /stage:size=268435456,mode=0700
+    networks: [database, backup-egress]
+    logging:
+      driver: json-file
+      options: {max-size: 10m, max-file: "3"}
+networks:
+  backup-egress:
+volumes:
+  backup-repository:
+  backup-restores:

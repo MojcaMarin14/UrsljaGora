@@ -1,10 +1,12 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { fetchAPI, getStrapiMedia } from "@/lib/api";
+import { getStrapiMedia } from "@/lib/api";
+import { useFeaturedContent } from "@/lib/use-featured-content";
+import CmsContentStatus from "@/app/components/CmsContentStatus";
 import Link from "next/link";
 import Footer from "../components/Footer";
-import { useEffect, useState, useRef } from "react";
+import { useRef } from "react";
 
 const GOLD  = "var(--accent)";
 const CREAM = "var(--section-bg)";
@@ -166,27 +168,15 @@ export default function AktualnoPage() {
   const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
-  const [novica,  setNovica]  = useState<any>(null);
-  const [ponudba, setPonudba] = useState<any>(null);
-  const [dogodek, setDogodek] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const content = useFeaturedContent();
+  const novica = content.novica.data;
+  const ponudba = content.ponudba.data;
+  const dogodek = content.dogodek.data;
+  const loading = Object.values(content).some(item => item.loading);
 
-  useEffect(() => {
-    Promise.all([
-      fetchAPI("novicas?populate=*&pagination[limit]=1"),
-      fetchAPI("dogodkis?populate=*&pagination[limit]=1"),
-      fetchAPI("ponudbes?populate=*&pagination[limit]=1"),
-    ]).then(([resN, resD, resP]) => {
-      setNovica(resN.data?.[0]  ?? null);
-      setDogodek(resD.data?.[0] ?? null);
-      setPonudba(resP.data?.[0] ?? null);
-      setLoading(false);
-    });
-  }, []);
-
-  const novinaImg  = novica?.slika?.url       ? getStrapiMedia(novica.slika.url)      : "/fallback.jpg";
-  const ponudbaImg = ponudba?.slika?.[0]?.url ? getStrapiMedia(ponudba.slika[0].url)  : "/fallback.jpg";
-  const dogodekImg = dogodek?.slika?.[0]?.url ? getStrapiMedia(dogodek.slika[0].url)  : "/fallback.jpg";
+  const novinaImg  = novica?.slika?.url       ? getStrapiMedia(novica.slika.url)      : "/pol2.jpg";
+  const ponudbaImg = ponudba?.slika?.[0]?.url ? getStrapiMedia(ponudba.slika[0].url)  : "/pol2.jpg";
+  const dogodekImg = dogodek?.slika?.[0]?.url ? getStrapiMedia(dogodek.slika[0].url)  : "/pol2.jpg";
 
   return (
     <main style={{ width: "100%", backgroundColor: CREAM, overflowX: "hidden" }}>
@@ -324,29 +314,35 @@ export default function AktualnoPage() {
       transition={{ duration: 0.6 }}
       className="aktualno-2col" style={{ maxWidth: 1152, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gridTemplateRows: "auto auto", gap: 20 }}
     >
+      {novica ? (
       <FeaturedCard
         img={novinaImg}
         category="Novice"
-        title={novica?.naslov ?? "Novosti s koče"}
+        title={novica.naslov}
         excerpt={(novica?.opis ?? "").slice(0, 160) + "…"}
         href="/aktualno/novice"
       />
+      ) : <CmsContentStatus category="Novice" {...content.novica} featured />}
+      {ponudba ? (
       <SmallCard
         img={ponudbaImg}
         category="Ponudbe"
-        title={ponudba?.naslov ?? "Posebne ponudbe"}
+        title={ponudba.naslov}
         excerpt={(ponudba?.opis ?? "").slice(0, 120) + "…"}
         href="/aktualno/ponudbe"
         delay={0.08}
       />
+      ) : <CmsContentStatus category="Ponudbe" {...content.ponudba} />}
+      {dogodek ? (
       <SmallCard
         img={dogodekImg}
         category="Dogodki"
-        title={dogodek?.naslov ?? "Prihajajoči dogodki"}
+        title={dogodek.naslov}
         excerpt={(dogodek?.opis ?? "").slice(0, 120) + "…"}
         href="/aktualno/dogodki"
         delay={0.16}
       />
+      ) : <CmsContentStatus category="Dogodki" {...content.dogodek} />}
     </motion.div>
   )}
 </section>

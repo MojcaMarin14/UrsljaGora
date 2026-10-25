@@ -1,0 +1,15 @@
+{
+    admin off
+}
+https://site.localhost:8443 {
+    tls internal
+    encode gzip
+    reverse_proxy frontend:3000
+}
+https://cms.localhost:8443 {
+    tls internal
+    request_body {
+        max_size 64MB
+    }
+    reverse_proxy strapi:1337
+}

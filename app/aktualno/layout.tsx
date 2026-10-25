@@ -1,3 +1,4 @@
+import { getSiteUrl } from "@/lib/site";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -14,7 +15,7 @@ export const metadata: Metadata = {
     title: "Aktualno – Dom na Uršlji gori",
     description:
       "Novice, dogodki in posebne ponudbe Doma na Uršlji gori. Vse aktualno z Uršlje gore.",
-    url: "https://ursljagoradom.si/aktualno",
+    url: `${getSiteUrl()}/aktualno`,
   },
 };
 

@@ -1,0 +1,7 @@
+# Local-only backend smoke test. The Vercel deployment is untouched.
+services:
+  caddy:
+    ports: !override
+      - "127.0.0.1:8443:8443"
+    volumes:
+      - ./Caddyfile.backend.local:/etc/caddy/Caddyfile:ro
