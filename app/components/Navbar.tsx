@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import ThemeToggle from "./ThemeToggle";
 
@@ -33,15 +33,56 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [theme, setTheme]     = useState<"dark" | "light">("dark");
   const pathname = usePathname();
+  const menuRef = useRef<HTMLDivElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+
+  function closeMenu() {
+    toggleRef.current?.focus({ preventScroll: true });
+    setOpen(false);
+  }
 
   const forceDark = pathname === "/mapa";
 
   useEffect(() => { setOpen(false); }, [pathname]);
 
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    if (!open) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const frame = requestAnimationFrame(() => {
+      const menu = menuRef.current;
+      if (!menu) return;
+      menu.scrollTop = 0;
+      menu.querySelector<HTMLElement>("a")?.focus({ preventScroll: true });
+    });
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        toggleRef.current?.focus({ preventScroll: true });
+        setOpen(false);
+      }
+      if (event.key !== "Tab") return;
+      const items: HTMLElement[] = [];
+      if (toggleRef.current) items.push(toggleRef.current);
+      menuRef.current?.querySelectorAll<HTMLElement>('a[href], button:not([disabled])').forEach(el => items.push(el));
+      const first = items[0], last = items[items.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      cancelAnimationFrame(frame);
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = previousOverflow;
+    };
   }, [open]);
+
+  useEffect(() => {
+    const desktop = window.matchMedia("(min-width: 769px)");
+    const onResize = () => { if (desktop.matches) setOpen(false); };
+    desktop.addEventListener("change", onResize);
+    return () => desktop.removeEventListener("change", onResize);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -90,7 +131,7 @@ export default function Navbar() {
         style={{
           position: "fixed",
           top: 0, left: 0, right: 0,
-          zIndex: 100,
+          zIndex: open ? 10001 : 2000,
           background: navBg,
           backdropFilter: "blur(12px)",
           WebkitBackdropFilter: "blur(12px)",
@@ -153,7 +194,7 @@ export default function Navbar() {
             style={{ display: "flex", alignItems: "center", gap: 14, flexShrink: 0 }}
           >
             <a
-              href="tel:+386641323851"
+              href="tel:+38664132385"
               style={{
                 display: "flex", alignItems: "center", gap: 5,
                 color: navText, textDecoration: "none",
@@ -188,12 +229,16 @@ export default function Navbar() {
 
           {/* Hamburger */}
           <button
+            ref={toggleRef}
+            type="button"
             onClick={() => setOpen(o => !o)}
             className="navbar-hamburger"
             aria-label="Meni"
+            aria-expanded={open}
+            aria-controls="site-mobile-menu"
             style={{
               background: "none", border: "none",
-              cursor: "pointer", padding: 8,
+              cursor: "pointer", padding: 8, minWidth: 44, minHeight: 44, justifyContent: "center",
               display: "none", flexDirection: "column",
               gap: 5, alignItems: "flex-end",
             }}
@@ -217,13 +262,23 @@ export default function Navbar() {
 
       {/* Mobile overlay meni */}
       <div
+        ref={menuRef}
+        id="site-mobile-menu"
+        role="navigation"
+        aria-label="Glavni meni"
+        aria-hidden={!open}
+        inert={!open}
         className="navbar-mobile-menu"
         style={{
-          position: "fixed", inset: 0, zIndex: 99,
+          position: "fixed", inset: 0, zIndex: 10000,
+          height: "100dvh", padding: "84px 24px 24px", boxSizing: "border-box",
+          overflowY: "auto", overscrollBehavior: "contain",
+          scrollPaddingTop: 84, scrollPaddingBottom: 24,
+          visibility: open ? "visible" : "hidden",
           background: menuBg,
           backdropFilter: "blur(16px)",
           display: "flex", flexDirection: "column",
-          alignItems: "center", justifyContent: "center",
+          alignItems: "center", justifyContent: "flex-start",
           gap: 8, transition: "opacity 0.3s, transform 0.3s",
           opacity: open ? 1 : 0,
           transform: open ? "translateY(0)" : "translateY(-12px)",
@@ -232,10 +287,11 @@ export default function Navbar() {
       >
         <a
           href="/"
+          onClick={closeMenu}
           style={{
             fontSize: 13, letterSpacing: "0.2em", textTransform: "uppercase",
             color: menuMuted, textDecoration: "none",
-            marginBottom: 32, fontFamily: "sans-serif",
+            marginTop: "auto", marginBottom: 32, fontFamily: "sans-serif", flexShrink: 0,
           }}
         >
           Uršlja gora
@@ -247,8 +303,9 @@ export default function Navbar() {
             <a
               key={l.href}
               href={l.href}
+              onClick={closeMenu}
               style={{
-                fontSize: "clamp(28px, 7vw, 42px)",
+                fontSize: "clamp(28px, 7vw, 42px)", flexShrink: 0,
                 fontWeight: 500,
                 color: isActive ? accentCol : menuText,
                 textDecoration: "none",
@@ -267,12 +324,12 @@ export default function Navbar() {
         })}
 
         <div style={{
-          display: "flex", alignItems: "center", gap: 20, marginTop: 32,
+          display: "flex", alignItems: "center", gap: 20, marginTop: 32, marginBottom: "auto", flexShrink: 0,
           opacity: open ? 1 : 0, transition: "opacity 0.3s",
           transitionDelay: open ? `${links.length * 0.04}s` : "0s",
         }}>
           <a
-            href="tel:+38641323851"
+            href="tel:+38664132385"
             style={{
               display: "flex", alignItems: "center", gap: 6,
               color: menuMuted, textDecoration: "none", fontSize: 14,

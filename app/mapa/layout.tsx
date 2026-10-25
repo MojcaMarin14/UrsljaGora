@@ -1,3 +1,4 @@
+import { getSiteUrl } from "@/lib/site";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
     title: "Pohodniška mapa – Dom na Uršlji gori",
     description:
       "Interaktivna mapa 6 pohodniških poti na Uršljo goro z GPS koordinatami, višinami in časi hoje.",
-    url: "https://ursljagoradom.si/mapa",
+    url: `${getSiteUrl()}/mapa`,
   },
 };
 

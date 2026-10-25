@@ -6,7 +6,7 @@ import Image from "next/image";
 import Footer from "@/app/components/Footer";
 
 function SimpleSlider() {
-  const images = ["/cebel.jpg", "/knj.jpg", "/cerk.jpg"];
+  const images = ["/cebel.jpg", "/knj.jpg", "/cerk.JPG"];
   const [index, setIndex] = useState(0);
 
   return (
@@ -78,7 +78,7 @@ export default function ONasPage() {
       <section ref={heroRef} style={{ position: "relative", width: "100%", height: "100vh", overflow: "hidden" }}>
         <motion.div style={{ y: heroY, position: "absolute", inset: 0 }}>
           <Image
-            src="/onas-hero.jpg" alt="O nas — Dom na Uršlji gori"
+            src="/onas-hero-travnik-C8rDom3olzf.jpg" alt="O nas — Dom na Uršlji gori"
             fill priority sizes="100vw" quality={85}
             style={{ objectFit: "cover", transform: "scale(1.1)", transformOrigin: "center" }}
           />

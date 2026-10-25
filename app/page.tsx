@@ -1,11 +1,13 @@
 "use client";
 
 import { motion, useScroll, useTransform, Variants } from "framer-motion";
-import { useRef, useEffect, useState } from "react";
+import { useRef } from "react";
 import Image from "next/image";
 import Footer from "./components/Footer";
 import SeasonsSection from "./components/SeasonsSection";
-import { fetchAPI, getStrapiMedia } from "@/lib/api";
+import { getStrapiMedia } from "@/lib/api";
+import { useFeaturedContent } from "@/lib/use-featured-content";
+import CmsContentStatus from "@/app/components/CmsContentStatus";
 
 function SectionLabel({ text, onDark = false }: { text: string; onDark?: boolean }) {
   return (
@@ -237,21 +239,10 @@ export default function HomePage() {
   const textY = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
-  const [novica,  setNovica]  = useState<any>(null);
-  const [ponudba, setPonudba] = useState<any>(null);
-  const [dogodek, setDogodek] = useState<any>(null);
-
-  useEffect(() => {
-    Promise.all([
-      fetchAPI("novicas?populate=*&pagination[limit]=1"),
-      fetchAPI("dogodkis?populate=*&pagination[limit]=1"),
-      fetchAPI("ponudbes?populate=*&pagination[limit]=1"),
-    ]).then(([resN, resD, resP]) => {
-      setNovica(resN.data?.[0]  ?? null);
-      setDogodek(resD.data?.[0] ?? null);
-      setPonudba(resP.data?.[0] ?? null);
-    });
-  }, []);
+  const content = useFeaturedContent();
+  const novica = content.novica.data;
+  const ponudba = content.ponudba.data;
+  const dogodek = content.dogodek.data;
 
   const novinaImg  = novica?.slika?.url       ? getStrapiMedia(novica.slika.url)      : "/pol2.jpg";
   const ponudbaImg = ponudba?.slika?.[0]?.url ? getStrapiMedia(ponudba.slika[0].url)  : "/meni2.jpg";
@@ -274,7 +265,7 @@ export default function HomePage() {
         <motion.div style={{ y: videoY, position: "absolute", inset: 0, scale: 1.1 }}>
           <video
             src="/8.mp4" autoPlay muted loop playsInline
-            poster="/hero-poster.jpg" preload="none"
+            poster="/hero-video-poster.jpg" preload="auto"
             style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
           />
           <div className="hero-overlay hero-overlay--video" style={{ position: "absolute", inset: 0 }} />
@@ -528,16 +519,22 @@ export default function HomePage() {
           </motion.div>
 
           <div style={{ marginBottom: 20 }}>
+            {novica ? (
             <FeaturedCard
               img={novinaImg} category="Novice"
-              title={novica?.naslov ?? "Novosti s koče"}
+              title={novica.naslov}
               excerpt={novica?.opis} href="/aktualno/novice"
             />
+            ) : <CmsContentStatus category="Novice" {...content.novica} onDark />}
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>
-            <NewsCard img={ponudbaImg} category="Ponudbe" title={ponudba?.naslov ?? "Posebne ponudbe"} excerpt={ponudba?.opis} href="/aktualno/ponudbe" index={0} />
-            <NewsCard img={dogodekImg} category="Dogodki" title={dogodek?.naslov ?? "Prihajajoči dogodki"} excerpt={dogodek?.opis} href="/aktualno/dogodki" index={1} />
+            {ponudba ? (
+            <NewsCard img={ponudbaImg} category="Ponudbe" title={ponudba.naslov} excerpt={ponudba?.opis} href="/aktualno/ponudbe" index={0} />
+            ) : <CmsContentStatus category="Ponudbe" {...content.ponudba} onDark />}
+            {dogodek ? (
+            <NewsCard img={dogodekImg} category="Dogodki" title={dogodek.naslov} excerpt={dogodek?.opis} href="/aktualno/dogodki" index={1} />
+            ) : <CmsContentStatus category="Dogodki" {...content.dogodek} onDark />}
           </div>
         </div>
       </section>

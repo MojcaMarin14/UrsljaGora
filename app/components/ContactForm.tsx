@@ -6,6 +6,7 @@ import Script from "next/script";
 import { useEffect, useRef, useState } from "react";
 
 const TURNSTILE_ACTION = "contact_form";
+type ContactConfig = { available: boolean; localTest: boolean; siteKey: string | null };
 
 declare global {
   interface Window {
@@ -27,15 +28,30 @@ export function ContactForm() {
   const [form, setForm]               = useState({ ime: "", email: "", sporocilo: "" });
   const [gdpr, setGdpr]               = useState(false);
   const [status, setStatus]           = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [config, setConfig] = useState<ContactConfig | null>(null);
+  const [sentLocally, setSentLocally] = useState(false);
   const [turnstileReady, setTurnstileReady] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState("");
   const [turnstileError, setTurnstileError] = useState("");
+  const [deliveryError, setDeliveryError] = useState("");
   const widgetContainerRef = useRef<HTMLDivElement | null>(null);
   const widgetIdRef        = useRef<string | null>(null);
-  const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+  const siteKey = config?.siteKey || "";
+  const showForm = status !== "sent";
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("/api/kontakt", { cache: "no-store", signal: controller.signal })
+      .then(async response => {
+        if (!response.ok) throw new Error("Contact unavailable");
+        const data = await response.json();
+        if (!controller.signal.aborted) setConfig({ available: data.available === true, localTest: data.localTest === true, siteKey: typeof data.siteKey === "string" ? data.siteKey : null });
+      })
+      .catch(() => { if (!controller.signal.aborted) setConfig({ available: false, localTest: false, siteKey: null }); });
+    return () => controller.abort();
+  }, []);
 
   useEffect(() => {
-    if (!siteKey || !turnstileReady || !widgetContainerRef.current || widgetIdRef.current || !window.turnstile) return;
+    if (!showForm || !siteKey || !turnstileReady || !widgetContainerRef.current || widgetIdRef.current || !window.turnstile) return;
     widgetIdRef.current = window.turnstile.render(widgetContainerRef.current, {
       sitekey: siteKey,
       action: TURNSTILE_ACTION,
@@ -45,11 +61,11 @@ export function ContactForm() {
       "error-callback":   () => { setTurnstileToken(""); setTurnstileError("Preverjanje ni uspelo. Poskusite znova."); },
       "expired-callback": () => { setTurnstileToken(""); setTurnstileError("Preverjanje je poteklo. Potrdite še enkrat."); },
     });
-  }, [siteKey, turnstileReady]);
-
-  useEffect(() => {
-    return () => { if (widgetIdRef.current && window.turnstile) window.turnstile.remove(widgetIdRef.current); };
-  }, []);
+    return () => {
+      if (widgetIdRef.current && window.turnstile) window.turnstile.remove(widgetIdRef.current);
+      widgetIdRef.current = null;
+    };
+  }, [siteKey, turnstileReady, showForm]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -60,22 +76,22 @@ export function ContactForm() {
     if (widgetIdRef.current && window.turnstile) window.turnstile.reset(widgetIdRef.current);
   };
 
-  const handleSubmit = async (e: React.MouseEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!form.ime || !form.email || !form.sporocilo || !gdpr) return;
-    if (!siteKey) { setStatus("error"); setTurnstileError("Zaščita obrazca trenutno ni nastavljena."); return; }
-    if (!turnstileToken) { setStatus("error"); setTurnstileError("Potrdite, da niste robot."); return; }
-    setStatus("sending"); setTurnstileError("");
+    if (status === "sending" || !form.ime.trim() || !form.email.trim() || !form.sporocilo.trim() || !gdpr || !config?.available) return;
+    if (!config.localTest && !turnstileToken) { setStatus("error"); setTurnstileError("Potrdite, da niste robot."); return; }
+    setStatus("sending"); setTurnstileError(""); setDeliveryError("");
     try {
-      const res  = await fetch("/api/kontakt", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...form, turnstileToken }) });
+      const res  = await fetch("/api/kontakt", { method: "POST", signal: AbortSignal.timeout(30000), headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ime: form.ime.trim(), email: form.email.trim(), sporocilo: form.sporocilo.trim(), gdpr, turnstileToken }) });
       const data = await res.json().catch(() => null);
-      if (res.ok) {
+      if (res.ok && data?.ok === true) {
+        setSentLocally(data.localTest === true);
         setStatus("sent"); setForm({ ime: "", email: "", sporocilo: "" }); setGdpr(false); resetTurnstile();
       } else {
-        setStatus("error"); setTurnstileError(data?.error ?? "Preverjanje obrazca ni uspelo."); resetTurnstile();
+        resetTurnstile(); setStatus("error"); setDeliveryError(data?.error ?? "Sporočila ni bilo mogoče poslati. Poskusite znova.");
       }
     } catch {
-      setStatus("error"); setTurnstileError("Povezava s strežnikom ni uspela. Poskusite znova."); resetTurnstile();
+      resetTurnstile(); setStatus("error"); setDeliveryError("Povezava s strežnikom ni uspela. Poskusite znova.");
     }
   };
 
@@ -93,7 +109,7 @@ export function ContactForm() {
     boxSizing: "border-box",
   };
 
-  const submitDisabled = status === "sending" || !gdpr || !turnstileToken || !siteKey;
+  const submitDisabled = status === "sending" || !gdpr || !config?.available || (!config.localTest && (!turnstileToken || !siteKey));
 
   return (
     <div style={{ maxWidth: 720, margin: "0 auto" }}>
@@ -102,6 +118,7 @@ export function ContactForm() {
           src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
           strategy="afterInteractive"
           onReady={() => setTurnstileReady(true)}
+          onError={() => setTurnstileError("Preverjanja ni mogoče naložiti. Poskusite znova pozneje.")}
         />
       )}
 
@@ -126,13 +143,15 @@ export function ContactForm() {
           >
             <div style={{ fontSize: 48, marginBottom: 20 }}>✉️</div>
             <h3 style={{ fontSize: 24, fontWeight: 500, color: "var(--heading)", letterSpacing: "-0.02em", marginBottom: 10 }}>
-              Sporočilo poslano!
+              {sentLocally ? "Sporočilo shranjeno v testni predal!" : "Sporočilo poslano!"}
             </h3>
             <p style={{ color: "var(--text-muted)", fontSize: 15, lineHeight: 1.7 }}>
-              Odgovorili vam bomo v najkrajšem možnem času.
+              {sentLocally ? "To je lokalni preizkus. Sporočilo ni bilo poslano na pravi e-poštni naslov." : "Odgovorili vam bomo v najkrajšem možnem času."}
             </p>
+            {sentLocally && <a href="/testna-posta/" target="_blank" rel="noopener noreferrer" style={{ display: "block", marginTop: 18, color: "var(--accent)", textDecoration: "underline" }}>Odpri testni predal</a>}
             <motion.button
-              onClick={() => { setStatus("idle"); resetTurnstile(); }}
+              type="button"
+              onClick={() => { setStatus("idle"); setDeliveryError(""); resetTurnstile(); }}
               whileHover={{ scale: 1.03 }}
               style={{
                 marginTop: 28,
@@ -150,7 +169,7 @@ export function ContactForm() {
             </motion.button>
           </motion.div>
         ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 18 }}>
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
               {[
@@ -158,10 +177,12 @@ export function ContactForm() {
                 { name: "email", label: "E-pošta", placeholder: "jana@email.com", type: "email" },
               ].map((f) => (
                 <div key={f.name}>
-                  <label style={{ display: "block", fontSize: 17, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--label)", fontWeight: 700, marginBottom: 8 }}>
+                  <label htmlFor={`contact-${f.name}`} style={{ display: "block", fontSize: 17, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--label)", fontWeight: 700, marginBottom: 8 }}>
                     {f.label}
                   </label>
                   <input
+                    id={`contact-${f.name}`}
+                    required
                     name={f.name}
                     type={f.type}
                     value={(form as any)[f.name]}
@@ -177,10 +198,12 @@ export function ContactForm() {
             </div>
 
             <div>
-              <label style={{ display: "block", fontSize: 17, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--label)", fontWeight: 700, marginBottom: 8 }}>
+              <label htmlFor="contact-message" style={{ display: "block", fontSize: 17, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--label)", fontWeight: 700, marginBottom: 8 }}>
                 Sporočilo
               </label>
               <textarea
+                id="contact-message"
+                required
                 name="sporocilo"
                 value={form.sporocilo}
                 onChange={handleChange}
@@ -194,13 +217,13 @@ export function ContactForm() {
             </div>
 
             <div>
-              {!siteKey ? (
-                <p style={{ fontSize: 13, color: "#d97706", margin: 0 }} />
-              ) : (
-                <div ref={widgetContainerRef} style={{ minHeight: 65 }} />
-              )}
+              {!config ? <p role="status" style={{ fontSize: 13, color: "var(--text-muted)", margin: 0 }}>Pripravljamo obrazec…</p>
+                : !config.available ? <p role="status" style={{ fontSize: 13, color: "#d97706", margin: 0 }}>Pošiljanje trenutno ni na voljo. Prosimo, uporabite e-pošto ali telefon.</p>
+                : config.localTest ? <p role="status" style={{ fontSize: 13, color: "var(--text-muted)", margin: 0 }}>Lokalni preizkus: sporočilo bo shranjeno samo v <a href="/testna-posta/" target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent)", textDecoration: "underline" }}>testni predal</a>.</p>
+                : <div ref={widgetContainerRef} style={{ minHeight: 65 }} />}
+
               {turnstileError && (
-                <p style={{ fontSize: 13, color: "#dc2626", margin: "8px 0 0" }}>{turnstileError}</p>
+                <p role="alert" style={{ fontSize: 13, color: "#dc2626", margin: "8px 0 0" }}>{turnstileError}</p>
               )}
             </div>
 
@@ -212,7 +235,7 @@ export function ContactForm() {
               />
               <label htmlFor="gdpr" style={{ fontSize: 17, color: "var(--text-muted)", lineHeight: 1.65, cursor: "pointer" }}>
                 Strinjam se z{" "}
-                <Link href="/zasebnost" style={{ color: "var(--accent)", textDecoration: "underline" }}>
+                <Link href="/politikaZasebnosti" style={{ color: "var(--accent)", textDecoration: "underline" }}>
                   obdelavo osebnih podatkov
                 </Link>{" "}
                 za namen odgovora na moje povpraševanje. Soglasje lahko kadarkoli prekličem z zahtevo na{" "}
@@ -220,7 +243,9 @@ export function ContactForm() {
               </label>
             </div>
 
-            {status === "error" && !turnstileError && (
+            {deliveryError && <p role="alert" style={{ fontSize: 13, color: "#dc2626", margin: 0 }}>{deliveryError}</p>}
+
+            {status === "error" && !turnstileError && !deliveryError && (
               <p style={{ fontSize: 13, color: "#dc2626", margin: 0 }}>
                 Prišlo je do napake. Poskusite znova ali nas kontaktirajte neposredno.
               </p>
@@ -228,7 +253,7 @@ export function ContactForm() {
 
             <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 4 }}>
               <motion.button
-                onClick={handleSubmit}
+                type="submit"
                 disabled={submitDisabled}
                 whileHover={{ scale: submitDisabled ? 1 : 1.03 }}
                 whileTap={{ scale: 0.97 }}
@@ -246,7 +271,7 @@ export function ContactForm() {
                 {status === "sending" ? "Pošiljam…" : "Pošlji sporočilo"}
               </motion.button>
             </div>
-          </div>
+          </form>
         )}
       </motion.div>
     </div>

@@ -1,21 +1,22 @@
+import { getSiteUrl } from "@/lib/site";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Vreme",
   description:
-    "Vremenska napoved za Uršljo goro (1699 m) – temperatura, padavine in sneg. Preverite vreme pred pohodom na Uršljo goro.",
+    "Vremenska napoved pri Domu na Uršlji gori (1680 m) – temperatura, veter, padavine in nov sneg. Preverite vreme pred pohodom na Uršljo goro.",
   keywords: [
     "vreme Uršlja gora",
     "vremenska napoved gore",
-    "temperatura vrh Koroška",
+    "temperatura Uršlja gora Koroška",
     "sneg Uršlja gora",
     "pohod vreme",
   ],
   openGraph: {
     title: "Vreme na Uršlji gori – Dom na Uršlji gori",
     description:
-      "Aktualna vremenska napoved za vrh Uršlje gore (1699 m). Temperatura, padavine in snežne razmere.",
-    url: "https://ursljagoradom.si/vreme",
+      "Aktualna vremenska napoved pri Domu na Uršlji gori (1680 m). Temperatura, veter, sunki, padavine in nov sneg.",
+    url: `${getSiteUrl()}/vreme`,
   },
 };
 

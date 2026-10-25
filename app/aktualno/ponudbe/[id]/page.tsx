@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import Footer from "@/app/components/Footer";
 import { fetchAPI, getStrapiMedia } from "@/lib/api";
 import Image from "next/image";
@@ -11,7 +12,7 @@ export default async function PonudbaDetailPage(props: { params: Promise<{ id: s
   const { id } = await props.params;
 
   const res = await fetchAPI(
-    `ponudbes?filters[id][$eq]=${id}&populate=*`
+    `ponudbes?filters[${/^\d+$/.test(id) ? "id" : "documentId"}][$eq]=${encodeURIComponent(id)}&populate=*&status=published`
   );
 
   const ponudba = res.data?.[0];

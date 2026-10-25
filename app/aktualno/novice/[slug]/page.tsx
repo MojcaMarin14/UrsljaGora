@@ -13,7 +13,7 @@ export default async function NovicaDetailPage({ params }: { params: Promise<{ s
   const { slug } = await params;
 
   const res = await fetchAPI(
-    `novicas?filters[slug][$eq]=${encodeURIComponent(slug)}&populate=*`
+    `novicas?filters[slug][$eq]=${encodeURIComponent(slug)}&populate=*&status=published`
   );
 
   const novica = res.data?.[0];

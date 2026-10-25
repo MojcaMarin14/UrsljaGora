@@ -2,35 +2,9 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Footer from "./Footer";
+import { type WeatherData, WEATHER_LOCATION, weatherIcon as icon, weatherDescription, formatReading, formatForecastDate } from "@/lib/weather";
 
 const GOLD = "var(--accent)";
-const CREAM = "var(--section-bg)";
-const DARK = "var(--heading)";
-
-
-const ICONS: { [key: number]: string } = {
-  0: "☀️", 1: "🌤️", 2: "⛅", 3: "☁️",
-  45: "🌫️", 48: "🌫️", 51: "🌦️", 53: "🌦️", 55: "🌧️",
-  61: "🌦️", 63: "🌧️", 65: "🌧️", 71: "🌨️", 73: "🌨️",
-  75: "❄️", 80: "🌦️", 81: "🌧️", 82: "🌧️", 85: "🌨️", 86: "❄️",
-};
-
-interface WeatherData {
-  hourly: { time: string[]; temperature_2m: number[] };
-  daily: {
-    time: string[];
-    temperature_2m_max: number[];
-    temperature_2m_min: number[];
-    weather_code: number[];
-    precipitation_sum: number[];
-    snowfall_sum: number[];
-  };
-}
-
-function icon(code: number): string {
-  return ICONS[code] ?? "🌡️";
-}
 
 export default function WeatherClient({ weather }: { weather: WeatherData }) {
   const { hourly, daily } = weather;
@@ -39,17 +13,20 @@ export default function WeatherClient({ weather }: { weather: WeatherData }) {
   const selectedDate = daily.time[selectedDay];
   const hoursForDay = hourly.time
     .map((t, i) => ({ t, temp: hourly.temperature_2m[i] }))
-    .filter((h) => h.t.startsWith(selectedDate));
+    .filter((h): h is { t: string; temp: number } => h.t.startsWith(selectedDate) && h.temp !== null && Number.isFinite(h.temp));
 
-  const maxTemp = Math.max(...hoursForDay.map((h) => h.temp));
-  const minTemp = Math.min(...hoursForDay.map((h) => h.temp));
+  const maxTemp = hoursForDay.length ? Math.max(...hoursForDay.map((h) => h.temp)) : 0;
+  const minTemp = hoursForDay.length ? Math.min(...hoursForDay.map((h) => h.temp)) : 0;
   const tempRange = maxTemp - minTemp || 1;
 
-  const todayMax = Math.round(daily.temperature_2m_max[0]);
-  const todayCode = daily.weather_code[0];
+  const hasCurrent = weather.current?.temperature_2m != null;
+  const headlineTemp = hasCurrent ? weather.current!.temperature_2m : daily.temperature_2m_max[0];
+  const headlineCode = hasCurrent ? weather.current!.weather_code : daily.weather_code[0];
+  const headlineLabel = hasCurrent ? `Trenutna napoved · ${weather.current!.time.slice(11, 16)}` : "Danes največ";
+  const selectedCode = daily.weather_code[selectedDay];
 
   return (
-    <main style={{ width: "100%", height: "100vh", overflow: "hidden", position: "relative" }}>
+    <main className="weather-page" style={{ width: "100%", height: "100dvh", overflow: "hidden", position: "relative" }}>
 
       {/* ── VIDEO BACKGROUND — cela stran ── */}
       <video
@@ -62,17 +39,17 @@ export default function WeatherClient({ weather }: { weather: WeatherData }) {
       <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 1 }} />
 
       {/* ── DASHBOARD NA VIDEU ── */}
-      <div style={{
+      <div className="weather-grid" style={{
         position: "relative", zIndex: 10,
-        height: "100vh",
+        height: "100dvh",
         paddingTop: 60,
         display: "grid",
-        gridTemplateColumns: "300px 1fr",
+        gridTemplateColumns: "300px minmax(0, 1fr)",
         overflow: "hidden",
       }}>
 
         {/* ── LEVO: Seznam dni ── */}
-        <div style={{
+        <div className="weather-days-panel" style={{
           display: "flex",
           flexDirection: "column",
           overflow: "hidden",
@@ -81,39 +58,42 @@ export default function WeatherClient({ weather }: { weather: WeatherData }) {
           borderRight: "1px solid rgba(255,255,255,0.08)",
         }}>
           {/* Header */}
-          <div style={{
+          <div className="weather-days-header" style={{
             padding: "28px 24px 20px",
             borderBottom: "1px solid rgba(255,255,255,0.07)",
           }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
               <div style={{ width: 24, height: 1, background: GOLD }} />
               <span style={{ fontSize: 11, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(201,169,110,0.9)", fontWeight: 700 }}>
-                Uršlja gora · 1699m
+                Dom na Uršlji gori · {WEATHER_LOCATION.elevation} m
               </span>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-              <span style={{ fontSize: 44 }}>{icon(todayCode)}</span>
+              <span role="img" aria-label={weatherDescription(headlineCode)} style={{ fontSize: 44 }}>{icon(headlineCode, !hasCurrent || weather.current?.is_day !== 0)}</span>
               <div>
                 <p style={{ fontSize: 40, fontWeight: 600, color: "white", letterSpacing: "-0.03em", margin: 0, lineHeight: 1 }}>
-                  {todayMax}°C
+                  {formatReading(headlineTemp, "°C")}
                 </p>
-                <p style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", margin: "4px 0 0" }}>danes</p>
+                <p style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", margin: "4px 0 0" }}>{headlineLabel}</p>
               </div>
             </div>
           </div>
 
           {/* Dni */}
-          <div style={{ flex: 1, overflowY: "auto", padding: "10px 10px" }}>
+          <div className="weather-days-list" aria-label="Dnevna napoved" style={{ flex: 1, overflowY: "auto", padding: "10px 10px" }}>
             {daily.time.map((date, i) => {
-              const d = new Date(date);
-              const day = d.toLocaleDateString("sl-SI", { weekday: "long" });
-              const full = d.toLocaleDateString("sl-SI", { day: "2-digit", month: "2-digit" });
+              const day = formatForecastDate(date, { weekday: "long" });
+              const full = formatForecastDate(date, { day: "2-digit", month: "2-digit" });
               const isSelected = selectedDay === i;
               const isToday = i === 0;
 
               return (
                 <button
                   key={date}
+                  className="weather-day-btn"
+                  type="button"
+                  aria-pressed={isSelected}
+                  aria-label={`${isToday ? "Danes" : day}, ${full}`}
                   onClick={() => setSelectedDay(i)}
                   style={{
                     width: "100%",
@@ -136,19 +116,19 @@ export default function WeatherClient({ weather }: { weather: WeatherData }) {
                     if (!isSelected) (e.currentTarget as HTMLElement).style.background = "transparent";
                   }}
                 >
-                  <span style={{ fontSize: 24, flexShrink: 0 }}>{icon(daily.weather_code[i])}</span>
-                  <div style={{ flex: 1, minWidth: 0 }}>
+                  <span role="img" aria-label={weatherDescription(daily.weather_code[i])} style={{ fontSize: 24, flexShrink: 0 }}>{icon(daily.weather_code[i])}</span>
+                  <div className="weather-day-info" style={{ flex: 1, minWidth: 0 }}>
                     <p style={{ fontSize: 13, fontWeight: 600, color: isSelected ? "white" : "rgba(255,255,255,0.65)", margin: 0, letterSpacing: "-0.01em" }}>
                       {isToday ? "Danes" : day}
                     </p>
                     <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", margin: "1px 0 0" }}>{full}</p>
                   </div>
-                  <div style={{ textAlign: "right", flexShrink: 0 }}>
+                  <div className="weather-day-temperatures" style={{ textAlign: "right", flexShrink: 0 }}>
                     <p style={{ fontSize: 15, fontWeight: 600, color: isSelected ? GOLD : "rgba(255,255,255,0.7)", margin: 0, letterSpacing: "-0.02em" }}>
-                      {Math.round(daily.temperature_2m_max[i])}°
+                      {formatReading(daily.temperature_2m_max[i], "°")}
                     </p>
                     <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", margin: "1px 0 0" }}>
-                      {Math.round(daily.temperature_2m_min[i])}°
+                      {formatReading(daily.temperature_2m_min[i], "°")}
                     </p>
                   </div>
                 </button>
@@ -160,6 +140,7 @@ export default function WeatherClient({ weather }: { weather: WeatherData }) {
         {/* ── DESNO: Detail ── */}
         <AnimatePresence mode="wait">
           <motion.div
+            className="weather-detail"
             key={selectedDay}
             initial={{ opacity: 0, x: 16 }}
             animate={{ opacity: 1, x: 0 }}
@@ -168,13 +149,15 @@ export default function WeatherClient({ weather }: { weather: WeatherData }) {
             style={{
               display: "flex",
               flexDirection: "column",
-              overflow: "hidden",
+              overflowY: "auto",
+              minWidth: 0,
+              minHeight: 0,
               background: "rgba(17,16,8,0.35)",
               backdropFilter: "blur(12px)",
             }}
           >
             {/* Header */}
-            <div style={{
+            <div className="weather-detail-header" style={{
               padding: "28px 36px 24px",
               borderBottom: "1px solid rgba(255,255,255,0.07)",
               display: "flex",
@@ -185,20 +168,22 @@ export default function WeatherClient({ weather }: { weather: WeatherData }) {
             }}>
               <div>
                 <p style={{ fontSize: 11, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(201,169,110,0.9)", fontWeight: 700, margin: "0 0 6px" }}>
-                  {selectedDay === 0 ? "Danes" : new Date(selectedDate).toLocaleDateString("sl-SI", { weekday: "long" })}
+                  {selectedDay === 0 ? "Danes" : formatForecastDate(selectedDate, { weekday: "long" })}
                 </p>
                 <h2 style={{ fontSize: "clamp(20px, 2.5vw, 30px)", fontWeight: 500, color: "white", letterSpacing: "-0.025em", margin: 0 }}>
-                  {new Date(selectedDate).toLocaleDateString("sl-SI", { day: "numeric", month: "long", year: "numeric" })}
+                  {formatForecastDate(selectedDate, { day: "numeric", month: "long", year: "numeric" })}
                 </h2>
               </div>
 
               {/* Stats */}
-              <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+              <div className="weather-stats" style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
                 {[
-                  { label: "Max", value: `${Math.round(daily.temperature_2m_max[selectedDay])}°C` },
-                  { label: "Min", value: `${Math.round(daily.temperature_2m_min[selectedDay])}°C` },
-                  { label: "Padavine", value: `${daily.precipitation_sum[selectedDay]} mm` },
-                  { label: "Sneg", value: `${daily.snowfall_sum[selectedDay]} cm` },
+                  { label: "Max", value: formatReading(daily.temperature_2m_max[selectedDay], "°C") },
+                  { label: "Min", value: formatReading(daily.temperature_2m_min[selectedDay], "°C") },
+                  { label: "Padavine", value: formatReading(daily.precipitation_sum[selectedDay], " mm", 1) },
+                  { label: "Nov sneg", value: formatReading(daily.snowfall_sum[selectedDay], " cm", 1) },
+                  { label: "Veter največ", value: formatReading(daily.wind_speed_10m_max[selectedDay], " km/h") },
+                  { label: "Sunki največ", value: formatReading(daily.wind_gusts_10m_max[selectedDay], " km/h") },
                 ].map((s) => (
                   <div key={s.label} style={{
                     background: "rgba(255,255,255,0.08)",
@@ -214,7 +199,7 @@ export default function WeatherClient({ weather }: { weather: WeatherData }) {
             </div>
 
             {/* Graf */}
-            <div style={{ flex: 1, padding: "24px 36px 28px", overflow: "hidden", display: "flex", flexDirection: "column" }}>
+            <div className="weather-detail-body" style={{ flex: 1, minHeight: 420, padding: "24px 36px 28px", display: "flex", flexDirection: "column" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
                 <div style={{ width: 24, height: 1, background: GOLD }} />
                 <span style={{ fontSize: 11, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(201,169,110,0.9)", fontWeight: 700 }}>
@@ -224,7 +209,7 @@ export default function WeatherClient({ weather }: { weather: WeatherData }) {
 
               {hoursForDay.length > 0 ? (
                 <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0 }}>
-                  <div style={{ flex: 1, display: "flex", alignItems: "flex-end", gap: 6, overflowX: "auto", paddingBottom: 8 }}>
+                  <div className="weather-hour-chart" role="region" aria-label="Urna temperatura, slovenski čas" tabIndex={0} style={{ flex: 1, minHeight: 190, display: "flex", alignItems: "flex-end", gap: 6, overflowX: "auto", paddingBottom: 8 }}>
                     {hoursForDay.map((h, i) => {
                       const heightPct = ((h.temp - minTemp) / tempRange) * 75 + 10;
                       const isWarm = h.temp >= (maxTemp + minTemp) / 2;
@@ -234,10 +219,10 @@ export default function WeatherClient({ weather }: { weather: WeatherData }) {
                           initial={{ opacity: 0, scaleY: 0 }}
                           animate={{ opacity: 1, scaleY: 1 }}
                           transition={{ duration: 0.35, delay: i * 0.025 }}
-                          style={{ display: "flex", flexDirection: "column", alignItems: "center", flexShrink: 0, width: 52, height: "100%", transformOrigin: "bottom" }}
+                          style={{ display: "flex", flexDirection: "column", alignItems: "center", flexShrink: 0, width: 52, alignSelf: "stretch", transformOrigin: "bottom" }}
                         >
                           <p style={{ fontSize: 12, fontWeight: 600, color: "white", margin: "0 0 6px" }}>
-                            {Math.round(h.temp)}°
+                            {formatReading(h.temp, "°")}
                           </p>
                           <div style={{ flex: 1, display: "flex", alignItems: "flex-end", width: "100%" }}>
                             <div style={{
@@ -249,7 +234,7 @@ export default function WeatherClient({ weather }: { weather: WeatherData }) {
                             }} />
                           </div>
                           <p style={{ fontSize: 10, color: "rgba(255,255,255,0.35)", marginTop: 6 }}>
-                            {new Date(h.t).getHours()}:00
+                            {h.t.slice(11, 16)}
                           </p>
                         </motion.div>
                       );
@@ -284,15 +269,17 @@ export default function WeatherClient({ weather }: { weather: WeatherData }) {
 }}>
   {/* Label */}
   <div style={{ position: "absolute", top: 8, left: 14, fontSize: 19, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", fontWeight: 700 }}>
-    Vizualizacija
+    Dnevna napoved
   </div>
 
   <AnimatePresence mode="wait">
     {(() => {
-     const code = daily.weather_code[selectedDay];
+     const code = selectedCode;
 
-const isSnow  = (code >= 71 && code <= 75) || (code >= 85 && code <= 86); // samo čisti sneg
-const isRain  = (code >= 51 && code <= 65) || (code >= 80 && code <= 82); // dež in rosenje  
+const isSnow  = code != null && [71, 73, 75, 77, 85, 86].includes(code);
+const isStorm = code != null && [95, 96, 97, 99].includes(code);
+const isFreezing = code != null && [56, 57, 66, 67].includes(code);
+const isRain  = code != null && [51, 53, 55, 61, 63, 65, 80, 81, 82].includes(code);
 const isSun   = code === 0 || code === 1;
 const isMist  = code === 45 || code === 48;
 const isCloud = code === 2 || code === 3;
@@ -303,37 +290,37 @@ const isCloud = code === 2 || code === 3;
           {Array.from({ length: 30 }).map((_, i) => (
             <motion.div key={i}
               animate={{ y: ["-10px", "90px"], x: [0, (i % 2 === 0 ? 1 : -1) * 15] }}
-              transition={{ duration: Math.random() * 2 + 2, repeat: Infinity, delay: Math.random() * 2, ease: "linear" }}
+              transition={{ duration: ((i * 37) % 97) / 97 * 2 + 2, repeat: Infinity, delay: ((i * 23) % 97) / 97 * 2, ease: "linear" }}
               style={{
                 position: "absolute",
-                left: `${Math.random() * 100}%`,
+                left: `${((i * 53 + 11) % 97) / 97 * 100}%`,
                 top: 0,
-                width: Math.random() * 4 + 2,
-                height: Math.random() * 4 + 2,
+                width: ((i * 43) % 97) / 97 * 4 + 2,
+                height: ((i * 43) % 97) / 97 * 4 + 2,
                 borderRadius: "50%",
                 background: "rgba(255,255,255,0.85)",
               }}
             />
           ))}
           <div style={{ position: "absolute", bottom: 8, left: "50%", transform: "translateX(-50%)", fontSize: 20, color: "rgba(255,255,255,0.5)", whiteSpace: "nowrap" }}>
-            ❄️ Sneženje
+            {icon(code)} {weatherDescription(code)}
           </div>
         </motion.div>
       );
 
-      if (isRain) return (
-        <motion.div key="rain" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      if (isRain || isStorm || isFreezing) return (
+        <motion.div key={isStorm ? "storm" : isFreezing ? "freezing" : "rain"} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
           style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
           {Array.from({ length: 40 }).map((_, i) => (
             <motion.div key={i}
               animate={{ y: ["-10px", "90px"] }}
-              transition={{ duration: Math.random() * 0.3 + 0.2, repeat: Infinity, delay: Math.random() * 1.5, ease: "linear" }}
+              transition={{ duration: ((i * 37) % 97) / 97 * 0.3 + 0.2, repeat: Infinity, delay: ((i * 23) % 97) / 97 * 1.5, ease: "linear" }}
               style={{
                 position: "absolute",
-                left: `${Math.random() * 100}%`,
+                left: `${((i * 53 + 11) % 97) / 97 * 100}%`,
                 top: 0,
                 width: 1.5,
-                height: Math.random() * 14 + 8,
+                height: ((i * 43) % 97) / 97 * 14 + 8,
                 background: "rgba(174,214,241,0.6)",
                 borderRadius: 2,
                 transform: "rotate(8deg)",
@@ -341,7 +328,7 @@ const isCloud = code === 2 || code === 3;
             />
           ))}
           <div style={{ position: "absolute", bottom: 8, left: "50%", transform: "translateX(-50%)", fontSize: 20, color: "rgba(255,255,255,0.5)", whiteSpace: "nowrap" }}>
-            🌧️ Dež
+            {icon(code)} {weatherDescription(code)}
           </div>
         </motion.div>
       );
@@ -369,7 +356,7 @@ const isCloud = code === 2 || code === 3;
             />
           ))}
           <div style={{ position: "absolute", bottom: 8, left: "50%", transform: "translateX(-50%)", fontSize: 20, color: "rgba(255,255,255,0.5)", whiteSpace: "nowrap" }}>
-            ☀️ Sončno
+            {icon(code)} {weatherDescription(code)}
           </div>
         </motion.div>
       );
@@ -393,7 +380,7 @@ const isCloud = code === 2 || code === 3;
             />
           ))}
           <div style={{ position: "absolute", bottom: 8, left: "50%", transform: "translateX(-50%)", fontSize: 12, color: "rgba(255,255,255,0.5)", whiteSpace: "nowrap" }}>
-            🌫️ Megla
+            {icon(code)} {weatherDescription(code)}
           </div>
         </motion.div>
       );
@@ -401,7 +388,7 @@ const isCloud = code === 2 || code === 3;
       if (isCloud) return (
   <motion.div key="cloud" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
     style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
-    
+
     {/* Oblak 1 — velik, zadaj */}
     <motion.div
       animate={{ x: [0, 6, 0] }}
@@ -442,14 +429,14 @@ const isCloud = code === 2 || code === 3;
     </motion.div>
 
     <div style={{ position: "absolute", bottom: 8, left: "50%", transform: "translateX(-50%)", fontSize: 20, color: "rgba(255,255,255,0.5)", whiteSpace: "nowrap" }}>
-      ☁️ Oblačno
+      {icon(code)} {weatherDescription(code)}
     </div>
   </motion.div>
 );
       return (
         <motion.div key="default" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
           style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>
-          🌡️ Spremenljivo
+          {icon(code)} {weatherDescription(code)}
         </motion.div>
       );
     })()}
@@ -460,6 +447,10 @@ const isCloud = code === 2 || code === 3;
               ) : (
                 <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 14 }}>Ni podatkov za ta dan.</p>
               )}
+              <p className="weather-source" style={{ fontSize: 11, lineHeight: 1.6, color: "rgba(255,255,255,0.6)", margin: "16px 0 0" }}>
+                Vir: <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer" style={{ color: "inherit", textDecoration: "underline" }}>Open-Meteo</a> · modelska napoved za dom na {WEATHER_LOCATION.elevation} m, ne meritev na postaji.
+                {" "}Vse ure so po slovenskem času. Dnevni simbol povzema najizrazitejše vreme dneva; nov sneg pomeni napovedano količino v dnevu.
+              </p>
             </div>
           </motion.div>
         </AnimatePresence>

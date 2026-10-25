@@ -371,43 +371,7 @@ footer a:hover {
   /* novice / dogodki / ponudbe featured card spodnja vsebina */
   .novice-featured-body { padding: 24px 20px 28px !important; }
 
-  /* Vreme */
-  .weather-grid {
-    grid-template-columns: 1fr !important;
-    grid-template-rows: auto 1fr !important;
-    padding-top: 56px !important;
-  }
-  .weather-days-panel {
-    flex-direction: row !important;
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
-    border-right: none !important;
-    border-bottom: 1px solid rgba(255,255,255,0.08) !important;
-    max-height: 160px;
-  }
-  .weather-days-panel > .weather-days-header { display: none !important; }
-  .weather-days-list {
-    flex-direction: row !important;
-    padding: 8px !important;
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
-    gap: 4px;
-  }
-  .weather-day-btn {
-    flex-direction: column !important;
-    align-items: center !important;
-    min-width: 68px !important;
-    padding: 8px 6px !important;
-    gap: 3px !important;
-  }
-  .weather-day-btn .weather-day-info { display: none !important; }
-  .weather-detail-header {
-    padding: 14px 18px 12px !important;
-    flex-wrap: wrap;
-  }
-  .weather-detail-header .weather-stats { gap: 6px !important; }
-  .weather-detail-header .weather-stats > div { padding: 7px 12px !important; }
-  .weather-detail-body { padding: 14px 18px 16px !important; }
+
 }
 
 /* ── GUESTBOOK FAB ── */
@@ -605,3 +569,39 @@ footer a:hover {
 .gb-submit:disabled { opacity: 0.5; cursor: not-allowed; }
 .gb-success { background: #eaf5ea; color: #3a7a3a; border-radius: 10px; padding: 16px; text-align: center; font-weight: 600; }
 .gb-error { color: #c1121f; font-size: 0.83rem; }
+
+/* Optional guestbook photo, inside the existing guestbook design. */
+.gb-photo { display: flex; flex-direction: column; gap: 8px; color: #444; font-size: .85rem; }
+.gb-photo input { max-width: 100%; font-size: .8rem; }
+.gb-photo small { color: #777; line-height: 1.5; }
+.gb-photo__preview { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.gb-photo__preview img { max-width: 150px; max-height: 110px; object-fit: contain; border-radius: 8px; }
+.gb-photo__preview button { color: #70551f; background: none; border: 1px solid #c9a96e; border-radius: 6px; padding: 6px 10px; cursor: pointer; font-size: .8rem; }
+.gb-entry__photo { display: block; max-width: 100%; max-height: 260px; width: auto; object-fit: contain; border-radius: 8px; margin-top: 12px; }
+
+.gb-photo__add { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 14px; border: 1px dashed #c9a96e; border-radius: 10px; background: #faf7f1; color: #70551f; text-align: left; font: inherit; cursor: pointer; transition: background .2s; }
+.gb-photo__add:hover:not(:disabled) { background: #f3ebdd; }
+.gb-photo__add:focus-visible { outline: 2px solid #70551f; outline-offset: 3px; }
+.gb-photo__add:disabled { opacity: .5; cursor: not-allowed; }
+.gb-photo__add-icon { display: grid; place-items: center; flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%; background: #c9a96e; color: #fff; }
+.gb-photo__add small { display: block; margin-top: 2px; font-size: .75rem; }
+.gb-photo__preview img, .gb-entry__photo { image-orientation: from-image; }
+
+/* Weather keeps the original desktop dashboard; narrow screens stack its panels. */
+@media (max-width: 768px) {
+  .weather-page { height: auto !important; min-height: 100dvh; overflow-x: clip !important; overflow-y: visible !important; }
+  .weather-grid { height: auto !important; min-height: 100dvh; grid-template-columns: minmax(0, 1fr) !important; grid-template-rows: auto auto !important; overflow: visible !important; }
+  .weather-days-panel { min-width: 0; border-right: none !important; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .weather-days-header { padding: 18px 18px 14px !important; }
+  .weather-days-list { display: flex; flex: none !important; gap: 6px; overflow-x: auto !important; overflow-y: hidden !important; padding: 10px !important; }
+  .weather-day-btn { flex: 0 0 86px; width: 86px !important; flex-direction: column; padding: 10px 6px !important; gap: 6px !important; text-align: center !important; }
+  .weather-day-info { flex: none !important; }
+  .weather-day-temperatures { display: flex; gap: 8px; align-items: baseline; }
+  .weather-detail { overflow: visible !important; }
+  .weather-detail-header { padding: 20px 18px !important; gap: 18px !important; }
+  .weather-stats { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; gap: 8px !important; }
+  .weather-stats > div { min-width: 0; padding: 9px 8px !important; }
+  .weather-detail-body { padding: 18px 18px 24px !important; min-height: 470px !important; }
+  .weather-hour-chart { min-width: 0; min-height: 220px !important; }
+  .weather-source { padding-bottom: 60px; }
+}

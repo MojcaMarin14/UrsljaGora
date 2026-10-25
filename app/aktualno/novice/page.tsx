@@ -270,6 +270,7 @@ function Pagination({ page, totalPages, onChange }: { page: number; totalPages: 
 export default function NovicePage() {
   const [novice, setNovice] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadFailed, setLoadFailed] = useState(false);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -281,21 +282,30 @@ export default function NovicePage() {
   }, []);
 
   useEffect(() => {
+    let active = true;
     setLoading(true);
+    setLoadFailed(false);
 
-    // Strapi v4 query: pagination + opcijsko filter po naslovu
+    // Published Strapi 5 documents, pagination and optional title search
     const searchParam = search
       ? `&filters[naslov][$containsi]=${encodeURIComponent(search)}`
       : "";
 
     fetchAPI(
-      `novicas?populate=*&sort=datum:desc&pagination[page]=${page}&pagination[pageSize]=${PER_PAGE}${searchParam}`
+      `novicas?populate=*&status=published&sort=datum:desc&pagination[page]=${page}&pagination[pageSize]=${PER_PAGE}${searchParam}`
     ).then((res) => {
+      if (!active) return;
       setNovice(res.data ?? []);
       const total = res.meta?.pagination?.pageCount ?? 1;
       setTotalPages(total);
       setLoading(false);
+    }).catch(() => {
+      if (!active) return;
+      setNovice([]);
+      setLoadFailed(true);
+      setLoading(false);
     });
+    return () => { active = false; };
   }, [page, search]);
 
   // Featured je samo na prvi strani brez searcha
@@ -389,8 +399,14 @@ export default function NovicePage() {
             </div>
           )}
 
+          {!loading && loadFailed && (
+            <p role="alert" style={{ textAlign: "center", padding: "60px 0", color: "var(--heading)" }}>
+              Vsebine trenutno ni mogoče naložiti. Poskusite znova pozneje.
+            </p>
+          )}
+
           {/* Prazno */}
-          {!loading && novice.length === 0 && (
+          {!loading && !loadFailed && novice.length === 0 && (
             <div style={{ textAlign: "center", padding: "60px 0", color: "rgba(17,16,8,0.35)", fontFamily: "sans-serif" }}>
               {search ? `Ni rezultatov za "${search}".` : "Trenutno ni objav."}
             </div>
@@ -400,7 +416,7 @@ export default function NovicePage() {
           {!loading && showFeatured && featured && (
             <div style={{ marginBottom: 24 }}>
               <FeaturedCard
-                img={featured.slika?.url ? getStrapiMedia(featured.slika.url) : "/fallback.jpg"}
+                img={featured.slika?.url ? getStrapiMedia(featured.slika.url) : "/pol2.jpg"}
                 title={featured.naslov}
                 excerpt={(featured.opis ?? "").slice(0, 200) + "…"}
                 href={`/aktualno/novice/${featured.slug}`}
@@ -420,7 +436,7 @@ export default function NovicePage() {
               {gridItems.map((a: any, i: number) => (
                 <NewsCard
                   key={a.id}
-                  img={a.slika?.url ? getStrapiMedia(a.slika.url) : "/fallback.jpg"}
+                  img={a.slika?.url ? getStrapiMedia(a.slika.url) : "/pol2.jpg"}
                   title={a.naslov}
                   excerpt={(a.opis ?? "").slice(0, 130) + "…"}
                   href={`/aktualno/novice/${a.slug}`}

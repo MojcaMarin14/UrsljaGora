@@ -265,6 +265,7 @@ function EventCard({ img, title, excerpt, href, datum, lokacija, delay = 0, pret
 export default function DogodkiPage() {
   const [dogodki, setDogodki] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadFailed, setLoadFailed] = useState(false);
   const [timeFilter, setTimeFilter] = useState<TimeFilter>("prihajajoči");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -275,9 +276,12 @@ export default function DogodkiPage() {
   }, []);
 
   useEffect(() => {
+    let active = true;
     setLoading(true);
+    setLoadFailed(false);
 
-    const now = new Date().toISOString();
+    // Strapi stores datum as a date, so include the whole event day in Slovenia.
+    const now = new Intl.DateTimeFormat("sv-SE", { timeZone: "Europe/Ljubljana" }).format(new Date());
 
     // Prihajajoči: datum >= danes, sort ASC (najbližji prvi)
     // Pretekli:    datum < danes,  sort DESC (najnovejši prvi)
@@ -288,12 +292,19 @@ export default function DogodkiPage() {
     const sortDir = isPrihajajoči ? "asc" : "desc";
 
     fetchAPI(
-      `dogodkis?populate=*&sort=datum:${sortDir}&pagination[page]=${page}&pagination[pageSize]=${PER_PAGE}${dateFilter}`
+      `dogodkis?populate=*&status=published&sort=datum:${sortDir}&pagination[page]=${page}&pagination[pageSize]=${PER_PAGE}${dateFilter}`
     ).then((res) => {
+      if (!active) return;
       setDogodki(res.data ?? []);
       setTotalPages(res.meta?.pagination?.pageCount ?? 1);
       setLoading(false);
+    }).catch(() => {
+      if (!active) return;
+      setDogodki([]);
+      setLoadFailed(true);
+      setLoading(false);
     });
+    return () => { active = false; };
   }, [page, timeFilter]);
 
   const showFeatured = page === 1 && timeFilter === "prihajajoči";
@@ -387,8 +398,14 @@ export default function DogodkiPage() {
             </div>
           )}
 
+          {!loading && loadFailed && (
+            <p role="alert" style={{ textAlign: "center", padding: "60px 0", color: "var(--heading)" }}>
+              Vsebine trenutno ni mogoče naložiti. Poskusite znova pozneje.
+            </p>
+          )}
+
           {/* Prazno */}
-          {!loading && dogodki.length === 0 && (
+          {!loading && !loadFailed && dogodki.length === 0 && (
             <div style={{ textAlign: "center", padding: "60px 0", color: "rgba(17,16,8,0.35)", fontFamily: "sans-serif" }}>
               {timeFilter === "prihajajoči"
                 ? "Trenutno ni načrtovanih dogodkov."
@@ -399,10 +416,10 @@ export default function DogodkiPage() {
           {/* Featured — samo prihajajoči, stran 1 */}
           {!loading && showFeatured && featured && (
             <FeaturedCard
-              img={featured.slika?.[0]?.url ? getStrapiMedia(featured.slika[0].url) : "/fallback.jpg"}
+              img={featured.slika?.[0]?.url ? getStrapiMedia(featured.slika[0].url) : "/pol2.jpg"}
               title={featured.naslov}
               excerpt={(featured.opis ?? "").slice(0, 200) + "…"}
-              href={`/aktualno/dogodki/${featured.id}`}
+              href={`/aktualno/dogodki/${featured.documentId}`}
               datum={featured.datum}
               lokacija={featured.lokacija}
             />
@@ -418,10 +435,10 @@ export default function DogodkiPage() {
               {gridItems.map((item: any, i: number) => (
                 <EventCard
                   key={item.id}
-                  img={item.slika?.[0]?.url ? getStrapiMedia(item.slika[0].url) : "/fallback.jpg"}
+                  img={item.slika?.[0]?.url ? getStrapiMedia(item.slika[0].url) : "/pol2.jpg"}
                   title={item.naslov}
                   excerpt={(item.opis ?? "").slice(0, 130) + "…"}
-                  href={`/aktualno/dogodki/${item.id}`}
+                  href={`/aktualno/dogodki/${item.documentId}`}
                   datum={item.datum}
                   lokacija={item.lokacija}
                   delay={i * 0.08}

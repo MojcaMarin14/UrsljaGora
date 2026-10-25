@@ -1,6 +1,7 @@
+import { getSiteUrl } from "@/lib/site";
 import { MetadataRoute } from "next";
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://urslja-gora-git-main-mojcamarin14s-projects.vercel.app";
+const BASE_URL = getSiteUrl();
 
 export default function robots(): MetadataRoute.Robots {
   return {

@@ -1,3 +1,4 @@
+import { getSiteUrl } from "@/lib/site";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
     title: "Jedilnik – Dom na Uršlji gori",
     description:
       "Domača planinska kuhinja na 1680 m. Topla hrana, lokalne specialitete in okrepčila za pohodnike na Uršlji gori.",
-    url: "https://ursljagoradom.si/onas/jedilnik",
+    url: `${getSiteUrl()}/onas/jedilnik`,
   },
 };
 

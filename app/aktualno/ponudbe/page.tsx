@@ -297,6 +297,7 @@ function OfferCard({ img, title, excerpt, href, veljavnost, kategorija, delay = 
 export default function PonudbePage() {
   const [ponudbe, setPonudbe] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadFailed, setLoadFailed] = useState(false);
   const [kategorija, setKategorija] = useState<Kategorija>("Vse");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -307,19 +308,28 @@ export default function PonudbePage() {
   }, []);
 
   useEffect(() => {
+    let active = true;
     setLoading(true);
+    setLoadFailed(false);
 
     const katParam = kategorija !== "Vse"
       ? `&filters[kategorija][$eq]=${encodeURIComponent(kategorija)}`
       : "";
 
     fetchAPI(
-      `ponudbes?populate=*&sort=veljavnost:desc&pagination[page]=${page}&pagination[pageSize]=${PER_PAGE}${katParam}`
+      `ponudbes?populate=*&status=published&sort=veljavnost:desc&pagination[page]=${page}&pagination[pageSize]=${PER_PAGE}${katParam}`
     ).then((res) => {
+      if (!active) return;
       setPonudbe(res.data ?? []);
       setTotalPages(res.meta?.pagination?.pageCount ?? 1);
       setLoading(false);
+    }).catch(() => {
+      if (!active) return;
+      setPonudbe([]);
+      setLoadFailed(true);
+      setLoading(false);
     });
+    return () => { active = false; };
   }, [page, kategorija]);
 
   // Featured samo na prvi strani brez filtra
@@ -413,8 +423,14 @@ export default function PonudbePage() {
             </div>
           )}
 
+          {!loading && loadFailed && (
+            <p role="alert" style={{ textAlign: "center", padding: "60px 0", color: "var(--heading)" }}>
+              Vsebine trenutno ni mogoče naložiti. Poskusite znova pozneje.
+            </p>
+          )}
+
           {/* Prazno */}
-          {!loading && ponudbe.length === 0 && (
+          {!loading && !loadFailed && ponudbe.length === 0 && (
             <div style={{ textAlign: "center", padding: "60px 0", color: "rgba(17,16,8,0.35)", fontFamily: "sans-serif" }}>
               {kategorija !== "Vse"
                 ? `Ni ponudb v kategoriji "${kategorija}".`
@@ -425,10 +441,10 @@ export default function PonudbePage() {
           {/* Featured — samo na strani 1 brez filtra */}
           {!loading && showFeatured && featured && (
             <FeaturedCard
-              img={featured.slika?.[0]?.url ? getStrapiMedia(featured.slika[0].url) : "/fallback.jpg"}
+              img={featured.slika?.[0]?.url ? getStrapiMedia(featured.slika[0].url) : "/pol2.jpg"}
               title={featured.naslov}
               excerpt={(featured.opis ?? "").slice(0, 200) + "…"}
-              href={`/aktualno/ponudbe/${featured.id}`}
+              href={`/aktualno/ponudbe/${featured.documentId}`}
               veljavnost={featured.veljavnost}
               kategorija={featured.kategorija}
             />
@@ -444,10 +460,10 @@ export default function PonudbePage() {
               {gridItems.map((item: any, i: number) => (
                 <OfferCard
                   key={item.id}
-                  img={item.slika?.[0]?.url ? getStrapiMedia(item.slika[0].url) : "/fallback.jpg"}
+                  img={item.slika?.[0]?.url ? getStrapiMedia(item.slika[0].url) : "/pol2.jpg"}
                   title={item.naslov}
                   excerpt={(item.opis ?? "").slice(0, 130) + "…"}
-                  href={`/aktualno/ponudbe/${item.id}`}
+                  href={`/aktualno/ponudbe/${item.documentId}`}
                   veljavnost={item.veljavnost}
                   kategorija={item.kategorija}
                   delay={i * 0.08}

@@ -1,3 +1,4 @@
+import { getSiteUrl } from "@/lib/site";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -14,7 +15,7 @@ export const metadata: Metadata = {
     title: "Kontakt – Dom na Uršlji gori",
     description:
       "Stopite v stik z Domom na Uršlji gori. Rezervacije, informacije o delovnem času in lokacija.",
-    url: "https://ursljagoradom.si/kontakt",
+    url: `${getSiteUrl()}/kontakt`,
   },
 };
 

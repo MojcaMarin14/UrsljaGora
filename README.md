@@ -1,37 +1,11 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Uršlja gora — Next.js frontend
 
-## Getting Started
+Glavna veja vsebuje posodobljen frontend za obstoječi Vercel projekt `urslja-gora`. Produkcijski naslov je https://urslja-gora.vercel.app. Uporabi Node 22 in `npm ci`; produkcijska gradnja je `npm run build`.
 
-First, run the development server:
+Popravki ohranjajo prvotno oblikovanje, animacije in navigacijo. Vključeni so mobilni meni na mapi, odpravljene manjkajoče slike in video poster, potrjena naslovna slika O nas, dinamične Strapi vsebine, obrazci in vreme. Novice, dogodki in ponudbe potrebujejo delujoč javni Strapi API; kode ali vzorčnih vsebin ne uporabljamo kot nadomestilo za manjkajočo bazo.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Lokalna CMS baza, naloženi mediji, gesla in zasebni testi niso objavljeni v tem repozitoriju. Pripravljena migracija in varnostne spremembe Strapi so ločene na veji `preview/local-recovery-20261025`; frontend izdaja jih ne uvaja v produkcijsko zaledje.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Za razvijanje zasebno kopiraj `.env.example` v `.env.local` in nastavi obstoječi Strapi. Na Vercelu se `NEXT_PUBLIC_STRAPI_URL` nastavi na javni HTTPS origin CMS brez `/api`; `STRAPI_INTERNAL_URL` mora biti izpuščen, zasebni Docker naslovi niso dosegljivi. `.env.example` vsebuje samo prazna polja in lokalne razvojne privzete vrednosti, ne produkcijskih skrivnosti.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# UrsljaGora
+[Status izdaje, preverjanje in povrnitev](docs/FRONTEND-PRODUCTION-20261025.md).
