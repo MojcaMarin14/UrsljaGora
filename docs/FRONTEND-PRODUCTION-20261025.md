@@ -20,3 +20,7 @@ Frontend uporablja Node 22, Next.js in eslint-config-next 16.4.3 ter Nodemailer 
 ## Povrnitev
 
 Prejšnji commit in Vercel deployment ostajata v zgodovini. Ob napaki obnovi prejšnjo Vercel produkcijsko izdajo oziroma ustvari nov Git revert commit za frontend izdajo. Ne uporabljaj force-push, ne prepisuj zgodovine in ne ponastavljaj baz. Vercel runtime/billing, DNS, domena, izvirni lokalni projekt in Cloud računi se s to pripravo ne konfigurirajo ročno.
+
+Ohranjena je tudi izvirna Vercel Analytics integracija iz prejšnje produkcijske kode. V izoliranih lokalnih testih je bila izklopljena; njena odstranitev ni del produkcijske izdaje. Brskalniški preizkusi blokirajo vse POST oddaje, vključno s telemetrijo.
+
+Če NEXT_PUBLIC_SITE_URL ni nastavljen, metapodatki in sitemap uporabijo potrjeni sedanji naslov https://urslja-gora.vercel.app namesto stare nepotrjene domene. Kasnejšo lastno domeno nastavite zasebno v Vercelu in ponovno zgradite frontend.

@@ -1,6 +1,7 @@
 import { getSiteUrl } from "@/lib/site";
 import "./globals.css";
 import Navbar from "./components/Navbar";
+import { Analytics } from "@vercel/analytics/react";
 import CookieConsent from "./components/CookieConsent";
 import GuestBook from "./components/GuestBook";
 
@@ -39,6 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="m-0 p-0" style={{ backgroundColor: "var(--page-bg)", color: "var(--text-primary)" }}>
         <Navbar />
         {children}
+        <Analytics />
         <CookieConsent />
         <GuestBook />
       </body>
