@@ -1,11 +1,9 @@
-# Uršlja gora — Next.js frontend
+# Uršlja gora — Next.js in Strapi
 
-Glavna veja vsebuje posodobljen frontend za obstoječi Vercel projekt `urslja-gora`. Produkcijski naslov je https://urslja-gora.vercel.app. Uporabi Node 22 in `npm ci`; produkcijska gradnja je `npm run build`.
+Frontend v korenu repozitorija je za obstoječi Vercel projekt `urslja-gora`: https://urslja-gora.vercel.app. Uporabi Node 22, `npm ci` in `npm run build`. Izvirno oblikovanje, animacije, slike in navigacija so ohranjeni.
 
-Popravki ohranjajo prvotno oblikovanje, animacije in navigacijo. Vključeni so mobilni meni na mapi, odpravljene manjkajoče slike in video poster, potrjena naslovna slika O nas, dinamične Strapi vsebine, obrazci in vreme. Novice, dogodki in ponudbe potrebujejo delujoč javni Strapi API; kode ali vzorčnih vsebin ne uporabljamo kot nadomestilo za manjkajočo bazo.
+CMS je v `cms/urslja-gora-cms`: preverjena priprava Strapi 5.59.0 za Strapi Cloud uporablja Node 24 in svoj obstoječi lockfile. Novice, dogodki in ponudbe prihajajo iz Strapi API, brez nadomestnih vzorčnih objav. Pravi podatki, naloženi mediji, gesla in zasebne kopije niso objavljeni v Git. Stara datoteka CMS `data/data.json` je zgolj demonstracijska in ni vir spletnih novic.
 
-Lokalna CMS baza, naloženi mediji, gesla in zasebni testi niso objavljeni v tem repozitoriju. Pripravljena migracija in varnostne spremembe Strapi so ločene na veji `preview/local-recovery-20261025`; frontend izdaja jih ne uvaja v produkcijsko zaledje.
+Zasebno kopiraj `.env.example` v `.env.local`. Vercel potrebuje `NEXT_PUBLIC_STRAPI_URL` z delujočim javnim HTTPS originom CMS brez `/api`; `STRAPI_INTERNAL_URL` izpusti. Vercel ne doseže lokalnega Docker CMS. URL spremeni šele po obnovi in preverjanju novega Clouda, nato ponovno zgradi frontend. Potrjena prijava v račun ali Git push sama po sebi ne ustvarita gostovanja, naročnine ali baze.
 
-Za razvijanje zasebno kopiraj `.env.example` v `.env.local` in nastavi obstoječi Strapi. Na Vercelu se `NEXT_PUBLIC_STRAPI_URL` nastavi na javni HTTPS origin CMS brez `/api`; `STRAPI_INTERNAL_URL` mora biti izpuščen, zasebni Docker naslovi niso dosegljivi. `.env.example` vsebuje samo prazna polja in lokalne razvojne privzete vrednosti, ne produkcijskih skrivnosti.
-
-[Status izdaje, preverjanje in povrnitev](docs/FRONTEND-PRODUCTION-20261025.md).
+Ta priprava ne spremeni Vercelovega paketa in ne vključi plačljivih storitev. Povezava z novim javnim CMS še zahteva ustvarjen projekt, pregled zasebnosti medijev in obnovo iz preverjene kopije. Natančno stanje in navodila: [Strapi Cloud](docs/STRAPI-CLOUD-SETUP.md). [Prejšnja izdaja frontenda](docs/FRONTEND-PRODUCTION-20261025.md) ostaja dokumentirana v zgodovini.

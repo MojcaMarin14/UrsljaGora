@@ -26,6 +26,11 @@ export interface AdminApiToken extends Struct.CollectionTypeSchema {
       Schema.Attribute.SetMinMaxLength<{
         minLength: 1;
       }>;
+    adminPermissions: Schema.Attribute.Relation<
+      'oneToMany',
+      'admin::permission'
+    >;
+    adminUserOwner: Schema.Attribute.Relation<'manyToOne', 'admin::user'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -39,6 +44,9 @@ export interface AdminApiToken extends Struct.CollectionTypeSchema {
         minLength: 1;
       }>;
     expiresAt: Schema.Attribute.DateTime;
+    kind: Schema.Attribute.Enumeration<['content-api', 'admin']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'content-api'>;
     lastUsedAt: Schema.Attribute.DateTime;
     lifespan: Schema.Attribute.BigInteger;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
@@ -56,7 +64,6 @@ export interface AdminApiToken extends Struct.CollectionTypeSchema {
     >;
     publishedAt: Schema.Attribute.DateTime;
     type: Schema.Attribute.Enumeration<['read-only', 'full-access', 'custom']> &
-      Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'read-only'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -134,6 +141,7 @@ export interface AdminPermission extends Struct.CollectionTypeSchema {
         minLength: 1;
       }>;
     actionParameters: Schema.Attribute.JSON & Schema.Attribute.DefaultTo<{}>;
+    apiToken: Schema.Attribute.Relation<'manyToOne', 'admin::api-token'>;
     conditions: Schema.Attribute.JSON & Schema.Attribute.DefaultTo<[]>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -241,6 +249,7 @@ export interface AdminSession extends Struct.CollectionTypeSchema {
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'admin::session'> &
       Schema.Attribute.Private;
+    metadata: Schema.Attribute.JSON & Schema.Attribute.Private;
     origin: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.Private;
@@ -385,6 +394,8 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
     };
   };
   attributes: {
+    apiTokens: Schema.Attribute.Relation<'oneToMany', 'admin::api-token'> &
+      Schema.Attribute.Private;
     blocked: Schema.Attribute.Boolean &
       Schema.Attribute.Private &
       Schema.Attribute.DefaultTo<false>;
@@ -421,6 +432,8 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
     publishedAt: Schema.Attribute.DateTime;
     registrationToken: Schema.Attribute.String & Schema.Attribute.Private;
     resetPasswordToken: Schema.Attribute.String & Schema.Attribute.Private;
+    resetPasswordTokenExpiresAt: Schema.Attribute.DateTime &
+      Schema.Attribute.Private;
     roles: Schema.Attribute.Relation<'manyToMany', 'admin::role'> &
       Schema.Attribute.Private;
     updatedAt: Schema.Attribute.DateTime;
@@ -630,6 +643,42 @@ export interface ApiGlobalGlobal extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiMapaFotografijaMapaFotografija
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'mapa_fotografijas';
+  info: {
+    displayName: 'Mapa fotografije';
+    pluralName: 'mapa-fotografijas';
+    singularName: 'mapa-fotografija';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    avtor: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    kraj: Schema.Attribute.String;
+    lat: Schema.Attribute.Float & Schema.Attribute.Required;
+    lng: Schema.Attribute.Float & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::mapa-fotografija.mapa-fotografija'
+    > &
+      Schema.Attribute.Private;
+    ocena: Schema.Attribute.Integer;
+    odobrena: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    opis: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    slika: Schema.Attribute.Media<'images'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiNovicaNovica extends Struct.CollectionTypeSchema {
   collectionName: 'novicas';
   info: {
@@ -665,82 +714,12 @@ export interface ApiNovicaNovica extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiMapaFotografijaMapaFotografija
-  extends Struct.CollectionTypeSchema {
-  collectionName: 'mapa_fotografijas';
-  info: {
-    displayName: 'Mapa fotografije';
-    pluralName: 'mapa-fotografijas';
-    singularName: 'mapa-fotografija';
-  };
-  options: {
-    draftAndPublish: false;
-  };
-  attributes: {
-    avtor: Schema.Attribute.String;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    kraj: Schema.Attribute.String;
-    lat: Schema.Attribute.Decimal & Schema.Attribute.Required;
-    lng: Schema.Attribute.Decimal & Schema.Attribute.Required;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::mapa-fotografija.mapa-fotografija'
-    > &
-      Schema.Attribute.Private;
-    ocena: Schema.Attribute.Integer;
-    odobrena: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
-    opis: Schema.Attribute.String;
-    publishedAt: Schema.Attribute.DateTime;
-    slika: Schema.Attribute.Media<'images'>;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiTockaNaMapiTockaNaMapi
-  extends Struct.CollectionTypeSchema {
-  collectionName: 'tocka_na_mapis';
-  info: {
-    displayName: 'Točke na mapi';
-    pluralName: 'tocka-na-mapis';
-    singularName: 'tocka-na-mapi';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    fotografija: Schema.Attribute.Media<'images'>;
-    ime: Schema.Attribute.String & Schema.Attribute.Required;
-    kategorija: Schema.Attribute.String;
-    lat: Schema.Attribute.Decimal & Schema.Attribute.Required;
-    lng: Schema.Attribute.Decimal & Schema.Attribute.Required;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::tocka-na-mapi.tocka-na-mapi'
-    > &
-      Schema.Attribute.Private;
-    opis: Schema.Attribute.Text;
-    publishedAt: Schema.Attribute.DateTime;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
 export interface ApiPohvalaPohvala extends Struct.CollectionTypeSchema {
   collectionName: 'pohvalas';
   info: {
-    singularName: 'pohvala';
-    pluralName: 'pohvalas';
     displayName: 'Pohvale in pripombe';
+    pluralName: 'pohvalas';
+    singularName: 'pohvala';
   };
   options: {
     draftAndPublish: false;
@@ -758,6 +737,8 @@ export interface ApiPohvalaPohvala extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     ocena: Schema.Attribute.Integer;
     odobrena: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    publishedAt: Schema.Attribute.DateTime;
+    slika: Schema.Attribute.Media<'images'>;
     sporocilo: Schema.Attribute.Text & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -800,6 +781,39 @@ export interface ApiPonudbePonudbe extends Struct.CollectionTypeSchema {
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     veljavnost: Schema.Attribute.Date;
+  };
+}
+
+export interface ApiTockaNaMapiTockaNaMapi extends Struct.CollectionTypeSchema {
+  collectionName: 'tocka_na_mapis';
+  info: {
+    displayName: 'To\u010Dke na mapi';
+    pluralName: 'tocka-na-mapis';
+    singularName: 'tocka-na-mapi';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    fotografija: Schema.Attribute.Media<'images'>;
+    ime: Schema.Attribute.String & Schema.Attribute.Required;
+    kategorija: Schema.Attribute.String;
+    lat: Schema.Attribute.Float & Schema.Attribute.Required;
+    lng: Schema.Attribute.Float & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::tocka-na-mapi.tocka-na-mapi'
+    > &
+      Schema.Attribute.Private;
+    opis: Schema.Attribute.Text;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
   };
 }
 
@@ -1304,7 +1318,7 @@ export interface PluginUsersPermissionsUser
 }
 
 declare module '@strapi/strapi' {
-  export module Public {
+  export namespace Public {
     export interface ContentTypeSchemas {
       'admin::api-token': AdminApiToken;
       'admin::api-token-permission': AdminApiTokenPermission;
